@@ -4,8 +4,8 @@
 :date: 2018-08-01 09:00
 :summary: FIXME: Разбор "Hello, World!" на Си. Исправить описание обязательно.
 :status: published
-:published: yes
 :test_link: http://judge2.vdi.mipt.ru/BAD_LINK
+:test_comment: Плохая ссылка на ДЗ
 
 
 .. default-role:: code

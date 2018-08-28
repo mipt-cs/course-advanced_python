@@ -14,9 +14,7 @@
             {% for lab in articles_page.object_list %}
             <tr>
                 <td>{{ loop.index }}</td>
-                <td>{% if lab.published %}<a href="{{ SITEURL }}/{{ lab.url }}">{% endif %}
-				{{ lab.title }}
-				{% if lab.published %}</a>{% endif %}</td>
+                <td><a href="{{ SITEURL }}/{{ lab.url }}"> {{ lab.title }} </a></td>
 				<td>{{ lab.summary }}</td>
                 <td>{% if lab.test_link %}
 					<a href="{{ lab.test_link }}"> 
