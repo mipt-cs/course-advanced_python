@@ -6,7 +6,7 @@ import os
 
 AUTHOR = 'Timofey Khirianov'
 SITENAME = 'Продвинутое программирование на Python'
-SITEURL = 'http://cs.mipt.ru/advanced-python'
+SITEURL = 'http://cs.mipt.ru/advanced_python'
 
 PATH = 'content'
 
