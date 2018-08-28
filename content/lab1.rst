@@ -38,5 +38,5 @@
 ``hello_world.c``
 -----------------
 
-.. code-include:: code/lesson1/hello_world.c
+.. code-include:: code/lab1/hello_world.c
     :lexer: cpp
