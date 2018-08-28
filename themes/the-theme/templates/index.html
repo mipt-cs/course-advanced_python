@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content_title %}{% endblock %}
+{% block content %}
+
+<aside class="body">
+    <table>
+        <thead>
+            <th>#</th>
+            <th>Название лабораторной работы</th>
+            <th>Описание работы</th>
+            <th>Домашняя работа</th>
+        </thead>
+        <tbody>
+            {% for lab in articles_page.object_list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{% if lab.published %}<a href="{{ SITEURL }}/{{ lab.url }}">{% endif %}
+				{{ lab.title }}
+				{% if lab.published %}</a>{% endif %}</td>
+				<td>{{ lab.summary }}</td>
+                <td>{% if lab.test_link %}
+					<a href="{{ lab.test_link }}"> 
+						{% if lab.test_comment %} {{ lab.test_comment}} {% else %} Ссылка {% endif %}
+					</a>{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</aside>
+
+{% endblock content %}
