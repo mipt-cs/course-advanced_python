@@ -3,7 +3,7 @@
 
 :date: 2018-08-01 09:00
 :summary: Поторение материала прошлого года
-:status: draft
+:status: published
 :test_comment: 
 
 
