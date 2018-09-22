@@ -273,7 +273,7 @@
                     c += 1;
                 }
                 printf("+--------+----------------+-----------+-----------+\n");
-                printf("Base value: addrecc - %p, dec - %d, hex - 0x%x\n", &p, a, a);
+                printf("Base value: addrecc - %p, dec - %d, hex - 0x%x\n", &a, a, a);
                 return 0;
         }
 

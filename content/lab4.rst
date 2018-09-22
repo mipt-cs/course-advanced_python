@@ -1,7 +1,7 @@
 Массивы в С. Динамические массивы, malloc, realloc, free.
 #####################################################################
 
-:date: 2018-09-22 10:00
+:date: 2018-09-21 10:00
 :summary: Массивы в С. Динамические массивы, malloc, realloc, free. Fast ISQRT
 :status: published
 :published: yes
