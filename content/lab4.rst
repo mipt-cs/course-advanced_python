@@ -5,6 +5,7 @@
 :summary: Массивы в С. Динамические массивы, malloc, realloc, free
 :status: published
 :published: yes
+:test_link: http://judge2.vdi.mipt.ru/cgi-bin/new-client?contest_id=610304
 
 .. default-role:: code
 
