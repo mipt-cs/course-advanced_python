@@ -3,7 +3,7 @@
 
 :date: 2018-09-21 10:00
 :summary: Массивы в С. Динамические массивы, malloc, realloc, free
-:status: draft
+:status: published
 :published: yes
 
 .. default-role:: code
