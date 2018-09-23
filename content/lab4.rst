@@ -3,7 +3,7 @@
 
 :date: 2018-09-21 10:00
 :summary: Массивы в С. Динамические массивы, malloc, realloc, free
-:status: published
+:status: draft
 :published: yes
 
 .. default-role:: code
@@ -191,6 +191,99 @@
         return 0;
     }
 
+
+Пример №3
+---------
+
+.. code-block:: c
+
+        #include <stdio.h>
+
+        void print_array(const int a[], int size)
+        {
+            printf("Array: ");
+            for (int i = 0; i < size; ++i)             
+            {
+                printf("%d ", a[i]);
+            }
+            printf("\n");
+        }
+
+        int main(){
+                int n, *b;
+                scanf("%d", &n);        // input array size
+                {                       // -- begin block --
+
+                        int a[n];       // define array inside the block
+
+                        for (int i = 0; i < n; a[i++] = i * i); // fill array
+                        print_array(a, n);                      // print array
+                        b = a;  // save array address
+
+                }                       // -- end block --
+
+                int a;                           // define a as integer
+                scanf("%d", &a);                 // input value
+                printf("n = %d\n", a);            // print it
+                print_array(b, n);               // print array
+
+                return 0;
+        }
+
+Результат работы программы:
+
+.. code-block:: bash
+        
+        ./app
+        5
+        Array: 1 4 9 16 25
+        5
+        n = 5
+        Array: 1 4 9 3 -182291632
+
+
+Как можно видеть из примера: 
+
+#. После окончания блока переменная :c:`a` «освободилась», и её можно использовать, как переменную другого типа (:c:`int`).
+#. Если память, соответствующая некоторому массиву считается свободной — нельзя гарантировать сохранность данных и корректную работу программы
+#. Чтобы контролировать неизменность массива :c:`a` в процессе *компиляции*, тип первой передаваемой функции :c:`const int a[]`
+
+Теперь рассмотрим, как передавать многомерные массивы (в частном случае - двумерные) в функцию:
+
+Пример №4
+---------
+
+.. code-block:: c
+
+        #include <stdlib.h>
+        #include <stdio.h>
+
+        void print2array(int  a[][4], int n)
+        {
+                for (int i=0; i < n; ++i) {
+                        for (int j = 0; j < 4; ++j) {
+                                printf("%d ", a[i][j]);
+                        }
+                        printf("\n");
+                }
+        }
+
+        int main()
+        {
+                int n;
+                scanf("%d ", n);
+                int a[n][4];
+                for (int i=0; i < n; ++i) {
+                        for (int j = 0; j < 4; ++j) {
+                                a[i][j] = i + j;
+                        }
+                };
+
+                print2array(a, n);
+                return 0;
+        }
+
+
 Упражнение №3
 -------------
 
@@ -281,6 +374,7 @@ free        освобождает выделенный блок памяти
         }
         printf("Array A successfully created!\n");
         free(A); // мы обязаны освободить выделенную память
+        A = NULL; // ! Хорошим тоном является зануление указателя после освобождения памяти
         return 0;
     }
 
@@ -311,6 +405,7 @@ free        освобождает выделенный блок памяти
                 A[i] = i;
             }
             free(A); // важно!
+            A = NULL;
         }
         printf("Program is on finish!\n");
         return 0;
@@ -336,50 +431,43 @@ free        освобождает выделенный блок памяти
 
     #include <stdio.h>
     #include <stdlib.h>
-    #include <string.h>
 
-    // Danger function: it's not responsible for
-    // the memory it allocates for the duplicate!
-    int* duplicate_array(int *A, size_t N)
-    {
-        int * B = (int *) malloc(sizeof(int)*N);
-        for(size_t i = 0; i < N; i++)
-            B[i] = A[i];
-        printf(" duplicate_array() allocated memory for the duplicate.\n");
-        return B;
-    }
-
-    int main()
-    {
-        printf("Calling irresponsible function duplicate_array():\n");
-        int A[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        int *B = duplicate_array(A, 10);
-        for (int i = 0; i < 10; ++i)
-            printf("%d\t", B[i]);
-
-        printf("Since caller function is not taking responsibility by itself,\n");
-        printf(" memory for the array above will never be released...\n\n");
-
-        printf("The same situation for the standard function strdup():\n");
-        char *hello = "Hello, World!";
-        char *message = strdup(hello);
-        printf("Strdup allocated memory for this message: \"%s\"\n", message);
-        printf("It'll never be released...\n\n");
-
-        int *p;
-        for (int i = 0; i < 10; i++)
-        {
-            p = (int *)malloc(sizeof(int));
-            printf("Allocating memory many times in cycle.\n");
-            *p = i;
-        }
-        free(p);
-        printf("But releasing it just once...\n");
-
+    int main() {
+        int *a = malloc(5 * sizeof(int));
         return 0;
     }
 
-Проверка на утечки памяти: **Valgrind**.
+Проверка на утечки памяти: **Valgrind**!
+
+Проверить программу на утечки памяти:
+
+.. code-block:: c
+    gcc -g -o app alloc_example.c
+    valgrind --leak-check=full ./app
+
+Кусок вывода:
+
+.. code-block:: c
+    ==14222== HEAP SUMMARY:
+    ==14222==     in use at exit: 10 bytes in 1 blocks
+    ==14222==   total heap usage: 1 allocs, 0 frees, 10 bytes allocated
+    ==14222== 
+    ==14222== 10 bytes in 1 blocks are definitely lost in loss record 1 of 1
+    ==14222==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+    ==14222==    by 0x10865B: main (app.c:5)
+    ==14222== 
+    ==14222== LEAK SUMMARY:
+    ==14222==    definitely lost: 10 bytes in 1 blocks
+    ==14222==    indirectly lost: 0 bytes in 0 blocks
+    ==14222==      possibly lost: 0 bytes in 0 blocks
+    ==14222==    still reachable: 0 bytes in 0 blocks
+    ==14222==         suppressed: 0 bytes in 0 blocks
+
+Упражнение №6
+-------------
+
+Запустить программу под valgrind (с утечкой памяти и без).
+
 
 Выделение памяти под двумерные массивы
 ======================================
@@ -441,8 +529,10 @@ free        освобождает выделенный блок памяти
         for (i = 0; i < n; i++)  // цикл по строкам
         {
             free(a[i]);   // освобождение памяти под строку
+            a[i] = NULL;
         }
         free(a);
+        a = NULL;
         return 0;
     }
 
@@ -466,10 +556,22 @@ free        освобождает выделенный блок памяти
 
 Скалярное произведение 2 векторов. Ввод: В 1 строке n - длина векторов, во 2 и 3 строках - 2 вектора соответственно. Вывод: Скалярное произведение.
 
+Метод ускоренного выделения памяти
+==================================
+
+.. code-block:: c
+    int n = 2, m = 3;
+    int** a = (int**)malloc(n * sizeof(int*) + n * m * sizeof(int));
+    a[0] = a + n;
+    for (int i = 1; i < n; ++i) {
+        a[i] = a[i-1] + m;
+    }
+
 
 Дополнительные материалы
 ========================
 
 1) Как пользоваться Valgrind: http://valgrind.org/docs/manual/quick-start.html
 2) Работа с динамическим выделением памяти: https://en.wikipedia.org/wiki/C_dynamic_memory_allocation
-3) Организация памяти процесса: https://habr.com/company/smart_soft/blog/185226/
+3) Организация памяти процесса: https://habr.com/company/smart_soft/blog/185226
+3) Динамические двумерные массивы: https://server.179.ru/tasks/cpp/total/086.html
