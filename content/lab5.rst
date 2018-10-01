@@ -3,7 +3,7 @@
 
 :date: 2018-09-30 10:00
 :summary: Структуры в С.
-:status: draft
+:status: published
 :published: yes
 
 .. default-role:: code
