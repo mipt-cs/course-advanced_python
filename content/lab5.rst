@@ -176,19 +176,13 @@
             }
         
             for (int i = number.size - 1; i >= 0; --i) {
+                if (number.digits[i] < 0 || number.digits[i] > 9) {
+                    //printf("error: wrong digit %d\n", number.digits[i]);
+                    exit(1);
+                }
                 printf("%d", number.digits[i]);
             }
             printf("\n");
-        }
-        
-        int main()
-        {
-            large_numbers number;
-        
-            number = input_large_numbers();
-            print_large_numbers(number);
-        
-            return 0;
         }
 
 Простейшая программа, которая зачитывет и печатает число.
@@ -223,28 +217,31 @@
             return b;
         }
         
+        // функция для складывания двух положительных чисел
         large_numbers add(large_numbers lhs, large_numbers rhs) {
-            large_numbers result;
-            int remainder = 0;
             
+            large_numbers result;
+            result.sign = 1;
+            int remainder = 0;
+        
             int common = min(lhs.size, rhs.size);
             int Max = max(lhs.size, rhs.size);
-            
+        
             result.digits = (int*)calloc(Max + 1, sizeof(int));
             // сложение общих разрядов
             for (int i = 0; i < common; ++i) {
-                int value = lhs.sign * lhs.digits[i] + rhs.sign * rhs.digits[i] + remainder;
+                int value = lhs.digits[i] + rhs.digits[i] + remainder;
                 result.digits[i] = value % 10;
                 remainder = value / 10;
             }
             // сложение различающихся разрядов
             for (int i = common; i < lhs.size; ++i) {
-                int value = lhs.sign * lhs.digits[i] + remainder;
+                int value = lhs.digits[i] + remainder;
                 result.digits[i] = value % 10;
                 remainder = value / 10;
             }
             for (int i = common; i < rhs.size; ++i) {
-                int value = rhs.sign * rhs.digits[i] + remainder;
+                int value = rhs.digits[i] + remainder;
                 result.digits[i] = value % 10;
                 remainder = value / 10;
             }
@@ -254,9 +251,9 @@
                 result.digits = (int*)realloc(result.digits, Max*sizeof(int));
             } else {
                 result.digits[Max] = remainder;
-                result.size = Max + 1;      
+                result.size = Max + 1;
             }
-            
+        
             return result;
         }
 
