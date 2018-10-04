@@ -119,11 +119,11 @@
             int *digits;
             int sign;
             int size;
-        } big_number;
+        } large_numbers;
         
-        big_number input_big_number()
+        large_numbers input_large_numbers()
         {
-            big_number number;
+            large_numbers number;
             number.sign = 1;
             
             int *buffer = (int*)calloc(MAX_NUMBER_LEN, sizeof(int));
