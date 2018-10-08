@@ -128,6 +128,7 @@ Cпособы ввода строк
 Разворот строки. Необходимо помнить, что в конце строки должен остаться терминирующий нуль.
 
 .. code-block:: c
+        
         void reverse_string(char * string){
             int length;
             for (length = 0; string[length] != '\0'; ++length);
