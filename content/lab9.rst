@@ -127,12 +127,16 @@
 	b = int(input())
 	print(a / b)
 
+.. code-block:: python
+
 	a = int(input())
 	b = int(input())
 	if b != 0:
     		print(a / b)
 	else:
     		print('Деление невозможно')
+
+.. code-block:: python
 
 	a = int(input())
 	b = int(input())
@@ -142,6 +146,8 @@
     		print('Деление невозможно')
     		b = int(input('Введите ненулевое значение '))
     		print(a / b)
+
+.. code-block:: python
 
 	a = int(input())
 	b = int(input())
@@ -154,6 +160,8 @@
         		print('Вы не справились!')
     	else:
         	print(a / b)
+
+.. code-block:: python
 
 	x = int(input())
 	if x % 2 == 0:
