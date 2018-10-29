@@ -184,6 +184,93 @@
 Строки
 ------
 
+.. code-block:: python
+
+	a = 'string'
+	b = 'another string'
+	print(a, b)
+
+.. code-block:: python
+
+	print(a + b)  # конкатенация строк
+
+.. code-block:: python
+
+	print(a)
+	'''
+	multiline
+	comment
+	'''
+	print(b)
+
+.. code-block:: python
+	
+	print(a + '\n' + b)  # вывод в двух различных строчках
+	
+	'string1'
+
+	"string2"
+	
+	'''multiple lines
+	string'''
+	
+	"""multiple lines
+	string with double qoutes"""
+
+	'abc' + 'def'
+
+	'abc' * 3
+
+	len('abcdef')
+
+	'abc' == '''abc'''
+
+	'abc' < 'ac'
+
+	'abc' > 'ab'
+
+	print('First line', '\n\n\n', 'Last line')
+
+	
+
+	# это комментарий
+	x = 5 # комментарий к действию
+	'''
+	Многострочный комментарий – это просто
+	строка
+	'''
+
+
+Цикл While
+----------
+
+.. code-block:: python
+	
+	a = 5
+	while a > 0:
+    		print(a, end=' ')
+    		a -= 1
+
+Вывести все нечетные числа от 5 до 55
+
+.. code-block:: python
+
+	a = 5
+	while a <= 55:
+    		print(a, end=' ')
+    		a += 2
+
+Вывести треугольник из звезд
+
+.. code-block:: python
+
+	n = int(input())
+	c = 1
+	while c <= n:
+    		print('*' * c)
+    		c += 1
+
+
 является комментарием.
 Комментарием в языке C является любая последовательность символов, заключенная между парами символов `/*` и `*/`.
 Также, все символы, располагающиеся за парой символов `//` и до конца строки, рассматриваются как комментарий.
