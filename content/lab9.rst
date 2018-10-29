@@ -4,7 +4,7 @@
 :date: 2018-10-29 07:30
 :summary: Повторение синтаксиса Python. ООП. Принципы и парадигмы ООП. Объекты и классы в Python.
 :status: published
-:published: no
+:published: yes
 
 .. default-role:: code
 
@@ -120,6 +120,61 @@
 
 Условия
 -------
+
+.. code-block:: python
+
+	a = int(input())
+	b = int(input())
+	print(a / b)
+
+	a = int(input())
+	b = int(input())
+	if b != 0:
+    		print(a / b)
+	else:
+    		print('Деление невозможно')
+
+	a = int(input())
+	b = int(input())
+	if b != 0:
+    		print(a / b)
+	else:
+    		print('Деление невозможно')
+    		b = int(input('Введите ненулевое значение '))
+    		print(a / b)
+
+	a = int(input())
+	b = int(input())
+	if b != 0:
+    		print(a / b)
+	else:
+    		print('Деление невозможно')
+    		b = int(input('Введите ненулевое значение '))
+    		if b == 0:
+        		print('Вы не справились!')
+    	else:
+        	print(a / b)
+
+	x = int(input())
+	if x % 2 == 0:
+    		print('Четное')
+	else:
+    		print('Нечетное')
+
+Наибольшее из двух чисел
+------------------------
+
+.. code-block:: python
+
+	a = 4
+	b = 7
+	if a >= b:
+    		print(a)
+	else:
+    		print(b)
+
+Строки
+------
 
 является комментарием.
 Комментарием в языке C является любая последовательность символов, заключенная между парами символов `/*` и `*/`.
