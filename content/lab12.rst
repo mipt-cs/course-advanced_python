@@ -318,6 +318,15 @@
 
 Вам необходимо написать адаптер MappingAdapter. Прототип класса вам дан в качестве исходного кода.
 
+.. code-block:: python
+
+    class MappingAdapter:
+        def __init__(self, adaptee):
+            pass
+
+        def lighten(self, grid):
+            pass
+
 для проверки кода используйте (ссылка работает только из локали МФТИ):
 
 .. code-block:: bash
