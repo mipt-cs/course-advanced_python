@@ -331,4 +331,4 @@
 
 .. code-block:: bash
 
-    wget -qO - --post-file=<filename> http://10.55.169.100:5000/
+    wget -qO - --post-file=<filename> http://10.55.169.100:5000/adapter.py/<name>
