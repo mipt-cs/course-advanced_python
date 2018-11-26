@@ -3,7 +3,7 @@
 
 :date: 2018-11-19 18:00
 :summary: Паттерны проектирования. Декоратор и наблюдатель.
-:status: draft
+:status: published
 :published: no
 
 .. default-role:: code

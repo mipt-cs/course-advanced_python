@@ -3,7 +3,7 @@
 
 :date: 2018-11-26 13:00
 :summary: Задачи. Декоратор, наблюдатель
-:status: draft
+:status: published
 :published: no
 
 .. default-role:: code
