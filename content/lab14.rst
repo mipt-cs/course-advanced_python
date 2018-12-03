@@ -26,7 +26,7 @@ Collections
 defaultdict
 -----------
 
-.. code:: ipython3
+.. code:: python
 
     from collections import defaultdict
     # Отнаследован от dict, а значит, имеет те же методы
@@ -34,7 +34,7 @@ defaultdict
 К примеру, нам нужно посчитать частоту чисел в массиве. Используя
 словарь, это можно сделать так:
 
-.. code:: ipython3
+.. code:: python
 
     elems = [2, 2, 4, 2, 3]
     build_in_dict = dict()
@@ -50,7 +50,7 @@ defaultdict
 Выглядит неаккуратно - 4 строчки занимают очень простую операцию -
 добавление элемента. Перепишем, используя defaultdict:
 
-.. code:: ipython3
+.. code:: python
 
     dct = defaultdict(int)
     
@@ -74,7 +74,7 @@ defaultdict принимает аргументом фабрику для пер
 
     dct[elem] = (int() if elem not in dct else dct[elem]) + 1
 
-.. code:: ipython3
+.. code:: python
 
     # По умолчанию, аргумент - None
     dct = defaultdict()
@@ -89,12 +89,12 @@ defaultdict принимает аргументом фабрику для пер
 Написать с помощью defaultdict функцию для подсчета количества различных
 labels для каждого цвета
 
-.. code:: ipython3
+.. code:: python
 
     def count_colors_labels(colors_labels):
         raise NotImplementedError()
 
-.. code:: ipython3
+.. code:: python
 
     # format: list of tuples: (color, label)
     elems = [('yellow', 3), ('green', 4), ('green', 4), ('red', 2), ('green', 7), ('yellow', 4)]
@@ -106,7 +106,7 @@ labels для каждого цвета
 
 Можем передать функцию:
 
-.. code:: ipython3
+.. code:: python
 
     import random
     
@@ -127,12 +127,12 @@ defaultdict, как только мы к ним обращаемся в перв
 Написать класс, с помощью которого можно создать словарь, который по
 умолчанию будет выдавать количество уже заведенных элементов до него
 
-.. code:: ipython3
+.. code:: python
 
     class StrangeClass(object):
         pass
 
-.. code:: ipython3
+.. code:: python
 
     dct = defaultdict(StrangeClass())
     
@@ -143,7 +143,7 @@ defaultdict, как только мы к ним обращаемся в перв
 deque (double-ended queue)
 --------------------------
 
-.. code:: ipython3
+.. code:: python
 
     from collections import deque
 
@@ -155,7 +155,7 @@ Deques поддерживают **thread-safe**, **memory efficient** добав
 
 Почему использовать deque вместо list?
 
-.. code:: ipython3
+.. code:: python
 
     elems = [1 for _ in range(20000000)]
     delems = deque(elems)
@@ -168,7 +168,7 @@ Deques поддерживают **thread-safe**, **memory efficient** добав
 элементов (по умолчанию None). При достижении границы, старые элементы
 будут удаляться с противоположного конца
 
-.. code:: ipython3
+.. code:: python
 
     d = deque(maxlen=2)
     print(d)
@@ -177,7 +177,7 @@ Deques поддерживают **thread-safe**, **memory efficient** добав
 
 Несколько полезных методов:
 
-.. code:: ipython3
+.. code:: python
 
     dq = deque([1,2,3,4,1])
     print('elem count: {}'.format(dq.count(1)))
@@ -193,12 +193,12 @@ Deques поддерживают **thread-safe**, **memory efficient** добав
 
 С помощью deque написать функцию, выдающую последние n строк из файла
 
-.. code:: ipython3
+.. code:: python
 
     def tail(filename, n=10):
         raise NotImplementedError()
 
-.. code:: ipython3
+.. code:: python
 
     # check with your file
     
@@ -219,11 +219,11 @@ Counter
 Отнаследован от dict. Как следует из названия, хорош, если требуется
 что-то посчитать (вообще-то, только **hashable** объекты)
 
-.. code:: ipython3
+.. code:: python
 
     from collections import Counter
 
-.. code:: ipython3
+.. code:: python
 
     c = Counter()
     print(c)
@@ -239,7 +239,7 @@ Counter
 
 Можем найти N наиболее встречаемых слов в тексте в 1 строчку!
 
-.. code:: ipython3
+.. code:: python
 
     text = '''The rose is red the violet is blue The honey is sweet and so are you'''
     
@@ -251,12 +251,12 @@ Counter
 Написать функцию, выводящую наименее встречаемые элементы с помощью
 Counter
 
-.. code:: ipython3
+.. code:: python
 
     def get_least_common(iterable_obj, n=3):
         raise NotImplementedError()
 
-.. code:: ipython3
+.. code:: python
 
     elems = [1,4,3,1,1,8,9,2,8,8,9,9]
     assert get_least_common(elems) == [2, 3, 4]
@@ -266,11 +266,11 @@ OrderedDict
 
 Как следует из названия, словарь, но уже с порядком элементов
 
-.. code:: ipython3
+.. code:: python
 
     from collections import OrderedDict
 
-.. code:: ipython3
+.. code:: python
 
     data = [(1, 'a'), (3, 'c'), (2, 'b')]
     
@@ -287,12 +287,12 @@ OrderedDict
 OrderedDict в том, чтобы при добавлении уже существующих элементов,
 перезаписывать их места в словаре
 
-.. code:: ipython3
+.. code:: python
 
     class LastUpdatedOrderedDict(OrderedDict):
         'Store items in the order the keys were last added'
 
-.. code:: ipython3
+.. code:: python
 
     lud = LastUpdatedOrderedDict()
     
@@ -315,18 +315,18 @@ namedtuple
 возвращает класс, поэтому первым аргументом должны передать его имя.
 Лучше всего как он работает можно понять на примерах:
 
-.. code:: ipython3
+.. code:: python
 
     from collections import namedtuple
 
-.. code:: ipython3
+.. code:: python
 
     Point = namedtuple('Point', ['x', 'y'])
     
     p = Point(1, 2)
     print(p)
 
-.. code:: ipython3
+.. code:: python
 
     t = [11, 22]
     Point._make(t)
@@ -334,7 +334,7 @@ namedtuple
 Может быть полезно при чтении csv файлов (конструирование объектов через
 соответствие полей и значений:
 
-.. code:: ipython3
+.. code:: python
 
     EmployeeRecord = namedtuple('EmployeeRecord', 'name, age')
     
@@ -353,7 +353,7 @@ namedtuple
 Полностью написать функцию, считывающую работников из csv файла.
 Использовать модуль csv
 
-.. code:: ipython3
+.. code:: python
 
     def read_employees(filename):
         raise NotImplementedError()
@@ -365,11 +365,11 @@ Usefull functions from collections
 функций. К примеру, мы можем узнать, является ли объект итерируемым или
 хешируемым:
 
-.. code:: ipython3
+.. code:: python
 
     import collections
 
-.. code:: ipython3
+.. code:: python
 
     objs = [set([1,2,3]), (1,)]
     
@@ -390,7 +390,7 @@ itertools - Модуль для "эффективного итерировани
 
 Лучше всего понять как с ним работать - выполнить простые упражнения
 
-.. code:: ipython3
+.. code:: python
 
     import itertools
 
@@ -400,7 +400,7 @@ itertools - Модуль для "эффективного итерировани
 Написать функцию, принимающую 2 списка и возвращающую декартово
 произведение (использовать itertools.product)
 
-.. code:: ipython3
+.. code:: python
 
     def get_cartesian_product(a, b):
         raise RuntimeError("Not implemented")
@@ -414,7 +414,7 @@ itertools - Модуль для "эффективного итерировани
 всевозможные перестановки из n символов в s строке в
 лексикографическом(!) порядке (использовать itertools.permutations)
 
-.. code:: ipython3
+.. code:: python
 
     def get_permutations(s, n):
         raise RuntimeError("Not implemented")
@@ -428,7 +428,7 @@ itertools - Модуль для "эффективного итерировани
 k и возвращать все возможные комбинации из символов в строке s с длинами
 <= k (использовать itertools.combinations)
 
-.. code:: ipython3
+.. code:: python
 
     def get_combinations(s, n):
         raise RuntimeError("Not implemented")
@@ -442,7 +442,7 @@ k и возвращать все возможные комбинации из с
 комбинации из символов в строке s с длинами = k с повторениями
 (использовать itertools.combinations\_with\_replacement)
 
-.. code:: ipython3
+.. code:: python
 
     def get_combinations_with_r(s, n):
         raise RuntimeError("Not implemented")
@@ -455,7 +455,7 @@ k и возвращать все возможные комбинации из с
 Написать функцию, которая подсчитывает количество подряд идующих
 символов в строке (использовать itertools.groupby)
 
-.. code:: ipython3
+.. code:: python
 
     def compress_string(s):
         raise RuntimeError("Not implemented")
@@ -470,7 +470,7 @@ k и возвращать все возможные комбинации из с
 :math:`a_i` --- некоторый элемент из :math:`i`-ого списка (использовать
 функцию из itertools)
 
-.. code:: ipython3
+.. code:: python
 
     def maximize(lists, m):
         raise RuntimeError("Not implemented")
@@ -493,7 +493,7 @@ functools
 Модуль **functools** используется для высокоуровневых функций, функций,
 которые ведут себя как функции или возвращают другие функции
 
-.. code:: ipython3
+.. code:: python
 
     import functools
 
@@ -570,7 +570,7 @@ partial-объект (по сути, функцию), который при вы
 С помощью partial и уже готовой функции add создайте функцию add2,
 которая принимает один аргумент x и возвращает результат: x+2
 
-.. code:: ipython3
+.. code:: python
 
     def add(a, b):
         return a + b
@@ -596,7 +596,7 @@ assigned=assigned, updated=updated) как декоратора при опре�
 доступе к атрибуту, скажем \_\ *name\_*, мы увидели декоратор, а не
 вызываемую функцию):
 
-.. code:: ipython3
+.. code:: python
 
     def foo(f):
         def wrapper(*args, **kwargs):
@@ -610,7 +610,7 @@ assigned=assigned, updated=updated) как декоратора при опре�
     print(bar(1, 2))
     (bar.__name__)
 
-.. code:: ipython3
+.. code:: python
 
     @wraps
     def foo(f):
@@ -630,13 +630,13 @@ copy
 
 Модуль **copy** - поверхностное и глубокое копирование объектов
 
-.. code:: ipython3
+.. code:: python
 
     import copy
 
 В чем проблема?
 
-.. code:: ipython3
+.. code:: python
 
     a = [1,2,3]
     b = a
@@ -644,7 +644,7 @@ copy
 
 Но ведь тогда мы можем сделать так:
 
-.. code:: ipython3
+.. code:: python
 
     a = [1,2,3]
     b = a.copy()
@@ -653,7 +653,7 @@ copy
 
 Да..., но ведь так работает не всегда!
 
-.. code:: ipython3
+.. code:: python
 
     class A():
         pass
@@ -667,7 +667,7 @@ copy
 А теперь модуль copy и функция поверхностного (верхний итератор)
 копирования copy:
 
-.. code:: ipython3
+.. code:: python
 
     c = copy.copy(a)
     print(id(c) == id(a))
