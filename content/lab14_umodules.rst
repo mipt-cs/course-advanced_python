@@ -3,8 +3,8 @@
 
 :date: 2018-12-01 23:00
 :summary: Обзор модулей python
-:status: draft
-:published: no
+:status: published
+:published: yes
 
 .. default-role:: code
 
