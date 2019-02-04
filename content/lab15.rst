@@ -110,7 +110,7 @@ Cтек протоколов TCP/IP
     import socket                            # Подключаем
 
     sock = socket.socket()                   # Создаём
-    sock.connect("<address>", "<port>")      # Присоединяемся
+    sock.connect(("<address>", "<port>"))      # Присоединяемся
 
     sock.send("some text data".encode())     # Отправка
     data = sock.recv(<data length in bytes>) # Ответ
