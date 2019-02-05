@@ -21,7 +21,8 @@ HelloWorld.c
 Пример простой программы на C, которая печатает "Привет, Мир! MIPT 2018.":
 
 .. code-block:: c
-
+        :linenos:
+        
         #include <stdio.h>
         /* Пример простой программы */
         int main()
