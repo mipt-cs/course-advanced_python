@@ -29,7 +29,7 @@
 
 Поток также называют "легковестным процессом". Потоки одного процесса в отличие от процессов имеют множество разделяемых (shared) ресурсов.
 
-.. image:: https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwizl5Wi97_gAhVE-yoKHebDCdgQjRx6BAgBEAU&url=http%3A%2F%2Fwww.intuit.ru%2Fstudies%2Fprofessional_skill_improvements%2F1797%2Fcourses%2F497%2Flecture%2F11284&psig=AOvVaw3kqTiQdLxpI2s-Vw8ci8sd&ust=1550395410978798
+.. image:: http://www.intuit.ru/EDI/06_03_17_3/1488752433-23564/tutorial/901/objects/10/files/10_1sm.png
    :width: 500
    :align: center
 
@@ -43,14 +43,17 @@
 -  бессмысленно порождать вычислительных тредов больше, чем у вас есть
    ядер
 
+Threading
+=========
+
 Global lock (GIL)
-=================
+-----------------
 
 CPython (самая популярная реализация интерпретатора питона) был
 реализован с максимальной простотой и имеет потокобезопасный механизм -
 GIL (Global Interpreter Lock).
 
-.. image:: https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjZ1rXc-b_gAhWps4sKHY2MAgEQjRx6BAgBEAU&url=https%3A%2F%2Fuwpce-pythoncert.github.io%2FSystemDevelopment%2Fthreading-multiprocessing.html&psig=AOvVaw2Il1rWFneHRGlOkk4iYZUT&ust=1550396099649008
+.. image:: https://uwpce-pythoncert.github.io/SystemDevelopment/_images/gil.png
    :width: 500
    :align: center
 
@@ -435,7 +438,7 @@ multiprocessing
     print(results)
 
 Класс Pool в multiprocessing
-============================
+----------------------------
 
 Класс Pool - удобный механизм распараллеливания выполнения функций,
 распределения входных данных по процессам и т. д.
@@ -480,7 +483,7 @@ map\_async, apply\_async - неблокирующие. При их вызове,
 
 
 Сравнение производительности программы на вычисление, используя multiprocessing
-===============================================================================
+-------------------------------------------------------------------------------
 
 Kernel Density Estimation (Ядерная оценка плотности)
 
