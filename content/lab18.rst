@@ -43,8 +43,9 @@
    например, сетевой карты или диска
 
 .. image:: https://camo.githubusercontent.com/b059a5a2eeb507e0e5188e90d2e171d1ec0b1313/68747470733a2f2f626c6f672d6173736574732e726973696e67737461636b2e636f6d2f323031362f4170722f6e6f6e5f6173796e635f626c6f636b696e675f6f7065726174696f6e735f6578616d706c655f696e5f6e6f64655f6865726f2d313435393835363835383139342e706e67
-:width: 500
-:align: center
+   :width: 500
+   :align: center
+   :alt: CPU-bound vs IO-bound
 
 Пример операции с длительным ожиданием:
 
@@ -244,6 +245,10 @@ foo.
     loop = asyncio.get_event_loop()
     loop.run_until_complete(print_sum(1, 2))
 
+.. image:: https://camo.githubusercontent.com/de86a2c33affd5101ddc77b69a274823e643bda2/687474703a2f2f6e746f6c6c2e6f72672f7374617469632f696d616765732f74756c69705f636f726f2e706e67
+   :width: 500
+   :align: center
+   :alt: Visualisation of the example compute/print_sum
 
 Еще один пример на создание и управление тасками:
 
@@ -517,3 +522,4 @@ ip. Но на момент запуска программы вы не знае�
     
     if __name__ == '__main__':
         executor.start_polling(dp)
+

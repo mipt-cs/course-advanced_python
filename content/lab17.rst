@@ -32,6 +32,7 @@
 .. image:: http://www.intuit.ru/EDI/06_03_17_3/1488752433-23564/tutorial/901/objects/10/files/10_1sm.png
    :width: 500
    :align: center
+   :alt: Sharing data between threads
 
 Несколько потоков выполнения могут существовать в рамках одного и того
 же процесса и совместно использовать его ресурсы.
@@ -56,6 +57,7 @@ GIL (Global Interpreter Lock).
 .. image:: https://uwpce-pythoncert.github.io/SystemDevelopment/_images/gil.png
    :width: 500
    :align: center
+   :alt: GIL visualisation
 
 Благодаря этому Lock'у интерпретатор питона может исполнять лишь одну
 команду в один момент времени (single threading). По этой причине,
