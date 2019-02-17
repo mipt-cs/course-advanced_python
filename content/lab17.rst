@@ -276,6 +276,12 @@ GIL (Global Interpreter Lock).
 Запустите на исполнение. Объясните, почему получаем ускорение (в отличие
 от предыдущего примера)
 
+При отсутствии доступа к интернету укажите доступные адреса urls ниже.
+К примеру:
+http://cs.mipt.ru/advanced_python/lessons/lab1.html
+http://cs.mipt.ru/advanced_python/lessons/lab2.html
+и т.д.
+
 .. code:: python
 
     import urllib.request
