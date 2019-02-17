@@ -4,7 +4,7 @@
 
 :date: 2019-02-16 13:00
 :summary: Многопоточность в питоне
-:status: draft
+:status: published
 :published: yes
 
 .. default-role:: code
