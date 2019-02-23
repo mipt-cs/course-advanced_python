@@ -4,7 +4,7 @@
 
 :date: 2019-02-16 15:00
 :summary: Асинхронное программирование
-:status: draft
+:status: published
 :published: yes
 
 .. default-role:: code
