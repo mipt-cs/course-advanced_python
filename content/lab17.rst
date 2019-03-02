@@ -29,7 +29,7 @@
 
 Поток также называют "легковестным процессом". Потоки одного процесса в отличие от процессов имеют множество разделяемых (shared) ресурсов.
 
-.. image:: http://www.intuit.ru/EDI/06_03_17_3/1488752433-23564/tutorial/901/objects/10/files/10_1sm.png
+.. image:: http://www.cs.miami.edu/home/visser/Courses/CSC322-09S/Content/UNIXProgramming/Threads.JPG
    :width: 500
    :align: center
    :alt: Sharing data between threads
