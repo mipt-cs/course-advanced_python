@@ -16,3 +16,5 @@
 Jupyter-notebook__
 
 .. __: {filename}/code/lab19/numpy.ipynb
+
+.. __: {filename}/code/lab19/numpy2.ipynb
