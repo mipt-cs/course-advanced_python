@@ -7,3 +7,5 @@ __pycache__
 *.db
 .idea/
 .vscode/
+.ipynb_checkpoints
+.DS_store
