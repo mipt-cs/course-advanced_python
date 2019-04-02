@@ -20,5 +20,5 @@ Jupyter-notebook__
 
 Data__
 
-.. __: {filename}/code/lab22/diabets.csv
+.. __: {filename}/code/lab23/diabets.csv
 
