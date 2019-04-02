@@ -13,7 +13,7 @@
 Введение в SKlearn
 ==============================
 
-Jupyter-notebook__
+Jupyter-Notebook__
 
 .. __: {filename}/code/lab23/SKlearn.ipynb
 
