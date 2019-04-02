@@ -4,7 +4,7 @@
 :date: 2019-04-02 6:51
 :summary: Введение в SKlearn
 :status: published
-:published: yes
+:published: no
 
 .. default-role:: code
 
