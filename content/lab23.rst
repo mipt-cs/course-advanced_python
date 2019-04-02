@@ -4,7 +4,7 @@
 :date: 2019-04-02 6:51
 :summary: Введение в SKlearn
 :status: published
-:published: no
+:published: yes
 
 .. default-role:: code
 
@@ -20,5 +20,5 @@ Jupyter-notebook__
 
 Data__
 
-.. __: {filename}/code/lab23/diabets.csv
+.. __: {filename}/code/lab23/diabetes.csv
 
