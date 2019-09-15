@@ -3,7 +3,7 @@
 
 :date: 2019-09-14 19:00
 :summary: Работа с файлами
-:status: draft
+:status: published
 
 .. default-role:: code
 
