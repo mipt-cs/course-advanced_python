@@ -32,6 +32,7 @@
 .. code:: bash
 
       $ python coolprogram.py
+
 или
 
 .. code:: bash
