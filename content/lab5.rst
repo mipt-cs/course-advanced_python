@@ -1,7 +1,7 @@
 :date: 2019-09-29 19:00
 :summary: Тема 5. Объектно-ориентированное программирование. Python.
 :status: published
-:published: no
+:published: yes
 
 .. default-role:: code
 
