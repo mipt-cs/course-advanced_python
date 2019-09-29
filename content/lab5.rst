@@ -3,7 +3,15 @@
 :status: published
 :published: no
 
-.. raw:: html
+.. default-role:: code
+
+.. role:: python(code)
+   :language: python
+   
+.. contents::
+
+Объектно-ориентированное программирование. Python.
+==================================================
 
 .. code:: python`
 
