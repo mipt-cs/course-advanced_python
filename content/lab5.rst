@@ -12,7 +12,7 @@
    
 .. contents::
 
-.. code:: python`
+.. code:: python
 
     import numpy as np
 
