@@ -889,7 +889,7 @@ import для нас отлично подойдет. Это будет выгл
 .. |Умножение РНК| image:: Умножение%20РНК.jpg
 
 Материалы:
-----------
+==========
 
 -  https://github.com/mipt-cs/course-advanced\_python/blob/materials\_2018/content/lab11.rst
 -  https://proglib.io/p/python-oop/
