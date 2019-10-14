@@ -3,7 +3,7 @@
 
 :date: 2019-10-14 09:00
 :summary: Тема 6. Часть 1. Работа с потоками и подпроцессами в Python
-:status: draft
+:status: published
 
 .. default-role:: code
 
