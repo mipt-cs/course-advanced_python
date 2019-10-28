@@ -3,7 +3,7 @@
 
 :date: 2019-10-28 09:00
 :summary: Тема 6. Часть 2. Работа с асинхронными операциями.
-:status: draft
+:status: published
 
 .. default-role:: code
 
