@@ -338,172 +338,197 @@ python (кроме ``range``).
 
 Реализуйте аналог функций zip, map, enumerate. \*\*\*
 
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 14%">
-<col style="width: 14%">
-<col style="width: 39%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Iterator</p></th>
-<th class="head"><p>Arguments</p></th>
-<th class="head"><p>Results</p></th>
-<th class="head"><p>Example</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.count" title="itertools.count"><code class="xref py py-func docutils literal notranslate"><span class="pre">count()</span></code></a></p></td>
-<td><p>start, [step]</p></td>
-<td><p>start, start+step, start+2*step, …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">count(10)</span> <span class="pre">--&gt;</span> <span class="pre">10</span> <span class="pre">11</span> <span class="pre">12</span> <span class="pre">13</span> <span class="pre">14</span> <span class="pre">...</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.cycle" title="itertools.cycle"><code class="xref py py-func docutils literal notranslate"><span class="pre">cycle()</span></code></a></p></td>
-<td><p>p</p></td>
-<td><p>p0, p1, … plast, p0, p1, …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">cycle('ABCD')</span> <span class="pre">--&gt;</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span> <span class="pre">D</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span> <span class="pre">D</span> <span class="pre">...</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.repeat" title="itertools.repeat"><code class="xref py py-func docutils literal notranslate"><span class="pre">repeat()</span></code></a></p></td>
-<td><p>elem [,n]</p></td>
-<td><p>elem, elem, elem, … endlessly or up to n times</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">repeat(10,</span> <span class="pre">3)</span> <span class="pre">--&gt;</span> <span class="pre">10</span> <span class="pre">10</span> <span class="pre">10</span></code></p></td>
-</tr>
-</tbody>
-</table>
+Большое количество различных итерируемых объектов содержится в библиотеке itertools. Функции приведены в таблицах ниже:
 
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 17%">
-<col style="width: 17%">
-<col style="width: 30%">
-<col style="width: 37%">
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Iterator</p></th>
-<th class="head"><p>Arguments</p></th>
-<th class="head"><p>Results</p></th>
-<th class="head"><p>Example</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.accumulate" title="itertools.accumulate"><code class="xref py py-func docutils literal notranslate"><span class="pre">accumulate()</span></code></a></p></td>
-<td><p>p [,func]</p></td>
-<td><p>p0, p0+p1, p0+p1+p2, …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">accumulate([1,2,3,4,5])</span> <span class="pre">--&gt;</span> <span class="pre">1</span> <span class="pre">3</span> <span class="pre">6</span> <span class="pre">10</span> <span class="pre">15</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.chain" title="itertools.chain"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain()</span></code></a></p></td>
-<td><p>p, q, …</p></td>
-<td><p>p0, p1, … plast, q0, q1, …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">chain('ABC',</span> <span class="pre">'DEF')</span> <span class="pre">--&gt;</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span> <span class="pre">D</span> <span class="pre">E</span> <span class="pre">F</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.chain.from_iterable" title="itertools.chain.from_iterable"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.from_iterable()</span></code></a></p></td>
-<td><p>iterable</p></td>
-<td><p>p0, p1, … plast, q0, q1, …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">chain.from_iterable(['ABC',</span> <span class="pre">'DEF'])</span> <span class="pre">--&gt;</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span> <span class="pre">D</span> <span class="pre">E</span> <span class="pre">F</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.compress" title="itertools.compress"><code class="xref py py-func docutils literal notranslate"><span class="pre">compress()</span></code></a></p></td>
-<td><p>data, selectors</p></td>
-<td><p>(d[0] if s[0]), (d[1] if s[1]), …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">compress('ABCDEF',</span> <span class="pre">[1,0,1,0,1,1])</span> <span class="pre">--&gt;</span> <span class="pre">A</span> <span class="pre">C</span> <span class="pre">E</span> <span class="pre">F</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.dropwhile" title="itertools.dropwhile"><code class="xref py py-func docutils literal notranslate"><span class="pre">dropwhile()</span></code></a></p></td>
-<td><p>pred, seq</p></td>
-<td><p>seq[n], seq[n+1], starting when pred fails</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">dropwhile(lambda</span> <span class="pre">x:</span> <span class="pre">x&lt;5,</span> <span class="pre">[1,4,6,4,1])</span> <span class="pre">--&gt;</span> <span class="pre">6</span> <span class="pre">4</span> <span class="pre">1</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.filterfalse" title="itertools.filterfalse"><code class="xref py py-func docutils literal notranslate"><span class="pre">filterfalse()</span></code></a></p></td>
-<td><p>pred, seq</p></td>
-<td><p>elements of seq where pred(elem) is false</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">filterfalse(lambda</span> <span class="pre">x:</span> <span class="pre">x%2,</span> <span class="pre">range(10))</span> <span class="pre">--&gt;</span> <span class="pre">0</span> <span class="pre">2</span> <span class="pre">4</span> <span class="pre">6</span> <span class="pre">8</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.groupby" title="itertools.groupby"><code class="xref py py-func docutils literal notranslate"><span class="pre">groupby()</span></code></a></p></td>
-<td><p>iterable[, key]</p></td>
-<td><p>sub-iterators grouped by value of key(v)</p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.islice" title="itertools.islice"><code class="xref py py-func docutils literal notranslate"><span class="pre">islice()</span></code></a></p></td>
-<td><p>seq, [start,] stop [, step]</p></td>
-<td><p>elements from seq[start:stop:step]</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">islice('ABCDEFG',</span> <span class="pre">2,</span> <span class="pre">None)</span> <span class="pre">--&gt;</span> <span class="pre">C</span> <span class="pre">D</span> <span class="pre">E</span> <span class="pre">F</span> <span class="pre">G</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.starmap" title="itertools.starmap"><code class="xref py py-func docutils literal notranslate"><span class="pre">starmap()</span></code></a></p></td>
-<td><p>func, seq</p></td>
-<td><p>func(*seq[0]), func(*seq[1]), …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">starmap(pow,</span> <span class="pre">[(2,5),</span> <span class="pre">(3,2),</span> <span class="pre">(10,3)])</span> <span class="pre">--&gt;</span> <span class="pre">32</span> <span class="pre">9</span> <span class="pre">1000</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.takewhile" title="itertools.takewhile"><code class="xref py py-func docutils literal notranslate"><span class="pre">takewhile()</span></code></a></p></td>
-<td><p>pred, seq</p></td>
-<td><p>seq[0], seq[1], until pred fails</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">takewhile(lambda</span> <span class="pre">x:</span> <span class="pre">x&lt;5,</span> <span class="pre">[1,4,6,4,1])</span> <span class="pre">--&gt;</span> <span class="pre">1</span> <span class="pre">4</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.tee" title="itertools.tee"><code class="xref py py-func docutils literal notranslate"><span class="pre">tee()</span></code></a></p></td>
-<td><p>it, n</p></td>
-<td><p>it1, it2, … itn  splits one iterator into n</p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.zip_longest" title="itertools.zip_longest"><code class="xref py py-func docutils literal notranslate"><span class="pre">zip_longest()</span></code></a></p></td>
-<td><p>p, q, …</p></td>
-<td><p>(p[0], q[0]), (p[1], q[1]), …</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">zip_longest('ABCD',</span> <span class="pre">'xy',</span> <span class="pre">fillvalue='-')</span> <span class="pre">--&gt;</span> <span class="pre">Ax</span> <span class="pre">By</span> <span class="pre">C-</span> <span class="pre">D-</span></code></p></td>
-</tr>
-</tbody>
-</table>
++---------------------------------+---------------+------------------------------------------------+---------------------------------------+
+| Iterator                        | Arguments     | Results                                        | Example                               |
++=================================+===============+================================================+=======================================+
+| count()_                        | start, [step] | start, start+step, start+2*step, …             | count(10) --> 10 11 12 13 14 ...      |
+|                                 |               |                                                |                                       |
+| .. _count(): #itertools.count   |               |                                                |                                       |
++---------------------------------+---------------+------------------------------------------------+---------------------------------------+
+| cycle()_                        | p             | p0, p1, … plast, p0, p1, …                     | cycle('ABCD') --> A B C D A B C D ... |
+|                                 |               |                                                |                                       |
+| .. _cycle(): #itertools.cycle   |               |                                                |                                       |
++---------------------------------+---------------+------------------------------------------------+---------------------------------------+
+| repeat()_                       | elem [,n]     | elem, elem, elem, … endlessly or up to n times | repeat(10, 3) --> 10 10 10            |
+|                                 |               |                                                |                                       |
+| .. _repeat(): #itertools.repeat |               |                                                |                                       |
++---------------------------------+---------------+------------------------------------------------+---------------------------------------+
 
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 36%">
-<col style="width: 16%">
-<col style="width: 48%">
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Iterator</p></th>
-<th class="head"><p>Arguments</p></th>
-<th class="head"><p>Results</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.product" title="itertools.product"><code class="xref py py-func docutils literal notranslate"><span class="pre">product()</span></code></a></p></td>
-<td><p>p, q, … [repeat=1]</p></td>
-<td><p>cartesian product, equivalent to a nested for-loop</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.permutations" title="itertools.permutations"><code class="xref py py-func docutils literal notranslate"><span class="pre">permutations()</span></code></a></p></td>
-<td><p>p[, r]</p></td>
-<td><p>r-length tuples, all possible orderings, no repeated elements</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#itertools.combinations" title="itertools.combinations"><code class="xref py py-func docutils literal notranslate"><span class="pre">combinations()</span></code></a></p></td>
-<td><p>p, r</p></td>
-<td><p>r-length tuples, in sorted order, no repeated elements</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#itertools.combinations_with_replacement" title="itertools.combinations_with_replacement"><code class="xref py py-func docutils literal notranslate"><span class="pre">combinations_with_replacement()</span></code></a></p></td>
-<td><p>p, r</p></td>
-<td><p>r-length tuples, in sorted order, with repeated elements</p></td>
-</tr>
-</tbody>
-</table>
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| Iterator                                                  | Arguments                   | Results                                     | Example                                                  |
++===========================================================+=============================+=============================================+==========================================================+
+| accumulate()_                                             | p [,func]                   | p0, p0+p1, p0+p1+p2, …                      | accumulate([1,2,3,4,5]) --> 1 3 6 10 15                  |
+|                                                           |                             |                                             |                                                          |
+| .. _accumulate(): #itertools.accumulate                   |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| chain()_                                                  | p, q, …                     | p0, p1, … plast, q0, q1, …                  | chain('ABC', 'DEF') --> A B C D E F                      |
+|                                                           |                             |                                             |                                                          |
+| .. _chain(): #itertools.chain                             |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| chain.from_iterable()_                                    | iterable                    | p0, p1, … plast, q0, q1, …                  | chain.from_iterable(['ABC', 'DEF']) --> A B C D E F      |
+|                                                           |                             |                                             |                                                          |
+| .. _chain.from_iterable(): #itertools.chain.from_iterable |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| compress()_                                               | data, selectors             | (d[0] if s[0]), (d[1] if s[1]), …           | compress('ABCDEF', [1,0,1,0,1,1]) --> A C E F            |
+|                                                           |                             |                                             |                                                          |
+| .. _compress(): #itertools.compress                       |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| dropwhile()_                                              | pred, seq                   | seq[n], seq[n+1], starting when pred fails  | dropwhile(lambda x: x<5, [1,4,6,4,1]) --> 6 4 1          |
+|                                                           |                             |                                             |                                                          |
+| .. _dropwhile(): #itertools.dropwhile                     |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| filterfalse()_                                            | pred, seq                   | elements of seq where pred(elem) is false   | filterfalse(lambda x: x%2, range(10)) --> 0 2 4 6 8      |
+|                                                           |                             |                                             |                                                          |
+| .. _filterfalse(): #itertools.filterfalse                 |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| groupby()_                                                | iterable[, key]             | sub-iterators grouped by value of key(v)    |                                                          |
+|                                                           |                             |                                             |                                                          |
+| .. _groupby(): #itertools.groupby                         |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| islice()_                                                 | seq, [start,] stop [, step] | elements from seq[start:stop:step]          | islice('ABCDEFG', 2, None) --> C D E F G                 |
+|                                                           |                             |                                             |                                                          |
+| .. _islice(): #itertools.islice                           |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| starmap()_                                                | func, seq                   | func(*seq[0]), func(*seq[1]), …             | starmap(pow, [(2,5), (3,2), (10,3)]) --> 32 9 1000       |
+|                                                           |                             |                                             |                                                          |
+| .. _starmap(): #itertools.starmap                         |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| takewhile()_                                              | pred, seq                   | seq[0], seq[1], until pred fails            | takewhile(lambda x: x<5, [1,4,6,4,1]) --> 1 4            |
+|                                                           |                             |                                             |                                                          |
+| .. _takewhile(): #itertools.takewhile                     |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| tee()_                                                    | it, n                       | it1, it2, … itn  splits one iterator into n |                                                          |
+|                                                           |                             |                                             |                                                          |
+| .. _tee(): #itertools.tee                                 |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
+| zip_longest()_                                            | p, q, …                     | (p[0], q[0]), (p[1], q[1]), …               | zip_longest('ABCD', 'xy', fillvalue='-') --> Ax By C- D- |
+|                                                           |                             |                                             |                                                          |
+| .. _zip_longest(): #itertools.zip_longest                 |                             |                                             |                                                          |
++-----------------------------------------------------------+-----------------------------+---------------------------------------------+----------------------------------------------------------+
 
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 43%">
-<col style="width: 57%">
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Examples</p></th>
-<th class="head"><p>Results</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">product('ABCD',</span> <span class="pre">repeat=2)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">AA</span> <span class="pre">AB</span> <span class="pre">AC</span> <span class="pre">AD</span> <span class="pre">BA</span> <span class="pre">BB</span> <span class="pre">BC</span> <span class="pre">BD</span> <span class="pre">CA</span> <span class="pre">CB</span> <span class="pre">CC</span> <span class="pre">CD</span> <span class="pre">DA</span> <span class="pre">DB</span> <span class="pre">DC</span> <span class="pre">DD</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">permutations('ABCD',</span> <span class="pre">2)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">AB</span> <span class="pre">AC</span> <span class="pre">AD</span> <span class="pre">BA</span> <span class="pre">BC</span> <span class="pre">BD</span> <span class="pre">CA</span> <span class="pre">CB</span> <span class="pre">CD</span> <span class="pre">DA</span> <span class="pre">DB</span> <span class="pre">DC</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">combinations('ABCD',</span> <span class="pre">2)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">AB</span> <span class="pre">AC</span> <span class="pre">AD</span> <span class="pre">BC</span> <span class="pre">BD</span> <span class="pre">CD</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">combinations_with_replacement('ABCD',</span><span class="pre">2)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">AA</span> <span class="pre">AB</span> <span class="pre">AC</span> <span class="pre">AD</span> <span class="pre">BB</span> <span class="pre">BC</span> <span class="pre">BD</span> <span class="pre">CC</span> <span class="pre">CD</span> <span class="pre">DD</span></code></p></td>
-</tr>
-</tbody>
-</table>
++-------------------------------------------------------------------------------+--------------------+---------------------------------------------------------------+
+| Iterator                                                                      | Arguments          | Results                                                       |
++===============================================================================+====================+===============================================================+
+| product()_                                                                    | p, q, … [repeat=1] | cartesian product, equivalent to a nested for-loop            |
+|                                                                               |                    |                                                               |
+| .. _product(): #itertools.product                                             |                    |                                                               |
++-------------------------------------------------------------------------------+--------------------+---------------------------------------------------------------+
+| permutations()_                                                               | p[, r]             | r-length tuples, all possible orderings, no repeated elements |
+|                                                                               |                    |                                                               |
+| .. _permutations(): #itertools.permutations                                   |                    |                                                               |
++-------------------------------------------------------------------------------+--------------------+---------------------------------------------------------------+
+| combinations()_                                                               | p, r               | r-length tuples, in sorted order, no repeated elements        |
+|                                                                               |                    |                                                               |
+| .. _combinations(): #itertools.combinations                                   |                    |                                                               |
++-------------------------------------------------------------------------------+--------------------+---------------------------------------------------------------+
+| combinations_with_replacement()_                                              | p, r               | r-length tuples, in sorted order, with repeated elements      |
+|                                                                               |                    |                                                               |
+| .. _combinations_with_replacement(): #itertools.combinations_with_replacement |                    |                                                               |
++-------------------------------------------------------------------------------+--------------------+---------------------------------------------------------------+
 
++-----------------------------------------+-------------------------------------------------+
+| Examples                                | Results                                         |
++=========================================+=================================================+
+| product('ABCD', repeat=2)               | AA AB AC AD BA BB BC BD CA CB CC CD DA DB DC DD |
++-----------------------------------------+-------------------------------------------------+
+| permutations('ABCD', 2)                 | AB AC AD BA BC BD CA CB CD DA DB DC             |
++-----------------------------------------+-------------------------------------------------+
+| combinations('ABCD', 2)                 | AB AC AD BC BD CD                               |
++-----------------------------------------+-------------------------------------------------+
+| combinations_with_replacement('ABCD',2) | AA AB AC AD BB BC BD CC CD DD                   |
++-----------------------------------------+-------------------------------------------------+
+
+Упражнение №1
+=============
+
+Написать функцию, принимающую 2 списка и возвращающую декартово
+произведение (использовать itertools.product)
+
+.. code:: python
+
+    def get_cartesian_product(a, b):
+        raise RuntimeError("Not implemented")
+    
+    get_cartesian_product([1, 2], [3, 4]) == [(1, 3), (1, 4), (2, 3), (2, 4)]
+
+Упражнение №2
+=============
+
+Написать функцию, принимающую строку s и число n и возвращающую
+всевозможные перестановки из n символов в s строке в
+лексикографическом(!) порядке (использовать itertools.permutations)
+
+.. code:: python
+
+    def get_permutations(s, n):
+        raise RuntimeError("Not implemented")
+    
+    get_permutations("cat", 2) == ["ac", "at", "ca", "ct", "ta", "tc"]
+
+Упражнение №3
+=============
+
+Реализовать функцию get\_combinations. Должна принимать строку s и число
+k и возвращать все возможные комбинации из символов в строке s с длинами
+<= k (использовать itertools.combinations)
+
+.. code:: python
+
+    def get_combinations(s, n):
+        raise RuntimeError("Not implemented")
+    
+    get_combinations("cat", 2) == ["a", "c", "t", "ac", "at", "ct"]
+
+Упражнение №4
+=============
+
+Функция должна принимать строку s и число k и возвращать все возможные
+комбинации из символов в строке s с длинами = k с повторениями
+(использовать itertools.combinations\_with\_replacement)
+
+.. code:: python
+
+    def get_combinations_with_r(s, n):
+        raise RuntimeError("Not implemented")
+    
+    get_combinations_with_r("cat", 2) == ["aa", "ac", "at", "cc", "ct", "tt"]
+
+Упражнение №5
+=============
+
+Написать функцию, которая подсчитывает количество подряд идующих
+символов в строке (использовать itertools.groupby)
+
+.. code:: python
+
+    def compress_string(s):
+        raise RuntimeError("Not implemented")
+    
+    compress_string('1222311') == [(1, 1), (3, 2), (1, 3), (2, 1)]
+
+Упражнение №6
+=============
+
+В функцию передается список списков. Нужно вернуть максимум, который
+достигает выражение $(a\_1^2 + a\_2^2 + ... + a\_n^2) % m $. Где
+:math:`a_i` --- некоторый элемент из :math:`i`-ого списка (использовать
+функцию из itertools)
+
+.. code:: python
+
+    def maximize(lists, m):
+        raise RuntimeError("Not implemented")
+    
+    lists = [
+        [5, 4],
+        [7, 8, 9],
+        [5, 7, 8, 9, 10]
+    ]
+    maximize(lists, m=1000) == 206
+
+В примере = 206, так как это максимум от суммы
+:math:`(a_1^2 + a_2^2 + a_3^2) \% 1000`
+
+:math:`a_1 = 5, a_2 = 9, a_3 = 10`
