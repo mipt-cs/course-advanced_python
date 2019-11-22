@@ -198,4 +198,54 @@ pickle поддерживает следующие типы:
 Тем самым, если вы сериализует объекты собственных классов, добавляйте явный импорт модуля с описанием вашего класса.
 
 
-TODO: instances serialization, add exercises
+Сериализация объектов с состоянием
+==================================
+
+Пусть у нас есть класс, объекты которого поддерживают внутри себя какое либо состояние (stateful).
+Например, поддерживают открытое соединение с базой данных, открытые файлы и т.д.
+Сериализация таких атрибутов не поддерживается и без написания дополонительного кода stateful объекты не возможно сериализовать.
+При помощи методов `__setstate__` и `__getstate__` можно модифицировать поведение stateful объектов при сериализации/десериализации.
+
+.. code:: python
+
+    class TextReader:
+        """Print and number lines in a text file."""
+
+        def __init__(self, filename):
+            self.filename = filename
+            self.file = open(filename)
+            self.lineno = 0
+
+        def readline(self):
+            self.lineno += 1
+            line = self.file.readline()
+            if not line:
+                return None
+            if line.endswith('\n'):
+                line = line[:-1]
+            return "%i: %s" % (self.lineno, line)
+
+        def __getstate__(self):
+            # Копируем состояние объекта из self.__dict__ который
+            # содержит все атрибуты. Всегда используйте dict.copy()
+            # во избежании модификации состояния самого объекта.
+            state = self.__dict__.copy()
+            # Удаляем несериализуемые атрибуты.
+            del state['file']
+            return state
+
+        def __setstate__(self, state):
+            # Восстанавливаем атрибуты объекта (например, filename и lineno).
+            self.__dict__.update(state)
+            # Восстанавливаем состояние открытого ранее файла. Для этого нам надо
+            # заного открыть его и прочитать необходимое количество строк.
+            file = open(self.filename)
+            for _ in range(self.lineno):
+                file.readline()
+            # Сохраняем file в атрибут.
+            self.file = file
+
+TODO: add exercises.
+1. Some simple pickle/unpickle tasks/
+2. Pickling instances (i.e., write prog that accepts commands (create obj, delete obj, print objs, save all, exit). On prog loading it tries to restore its state, if possible.)
+3. Pickling stateful objects
