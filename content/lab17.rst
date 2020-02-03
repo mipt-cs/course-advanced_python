@@ -270,7 +270,7 @@ BOOLEAN в SQLite представлен типом INTEGER со значени�
         (4, 'Mark', 25, 'Rich-Mond ', 65000.00),
         (5, 'David', 27, 'Texas', 85000.00),
         (6, 'Kim', 22, 'South-Hall', 45000.00),
-        (7, "James", 24, "Houston", 10000.00);
+        (7, 'James', 24, 'Houston', 10000.00);
 
     INSERT INTO department
     VALUES
