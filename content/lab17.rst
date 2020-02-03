@@ -435,7 +435,7 @@ JOIN
 таблицу, используя данные из другой таблицы. Для этих целей `INSERT` поддерживает полноценный
 запрос `SELECT`.
 
-.. code-block::
+.. code-block:: sql
 
     INSERT INTO table_name
     SELECT your_select_query...;
