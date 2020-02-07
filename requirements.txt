@@ -1,3 +1,4 @@
 pelican
 beautifulsoup4
 pelican-youtube
+ipython
