@@ -907,7 +907,7 @@ _`Ссылка на jupyter notebook:`: https://clck.ru/MANG7
 
    \det A = \sum_{\alpha_{1}, \alpha_{2}, \dots, \alpha_{n}} (-1)^{N(\alpha_{1}, \alpha_{2}, \dots, \alpha_{n})} \cdot a_{\alpha_{1} 1} \cdot \cdot \cdot a_{\alpha_{n} n},
 
- где :math:`\alpha_{1}, \alpha_{2}, \dots, \alpha_{n}` — перестановка
+где :math:`\alpha_{1}, \alpha_{2}, \dots, \alpha_{n}` — перестановка
 чисел от :math:`1` до :math:`n`,
 :math:`N(\alpha_{1}, \alpha_{2}, \dots, \alpha_{n})` — число инверсий в
 перестановке, суммирование ведется по всем возможным перестановкам длины
