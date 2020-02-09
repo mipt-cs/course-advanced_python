@@ -1,9 +1,21 @@
-на основе материалов за авторством: Юрий Кашницкий (DS in KPN,
+Объектно-ориентированное программирование. Python.
+##################################################
+
+:date: 2020-09-02 19:00
+:summary: Тема 15. Библиотека Pandas для работы с данными
+:status: not_published
+
+.. default-role:: code
+
+.. role:: python(code)
+   :language: python
+   
+.. contents::
+
+
+На основе материалов за авторством: Юрий Кашницкий (DS in KPN,
 NLP-Researcher) и Екатерина Демидова (DS в Segmento).
 
-http://cs.mipt.ru/advanced_python
-
-#
 
 .. raw:: html
 
@@ -26,7 +38,7 @@ Pandas — программная библиотека на языке Python д
 строк и столбцов. По умолчанию, строчки таблицы - это объекты, а столбцы
 - признаки (фичи) объектов.
 
-.. code:: ipython3
+.. code:: python
 
     import pandas as pd
     import numpy as np
@@ -34,7 +46,7 @@ Pandas — программная библиотека на языке Python д
 Создание DataFrame
 ------------------
 
-.. code:: ipython3
+.. code:: python
 
     d = {'feature1': [4,3,2,1,0], 'feature2': ['x', 'z', 'y', 'x', 'z'], 'feature3': [2,3,4,1,0]}
     df = pd.DataFrame(d)
@@ -105,7 +117,7 @@ Pandas — программная библиотека на языке Python д
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data = [['tom', 10], ['nick', 15], ['juli', 14]] 
     df = pd.DataFrame(data, columns = ['Name', 'Age'])  
@@ -160,7 +172,7 @@ Pandas — программная библиотека на языке Python д
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data = {'Name':['Tom', 'Jack', 'nick', 'juli'], 'marks':[99, 98, 95, 90]} 
     df = pd.DataFrame(data, index =['rank1', 'rank2', 'rank3', 'rank4'])  
@@ -220,7 +232,7 @@ Pandas — программная библиотека на языке Python д
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data = [{'a': 1, 'b': 2, 'c':3}, {'a':10, 'b': 20}] 
     df = pd.DataFrame(data) 
@@ -273,7 +285,7 @@ Pandas — программная библиотека на языке Python д
 
 
 
-.. code:: ipython3
+.. code:: python
 
     d = {'one' : pd.Series([10, 20, 30, 40], index =['a', 'b', 'c', 'd']), 
           'two' : pd.Series([10, 20, 30, 40], index =['a', 'b', 'c', 'd'])} 
@@ -368,7 +380,7 @@ Pandas — программная библиотека на языке Python д
 признаковым описаниям отдельных объектов, а столбцы соответствуют
 признакам.
 
-.. code:: ipython3
+.. code:: python
 
     pd.read_csv('beauty.csv', nrows=2)
 
