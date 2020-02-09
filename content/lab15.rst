@@ -414,7 +414,7 @@ Pandas — программная библиотека на языке Python д
 
 
 
-.. code:: ipython3
+.. code:: python
 
     #help(pd.read_csv)
     path_to_file = 'beauty.csv'
@@ -538,7 +538,7 @@ Pandas — программная библиотека на языке Python д
 
 Мы считали данные по модельному бизнесу 80-90е года в США
 
-.. code:: ipython3
+.. code:: python
 
     type(data)
 
@@ -551,7 +551,7 @@ Pandas — программная библиотека на языке Python д
 
 
 
-.. code:: ipython3
+.. code:: python
 
     #data.shape
     len(data)
@@ -568,7 +568,7 @@ Pandas — программная библиотека на языке Python д
 Чтобы посмотреть общую информацию по датафрейму и всем признакам,
 воспользуемся методом info:
 
-.. code:: ipython3
+.. code:: python
 
     data.info()
 
@@ -600,7 +600,7 @@ int64 и float64 — это типы признаков. Видим, что 1 п
 непропущенных значений, среднее, стандартное отклонение, диапазон,
 медиану, 0.25 и 0.75 квартили.
 
-.. code:: ipython3
+.. code:: python
 
     data.describe()
 
@@ -752,7 +752,7 @@ int64 и float64 — это типы признаков. Видим, что 1 п
 
 Посмотрим на признак “exper” - рабочий стаж
 
-.. code:: ipython3
+.. code:: python
 
     data['exper'].head()
     #data.exper.head() # 2-ой вариант
@@ -774,7 +774,7 @@ int64 и float64 — это типы признаков. Видим, что 1 п
 Как описывалось ранее - тип данных в колонке является Series, что по
 сути является проиндексированным массивом
 
-.. code:: ipython3
+.. code:: python
 
     type(data['exper'])
 
@@ -794,7 +794,7 @@ loc и iloc
 определённые интервал строк и интересующих столбцов и работать/смотреть
 только их
 
-.. code:: ipython3
+.. code:: python
 
     #data.loc[1:5, ['wage']]
     data.wage.loc[1:5]
@@ -813,7 +813,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     #data.iloc[0,1] # первое число - номер столбца (начинается с 0). Второе - индекс строчки
     data['wage'].iloc[1:5]
@@ -836,7 +836,7 @@ loc и iloc
 
 Посмотрим на наш датафрейм, на соответствие какому-то условию
 
-.. code:: ipython3
+.. code:: python
 
     (data['exper'] >= 15)
 
@@ -863,7 +863,7 @@ loc и iloc
 Посмотрим только те строки, в датафрейме, которые удовлетворяют
 определённому условию, и выведем первые 5 из них
 
-.. code:: ipython3
+.. code:: python
 
     data[(data['female'] == 1) & (data['black'] == 1)].head(10)
 
@@ -1042,7 +1042,7 @@ loc и iloc
 Посмотрим только те строки, которые удовлетворяют условию и выведем
 значение определённого столбца
 
-.. code:: ipython3
+.. code:: python
 
     data[data['female'] == 1]['wage'].head(10)
 
@@ -1065,7 +1065,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data[(data['female'] == 0) & (data['married'] == 1)].head(10)
 
@@ -1241,7 +1241,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     # Метод describe для сложного условия
     data[(data['female'] == 0) & (data['married'] == 1)].describe()
@@ -1394,7 +1394,7 @@ loc и iloc
 
 Посчитаем средние значения из тех данных, что удовлетворяют условию
 
-.. code:: ipython3
+.. code:: python
 
     data[data['female'] == 1]['wage'].mean(), data[data['female'] == 0]['wage'].mean() # .std, .min, .max, .count
 
@@ -1409,7 +1409,7 @@ loc и iloc
 
 Вывод медианного значения, для данных, удовлетворяющих сложному условию
 
-.. code:: ipython3
+.. code:: python
 
     data[(data['female'] == 0) & (data['married'] == 1)]['wage'].median(), \
     data[(data['female'] == 0) & (data['married'] == 0)]['wage'].median()
@@ -1423,7 +1423,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data['wage'].nunique()
 
@@ -1439,7 +1439,7 @@ loc и iloc
 Ниже приводятся примеры использования метода groupby для отображения
 информации по сгруппированному признаку
 
-.. code:: ipython3
+.. code:: python
 
     data.groupby('looks').wage.count()
 
@@ -1458,7 +1458,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     for look, sub_df in data.drop(['goodhlth'],axis=1).groupby('looks'):
         print(look)
@@ -1510,7 +1510,7 @@ loc и iloc
     
     
 
-.. code:: ipython3
+.. code:: python
 
     for look, sub_df in data.groupby('looks'):
         print(look)
@@ -1537,7 +1537,7 @@ loc и iloc
     
     
 
-.. code:: ipython3
+.. code:: python
 
     for look, sub_df in data.groupby('looks'):
         print(look)
@@ -1564,7 +1564,7 @@ loc и iloc
     
     
 
-.. code:: ipython3
+.. code:: python
 
     for look, sub_df in data.groupby(['looks', 'female']):
         print(look)
@@ -1609,7 +1609,7 @@ loc и iloc
 С помощью .agg метод groupby может применять различные функции к данным,
 что он получает
 
-.. code:: ipython3
+.. code:: python
 
     data.groupby('looks')[['wage', 'exper']].max()
 
@@ -1679,7 +1679,7 @@ loc и iloc
 
 Декартово произведение признаков из столбцов и их отображение
 
-.. code:: ipython3
+.. code:: python
 
     pd.crosstab(data['female'], data['married'])
 
@@ -1732,7 +1732,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     pd.crosstab(data['female'], data['looks'])
 
@@ -1800,7 +1800,7 @@ loc и iloc
 Создание нового признака из наложения дополнительных условий на основе
 старых данных
 
-.. code:: ipython3
+.. code:: python
 
     data['exp'] = (data['exper'] >=15).astype(int)
     data.head(10)
@@ -1988,7 +1988,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     new = data[data['female'] == 1]
     new.to_csv('new.csv', index=False)
@@ -2101,7 +2101,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data['wage'].sort_values(ascending=False).head(3)
 
@@ -2117,11 +2117,11 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data['is_rich'] = (data['wage'] > data['wage'].quantile(.75)).astype('int64')
 
-.. code:: ipython3
+.. code:: python
 
     data['wage'].quantile(.75)
 
@@ -2134,7 +2134,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data.head()
 
@@ -2257,7 +2257,7 @@ loc и iloc
 
 
 
-.. code:: ipython3
+.. code:: python
 
     data['rubbish'] = .56 * data['wage'] + 0.32 * data['exper']
     data.head()
