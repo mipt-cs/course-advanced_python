@@ -3,7 +3,7 @@
 
 :date: 2020-09-02 19:00
 :summary: Тема 15. Библиотека Pandas для работы с данными
-:status: not_published
+:status: no
 
 .. default-role:: code
 
