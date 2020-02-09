@@ -335,8 +335,6 @@ Pandas — программная библиотека на языке Python д
 
 
 
-#
-
 .. raw:: html
 
    <center>
