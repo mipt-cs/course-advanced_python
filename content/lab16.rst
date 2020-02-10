@@ -3,7 +3,7 @@
 
 :date: 2020-02-11 19:00
 :summary: Тема 3.2. Визуализация в python
-:status: no
+:status: published
 
 .. default-role:: code
 
