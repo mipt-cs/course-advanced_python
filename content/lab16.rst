@@ -202,10 +202,7 @@
     plt.legend();
 
 
-
-.. image:: output_5_0.png
-   :width: 378px
-   :height: 248px
+.. image:: ../images/lab16/output_5_0.png
 
 
 .. code:: python
@@ -214,9 +211,8 @@
 
 
 
-.. image:: output_6_0.png
-   :width: 369px
-   :height: 248px
+.. image:: ../images/lab16/output_6_0.png
+
 
 
 .. code:: python
@@ -225,9 +221,7 @@
 
 
 
-.. image:: output_7_0.png
-   :width: 375px
-   :height: 248px
+.. image:: ../images/lab16/output_7_0.png
 
 
 .. code:: python
@@ -236,9 +230,7 @@
 
 
 
-.. image:: output_8_0.png
-   :width: 378px
-   :height: 261px
+.. image:: ../images/lab16/output_8_0.png
 
 
 .. code:: python
@@ -248,9 +240,7 @@
 
 
 
-.. image:: output_9_0.png
-   :width: 594px
-   :height: 263px
+.. image:: ../images/lab16/output_9_0.png
 
 
 .. code:: python
@@ -259,9 +249,7 @@
 
 
 
-.. image:: output_10_0.png
-   :width: 388px
-   :height: 261px
+.. image:: ../images/lab16/output_10_0.png
 
 
 .. code:: python
@@ -273,9 +261,7 @@
 
 
 
-.. image:: output_11_0.png
-   :width: 723px
-   :height: 261px
+.. image:: ../images/lab16/output_11_0.png
 
 
 .. code:: python
@@ -284,9 +270,7 @@
 
 
 
-.. image:: output_12_0.png
-   :width: 231px
-   :height: 231px
+.. image:: ../images/lab16/output_12_0.png
 
 
 .. code:: python
@@ -296,9 +280,7 @@
 
 
 
-.. image:: output_13_0.png
-   :width: 615px
-   :height: 251px
+.. image:: ../images/lab16/output_13_0.png
 
 
 .. code:: python
@@ -307,9 +289,7 @@
 
 
 
-.. image:: output_14_0.png
-   :width: 352px
-   :height: 261px
+.. image:: ../images/lab16/output_14_0.png
 
 
 .. code:: python
@@ -320,9 +300,7 @@
 
 
 
-.. image:: output_15_0.png
-   :width: 369px
-   :height: 248px
+.. image:: ../images/lab16/output_15_0.png
 
 
 .. code:: python
@@ -331,9 +309,7 @@
 
 
 
-.. image:: output_16_0.png
-   :width: 421px
-   :height: 423px
+.. image:: ../images/lab16/output_16_0.png
 
 
 .. code:: python
@@ -342,9 +318,7 @@
 
 
 
-.. image:: output_17_0.png
-   :width: 421px
-   :height: 423px
+.. image:: ../images/lab16/output_17_0.png
 
 
 .. code:: python
@@ -353,9 +327,7 @@
 
 
 
-.. image:: output_18_0.png
-   :width: 389px
-   :height: 261px
+.. image:: ../images/lab16/output_18_0.png
 
 
 .. code:: python
@@ -364,9 +336,7 @@
 
 
 
-.. image:: output_19_0.png
-   :width: 381px
-   :height: 260px
+.. image:: ../images/lab16/output_19_0.png
 
 
 3D графики
@@ -405,9 +375,7 @@
 
 
 
-.. image:: output_21_0.png
-   :width: 590px
-   :height: 446px
+.. image:: ../images/lab16/output_21_0.png
 
 
 Создание анимации
@@ -534,9 +502,7 @@
     
 
 
-.. image:: output_23_1.png
-   :width: 383px
-   :height: 252px
+.. image:: ../images/lab16/output_23_1.gif
 
 
 Домашнее задание:
