@@ -1,4 +1,19 @@
-.. code:: ipython3
+Объектно-ориентированное программирование. Python.
+##################################################
+
+:date: 2020-02-11 19:00
+:summary: Тема 3.2. Визуализация в python
+:status: no
+
+.. default-role:: code
+
+.. role:: python(code)
+   :language: python
+   
+.. contents::
+
+
+.. code:: python
 
     import pandas as pd
     import numpy as np
@@ -15,7 +30,7 @@
 Считываем данные
 ----------------
 
-.. code:: ipython3
+.. code:: python
 
     # Берем данные отсюда: https://github.com/Laggg/data--for--students
     # сначала считываем 2 строчки, чтобы понять разделитель колонок (по умолчанию разделитель - ",")
@@ -63,7 +78,7 @@
 
 
 
-.. code:: ipython3
+.. code:: python
 
     df = pd.read_csv('beauty.csv', sep=';')
     df.head()
@@ -178,7 +193,7 @@
 Строим некоторые виды графиков
 ------------------------------
 
-.. code:: ipython3
+.. code:: python
 
     # приведем пример графика с некоторыми параметрами, которые можно изменять.
     # все комбинации параметров смотрите в официальной документации
@@ -193,7 +208,7 @@
    :height: 248px
 
 
-.. code:: ipython3
+.. code:: python
 
     data['wage'].plot();
 
@@ -204,7 +219,7 @@
    :height: 248px
 
 
-.. code:: ipython3
+.. code:: python
 
     df['wage'].hist(figsize=(6, 4), bins=100);
 
@@ -215,7 +230,7 @@
    :height: 248px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.distplot(df['wage'], bins=10);
 
@@ -226,7 +241,7 @@
    :height: 261px
 
 
-.. code:: ipython3
+.. code:: python
 
     features = ['wage', 'exper']
     df[features].hist(figsize=(10, 4), bins=60);
@@ -238,7 +253,7 @@
    :height: 263px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.countplot(x='female', hue='looks', data=data);
 
@@ -249,7 +264,7 @@
    :height: 261px
 
 
-.. code:: ipython3
+.. code:: python
 
     _, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
     
@@ -263,7 +278,7 @@
    :height: 261px
 
 
-.. code:: ipython3
+.. code:: python
 
     plt.pie(data.groupby('female')['wage'].count()); # круговая диаграмми (pie)
 
@@ -274,7 +289,7 @@
    :height: 231px
 
 
-.. code:: ipython3
+.. code:: python
 
     df[features].plot(kind='density', subplots=True, layout=(1, 2), 
                       sharex=False, figsize=(10, 4));
@@ -286,7 +301,7 @@
    :height: 251px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.boxplot(x='wage', data=df);
 
@@ -297,7 +312,7 @@
    :height: 261px
 
 
-.. code:: ipython3
+.. code:: python
 
     _, axes = plt.subplots(1, 2, sharey=True, figsize=(6, 4))
     sns.boxplot(data=df['wage'], ax=axes[0]);
@@ -310,7 +325,7 @@
    :height: 248px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.jointplot(x='wage', y='exper', data=data, kind='scatter');
 
@@ -321,7 +336,7 @@
    :height: 423px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.jointplot('exper', 'wage', data=data, kind="kde", color="r");
 
@@ -332,7 +347,7 @@
    :height: 423px
 
 
-.. code:: ipython3
+.. code:: python
 
     df.groupby('looks').wage.sum().plot();
 
@@ -343,7 +358,7 @@
    :height: 261px
 
 
-.. code:: ipython3
+.. code:: python
 
     df.groupby('looks').wage.sum().plot(kind='bar', rot=75, color='green');
 
@@ -357,7 +372,7 @@
 3D графики
 ----------
 
-.. code:: ipython3
+.. code:: python
 
     from mpl_toolkits.mplot3d import Axes3D
     from sklearn import datasets
@@ -402,7 +417,7 @@
 данными: https://hsto.org/webt/h7/vn/dt/h7vndtkzlinfkyoqzpcmjxecubu.gif
 из статьи про SVM https://habr.com/ru/company/ods/blog/484148/
 
-.. code:: ipython3
+.. code:: python
 
     import matplotlib.animation as animation
     from matplotlib.animation import PillowWriter
@@ -545,7 +560,7 @@
    -  найти необычную зависимость количества задержек от имеющихся
       данных
 
-.. code:: ipython3
+.. code:: python
 
     import pandas as pd
     pd.read_csv('flight_delays.csv').head(10)
