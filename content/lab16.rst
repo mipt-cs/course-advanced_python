@@ -505,7 +505,7 @@
 .. image:: ../images/lab16/output_23_1.gif
 
 
-Домашнее задание:
+Домашнее задание
 =================
 
 1) взять данные отсюда: https://github.com/Laggg/data–for–students
