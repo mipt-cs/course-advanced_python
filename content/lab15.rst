@@ -3,13 +3,13 @@
 
 :date: 2020-09-02 19:00
 :summary: Библиотека Pandas
-:status: draft
+:status: published
 
 .. default-role:: code
 
 .. role:: python(code)
    :language: python
-   
+
 .. contents::
 
 
@@ -50,11 +50,11 @@ Pandas — программная библиотека на языке Python д
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -105,8 +105,8 @@ Pandas — программная библиотека на языке Python д
 
 .. code:: python
 
-    data = [['tom', 10], ['nick', 15], ['juli', 14]] 
-    df = pd.DataFrame(data, columns = ['Name', 'Age'])  
+    data = [['tom', 10], ['nick', 15], ['juli', 14]]
+    df = pd.DataFrame(data, columns = ['Name', 'Age'])
     df
 
 
@@ -119,11 +119,11 @@ Pandas — программная библиотека на языке Python д
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -160,9 +160,9 @@ Pandas — программная библиотека на языке Python д
 
 .. code:: python
 
-    data = {'Name':['Tom', 'Jack', 'nick', 'juli'], 'marks':[99, 98, 95, 90]} 
-    df = pd.DataFrame(data, index =['rank1', 'rank2', 'rank3', 'rank4'])  
-    df 
+    data = {'Name':['Tom', 'Jack', 'nick', 'juli'], 'marks':[99, 98, 95, 90]}
+    df = pd.DataFrame(data, index =['rank1', 'rank2', 'rank3', 'rank4'])
+    df
 
 
 
@@ -174,11 +174,11 @@ Pandas — программная библиотека на языке Python д
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -220,9 +220,9 @@ Pandas — программная библиотека на языке Python д
 
 .. code:: python
 
-    data = [{'a': 1, 'b': 2, 'c':3}, {'a':10, 'b': 20}] 
-    df = pd.DataFrame(data) 
-    df 
+    data = [{'a': 1, 'b': 2, 'c':3}, {'a':10, 'b': 20}]
+    df = pd.DataFrame(data)
+    df
 
 
 
@@ -234,11 +234,11 @@ Pandas — программная библиотека на языке Python д
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -273,10 +273,10 @@ Pandas — программная библиотека на языке Python д
 
 .. code:: python
 
-    d = {'one' : pd.Series([10, 20, 30, 40], index =['a', 'b', 'c', 'd']), 
-          'two' : pd.Series([10, 20, 30, 40], index =['a', 'b', 'c', 'd'])} 
-    df = pd.DataFrame(d) 
-    df 
+    d = {'one' : pd.Series([10, 20, 30, 40], index =['a', 'b', 'c', 'd']),
+          'two' : pd.Series([10, 20, 30, 40], index =['a', 'b', 'c', 'd'])}
+    df = pd.DataFrame(d)
+    df
 
 
 
@@ -288,11 +288,11 @@ Pandas — программная библиотека на языке Python д
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -378,11 +378,11 @@ Pandas — программная библиотека на языке Python д
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -414,7 +414,7 @@ Pandas — программная библиотека на языке Python д
     #help(pd.read_csv)
     path_to_file = 'beauty.csv'
     data = pd.read_csv(path_to_file, sep=';')
-    
+
     print(data.shape)
     #df.tail()
     data.head()
@@ -423,7 +423,7 @@ Pandas — программная библиотека на языке Python д
 .. parsed-literal::
 
     (1260, 10)
-    
+
 
 
 
@@ -434,11 +434,11 @@ Pandas — программная библиотека на языке Python д
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -585,7 +585,7 @@ Pandas — программная библиотека на языке Python д
     looks       1260 non-null int64
     dtypes: float64(1), int64(9)
     memory usage: 98.6 KB
-    
+
 
 int64 и float64 — это типы признаков. Видим, что 1 признак — float64 и 9
 признаков имеют тип int64.
@@ -609,11 +609,11 @@ int64 и float64 — это типы признаков. Видим, что 1 п
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -845,7 +845,7 @@ loc и iloc
     2        True
     3        True
     4        True
-            ...  
+            ...
     1255     True
     1256    False
     1257     True
@@ -872,11 +872,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -1074,11 +1074,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -1251,11 +1251,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -1470,7 +1470,7 @@ loc и iloc
     248  10.99     40      0      0       0        1        0    12      1
     327   1.65     24      0      0       1        0        1    13      1
     751   7.93     39      1      0       0        1        0    12      1
-    
+
     2
         wage  exper  union  black  female  married  service  educ  looks
     12  5.14     19      0      0       0        1        1    17      2
@@ -1478,7 +1478,7 @@ loc и iloc
     35  9.62     37      0      0       0        1        0    13      2
     37  7.69     10      1      0       0        1        0    13      2
     57  6.56     17      0      0       0        1        0    13      2
-    
+
     3
         wage  exper  union  black  female  married  service  educ  looks
     1   4.28     28      0      0       1        1        0    12      3
@@ -1486,7 +1486,7 @@ loc и iloc
     4  11.42     27      0      0       0        1        0    16      3
     5   3.91     20      0      0       1        1        0    12      3
     6   8.76     12      0      0       0        1        0    16      3
-    
+
     4
         wage  exper  union  black  female  married  service  educ  looks
     0   5.73     30      0      0       1        1        1    14      4
@@ -1494,7 +1494,7 @@ loc и iloc
     7   7.69      5      1      0       0        0        0    16      4
     10  3.45      3      0      0       1        0        0    12      4
     11  4.03      6      0      0       0        1        0    16      4
-    
+
     5
           wage  exper  union  black  female  married  service  educ  looks
     26   14.84     29      0      0       0        0        1    13      5
@@ -1502,8 +1502,8 @@ loc и iloc
     76   23.32     15      0      0       0        1        1    17      5
     112   6.11      7      0      0       1        1        0    12      5
     316   3.92     12      0      0       0        1        1    12      5
-    
-    
+
+
 
 .. code:: python
 
@@ -1517,20 +1517,20 @@ loc и iloc
 
     1
     3.46
-    
+
     2
     4.595000000000001
-    
+
     3
     5.635
-    
+
     4
     5.24
-    
+
     5
     4.81
-    
-    
+
+
 
 .. code:: python
 
@@ -1544,20 +1544,20 @@ loc и iloc
 
     1
     0.385
-    
+
     2
     0.38
-    
+
     3
     0.323
-    
+
     4
     0.374
-    
+
     5
     0.421
-    
-    
+
+
 
 .. code:: python
 
@@ -1571,35 +1571,35 @@ loc и iloc
 
     (1, 0)
     0.75
-    
+
     (1, 1)
     1.0
-    
+
     (2, 0)
     0.9431818181818182
-    
+
     (2, 1)
     0.9259259259259259
-    
+
     (3, 0)
     0.9304703476482618
-    
+
     (3, 1)
     0.9012875536480687
-    
+
     (4, 0)
     0.9649122807017544
-    
+
     (4, 1)
     0.9411764705882353
-    
+
     (5, 0)
     1.0
-    
+
     (5, 1)
     1.0
-    
-    
+
+
 
 С помощью .agg метод groupby может применять различные функции к данным,
 что он получает
@@ -1618,11 +1618,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -1688,11 +1688,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -1741,11 +1741,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -1810,11 +1810,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -1999,11 +1999,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -2143,11 +2143,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -2267,11 +2267,11 @@ loc и iloc
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
