@@ -37,6 +37,7 @@
 
 .. image:: {filename}/images/lab17/company.png
    :align: center
+   :alt: Таблица company
 
 Выше представлена основная структура данных реляционной модели – таблица.
 Информация о конкретном объекте представлена в строках (кортежах) и столбцах.
@@ -61,6 +62,7 @@
 
 .. image:: {filename}/images/lab17/department.png
    :align: center
+   :alt: Таблица department
 
 Атрибут «ID» связывает данные из таблицы «company» связывает ее с данными из таблицы «department» через атрибут
 «Employee ID».
