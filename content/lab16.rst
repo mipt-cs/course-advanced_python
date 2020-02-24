@@ -3,13 +3,13 @@
 
 :date: 2020-02-11 19:00
 :summary: Тема 3.2. Визуализация в python
-:status: no
+:status: draft
 
 .. default-role:: code
 
 .. role:: python(code)
    :language: python
-   
+
 .. contents::
 
 
@@ -17,13 +17,13 @@
 
     import pandas as pd
     import numpy as np
-    
+
     import matplotlib.pyplot as plt # some imports to set up plotting
     import seaborn as sns # pip install seaborn
-    
+
     import warnings
     warnings.filterwarnings('ignore')
-    
+
     # Graphics in retina format are more sharp and legible
     %config InlineBackend.figure_format = 'retina'
 
@@ -47,11 +47,11 @@
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -93,11 +93,11 @@
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
@@ -255,7 +255,7 @@
 .. code:: python
 
     _, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
-    
+
     sns.countplot(x='female', data=data, ax=axes[0]);
     sns.countplot(x='looks', data=data, ax=axes[1]);
 
@@ -275,7 +275,7 @@
 
 .. code:: python
 
-    df[features].plot(kind='density', subplots=True, layout=(1, 2), 
+    df[features].plot(kind='density', subplots=True, layout=(1, 2),
                       sharex=False, figsize=(10, 4));
 
 
@@ -347,7 +347,7 @@
     from mpl_toolkits.mplot3d import Axes3D
     from sklearn import datasets
     from sklearn.decomposition import PCA
-    
+
     # import some data to play with
     iris = datasets.load_iris()
     X = iris.data[:, :2]  # we only take the first two features.
@@ -355,15 +355,15 @@
     x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
     y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
     X_reduced = PCA(n_components=3).fit_transform(iris.data)
-    
-    
+
+
     # To getter a better understanding of interaction of the dimensions
     # plot the first three PCA dimensions
     fig = plt.figure(1, figsize=(8, 6))
     ax = Axes3D(fig, elev=-150, azim=110)
     ax.scatter(X_reduced[:, 0], X_reduced[:, 1], X_reduced[:, 2], c=y,
                cmap=plt.cm.Set1, edgecolor='k', s=40)
-    
+
     ax.set_title("First three PCA directions")
     ax.set_xlabel("1st eigenvector")
     ax.w_xaxis.set_ticklabels([])
@@ -390,28 +390,28 @@
     import matplotlib.animation as animation
     from matplotlib.animation import PillowWriter
     import matplotlib.lines as mlines
-    
+
     from sklearn.datasets import load_iris
     from sklearn.decomposition import PCA
     from sklearn.model_selection import train_test_split
-    
+
     def newline(p1, p2, color=None): # функция отрисовки линии
         #function kredits to: https://fooobar.com/questions/626491/how-to-draw-a-line-with-matplotlib
         ax = plt.gca()
         xmin, xmax = ax.get_xbound()
-    
+
         if(p2[0] == p1[0]):
             xmin = xmax = p1[0]
             ymin, ymax = ax.get_ybound()
         else:
             ymax = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmax-p1[0])
             ymin = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmin-p1[0])
-    
+
         l = mlines.Line2D([xmin,xmax], [ymin,ymax], color=color)
         ax.add_line(l)
         return l
-    
-    
+
+
     def one_image(w, X, Y): # фунцкия отрисовки одного кадра
         axes = plt.gca()
         axes.set_xlim([-4,4])
@@ -420,8 +420,8 @@
         im = plt.scatter(X[:,0], X[:,1], c=[d1[y] for y in Y])
         im = newline([0,-w[2]/w[1]],[-w[2]/w[0],0], 'blue')
         return im
-    
-    
+
+
     # блок подготовки данных
     iris = load_iris()
     X = iris.data
@@ -430,7 +430,7 @@
     X = pca.fit_transform(X)
     Y = (Y == 2).astype(int)*2-1 # [0,1,2] --> [False,False,True] --> [0,1,1] --> [0,0,2] --> [-1,1,1]
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state=2020)
-    
+
     history_w = np.array([[ 1.40100620e-02,  3.82414425e-02,  9.29992169e-03],
            [ 9.34759319e-02,  1.38405275e-02, -2.07000784e-02],
            [ 1.77059209e-01,  2.08938874e-02, -5.07000782e-02],
@@ -481,25 +481,25 @@
            [ 5.57651268e-01,  2.83422349e-02, -3.20699993e-01],
            [ 5.53558401e-01,  3.77632078e-02, -3.50699990e-01],
            [ 5.12157603e-01,  5.03918360e-02, -3.80699987e-01]])
-    
-    
+
+
     fig = plt.figure()
     ims = [] # набиваем в этот список кадры с помощью цикла
     for i in range(50):
         im = one_image(history_w[i], X_train, Y_train)
         ims.append([im])
-    
+
     ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True, # используем волшебную команду
                                     repeat_delay=500)
     writer = PillowWriter(fps=20) # устанавливаем фпс
-    
+
     ani.save("my_demo.gif", writer='imagemagick') # сохраняем
 
 
 .. parsed-literal::
 
     MovieWriter imagemagick unavailable; trying to use <class 'matplotlib.animation.PillowWriter'> instead.
-    
+
 
 
 .. image:: ../images/lab16/output_23_1.gif
@@ -541,11 +541,11 @@
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-    
+
         .dataframe tbody tr th {
             vertical-align: top;
         }
-    
+
         .dataframe thead th {
             text-align: right;
         }
