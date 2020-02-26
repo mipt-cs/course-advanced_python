@@ -1,4 +1,20 @@
-.. code:: ipython3
+Визуализация в Python
+##################################################
+
+:date: 2020-25-02 19:00
+:summary: Визуализация
+:status: not_published
+
+.. default-role:: code
+
+.. role:: python(code)
+   :language: python
+
+.. contents::
+
+
+
+.. code:: python
 
     import pandas as pd
     import numpy as np
@@ -15,7 +31,7 @@
 Считываем данные
 ----------------
 
-.. code:: ipython3
+.. code:: python
 
     # Берем данные отсюда: https://github.com/Laggg/data--for--students
     # сначала считываем 2 строчки, чтобы понять разделитель колонок (по умолчанию разделитель - ",")
@@ -63,7 +79,7 @@
 
 
 
-.. code:: ipython3
+.. code:: python
 
     df = pd.read_csv('beauty.csv', sep=';')
     df.head()
@@ -178,6 +194,9 @@
 Наглядная схема по названием параметров
 ---------------------------------------
 
+.. image:: ../images/lab16/anatomy_plot.png
+   :width: 505px
+   :height: 261px
 
 Строим некоторые виды графиков
 ------------------------------
@@ -196,7 +215,7 @@
 изменять. Все комбинации параметров смотрите в официальной документации
 https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 
-.. code:: ipython3
+.. code:: python
 
     x = [1,2,3,1,3,2]
     x = np.array([1,2,3,1,3,2])
@@ -213,7 +232,7 @@ https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 
 
 
-.. image:: output_8_0.png
+.. image:: ../images/lab16/output_8_0.png
    :width: 497px
    :height: 265px
 
@@ -221,7 +240,7 @@ https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 2) Другой пример - scatter (где точки не соединяются прямыми линиями), с
    указанием точек (x1,y1),(x2,y2),(x3,y3)…
 
-.. code:: ipython3
+.. code:: python
 
     x = np.linspace(0, 5, 50) # создаем массив из 100 чисел float от 0 до 5 с равномернов шагом
     y = x*(x - 2)*(x - 4)
@@ -237,7 +256,7 @@ https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 
 
 
-.. image:: output_10_0.png
+.. image:: ../images/lab16/output_10_0.png
    :width: 505px
    :height: 261px
 
@@ -250,24 +269,24 @@ https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 Один из главных параметров bins - обратная величина к ширине столбцов на
 графике
 
-.. code:: ipython3
+.. code:: python
 
     df['wage'].hist(figsize=(6, 4), bins=100);
 
 
 
-.. image:: output_12_0.png
+.. image:: ../images/lab16/output_12_0.png
    :width: 375px
    :height: 248px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.distplot(df['wage'], bins=10);
 
 
 
-.. image:: output_13_0.png
+.. image:: ../images/lab16/output_13_0.png
    :width: 378px
    :height: 261px
 
@@ -275,14 +294,14 @@ https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 Можно сразу построить несколько гистограмм, относящихся к разным
 столбцам данных:
 
-.. code:: ipython3
+.. code:: python
 
     features = ['wage', 'exper']
     df[features].hist(figsize=(10, 4), bins=60);
 
 
 
-.. image:: output_15_0.png
+.. image:: ../images/lab16/output_15_0.png
    :width: 594px
    :height: 263px
 
@@ -291,24 +310,24 @@ https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
    категориальных признаков в данных. Показывает, сколько трочек в df
    имеют каждое из выбранного значения категориального признака.
 
-.. code:: ipython3
+.. code:: python
 
     sns.countplot(x='female', data=df);
 
 
 
-.. image:: output_17_0.png
+.. image:: ../images/lab16/output_17_0.png
    :width: 388px
    :height: 261px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.countplot(y='female', data=df);
 
 
 
-.. image:: output_18_0.png
+.. image:: ../images/lab16/output_18_0.png
    :width: 376px
    :height: 261px
 
@@ -316,13 +335,13 @@ https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 Приведем пример для столбца look относительно параметра female в
 DataFrame df
 
-.. code:: ipython3
+.. code:: python
 
     sns.countplot(x='female', hue='looks', data=df);
 
 
 
-.. image:: output_20_0.png
+.. image:: ../images/lab16/output_20_0.png
    :width: 388px
    :height: 261px
 
@@ -332,7 +351,7 @@ DataFrame df
 правая. Аналогично можно создать сетку 2х2 для 4х графиков (но для 4х
 графиков нужно указывать уже 2 координаты, например, ax=axis[1][1]).
 
-.. code:: ipython3
+.. code:: python
 
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
     
@@ -341,20 +360,20 @@ DataFrame df
 
 
 
-.. image:: output_22_0.png
+.. image:: ../images/lab16/output_22_0.png
    :width: 723px
    :height: 261px
 
 
 3) Круговая диаграмма отлично показывает соотношение частей:
 
-.. code:: ipython3
+.. code:: python
 
     plt.pie(df.groupby('female')['wage'].count()); # круговая диаграмми (pie)
 
 
 
-.. image:: output_24_0.png
+.. image:: ../images/lab16/output_24_0.png
    :width: 231px
    :height: 231px
 
@@ -373,18 +392,18 @@ DataFrame df
 Точками на графике обозначаются выбросы (outliers) — те значения,
 которые не вписываются в промежуток значений, заданный усами графика.
 
-.. code:: ipython3
+.. code:: python
 
     sns.boxplot(x='wage', data=df);
 
 
 
-.. image:: output_26_0.png
+.. image:: ../images/lab16/output_26_0.png
    :width: 352px
    :height: 261px
 
 
-.. code:: ipython3
+.. code:: python
 
     _, axes = plt.subplots(1, 2, sharey=True, figsize=(6, 4))
     sns.boxplot(data=df['wage'], ax=axes[0]);
@@ -392,35 +411,40 @@ DataFrame df
 
 
 
-.. image:: output_27_0.png
+.. image:: ../images/lab16/output_27_0.png
    :width: 369px
    :height: 248px
 
 
 Для большего понимания посмотреть на картинку из Wikipedia:
 
+.. image:: ../images/lab16/box_plot.png
+   :width: 369px
+   :height: 248px
+   
+
 6) joint plot: Для того, чтобы подробнее посмотреть на взаимосвязь двух
    численных признаков, есть еще и joint plot — это гибрид scatter plot
    и histogram. Посмотрим на то, как связаны между собой wage и exper.
 
-.. code:: ipython3
+.. code:: python
 
     sns.jointplot(x='wage', y='exper', data=df, kind='scatter');
 
 
 
-.. image:: output_30_0.png
+.. image:: ../images/lab16/output_30_0.png
    :width: 421px
    :height: 423px
 
 
-.. code:: ipython3
+.. code:: python
 
     sns.jointplot('exper', 'wage', data=df, kind="kde", color="r");
 
 
 
-.. image:: output_31_0.png
+.. image:: ../images/lab16/output_31_0.png
    :width: 421px
    :height: 423px
 
@@ -428,25 +452,25 @@ DataFrame df
 После всего вышесказанного, нужно отметить, что можно делать некоторые
 операции над DataFrame, и уже к ним применять метод .plot(…)
 
-.. code:: ipython3
+.. code:: python
 
     df.groupby('looks').wage.sum().plot(kind='bar', rot=75, color='green');
 
 
 
-.. image:: output_33_0.png
+.. image:: ../images/lab16/output_33_0.png
    :width: 381px
    :height: 260px
 
 
-.. code:: ipython3
+.. code:: python
 
     df[features].plot(kind='density', subplots=True, layout=(1, 2), 
                       sharex=False, figsize=(10, 4));
 
 
 
-.. image:: output_34_0.png
+.. image:: ../images/lab16/output_34_0.png
    :width: 615px
    :height: 251px
 
@@ -454,7 +478,7 @@ DataFrame df
 3D графики
 ----------
 
-.. code:: ipython3
+.. code:: python
 
     from mpl_toolkits.mplot3d import Axes3D
     from sklearn import datasets
@@ -487,7 +511,7 @@ DataFrame df
 
 
 
-.. image:: output_36_0.png
+.. image:: ../images/lab16/output_36_0.png
    :width: 590px
    :height: 446px
 
@@ -499,7 +523,7 @@ DataFrame df
 данными: https://hsto.org/webt/h7/vn/dt/h7vndtkzlinfkyoqzpcmjxecubu.gif
 из статьи про SVM https://habr.com/ru/company/ods/blog/484148/
 
-.. code:: ipython3
+.. code:: python
 
     import matplotlib.animation as animation
     from matplotlib.animation import PillowWriter
@@ -616,7 +640,7 @@ DataFrame df
     
 
 
-.. image:: output_38_1.png
+.. image:: ../images/lab16/output23_1.gif
    :width: 383px
    :height: 252px
 
@@ -643,7 +667,7 @@ DataFrame df
    -  найти необычную зависимость количества задержек от имеющихся
       данных
 
-.. code:: ipython3
+.. code:: python
 
     import pandas as pd
     pd.read_csv('flight_delays.csv').head(10)
