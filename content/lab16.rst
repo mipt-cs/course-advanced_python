@@ -1,36 +1,21 @@
-Визуализация в Python
-##################################################
-
-:date: 2020-02-11 19:00
-:summary: Тема 3.2. Визуализация в python
-:status: draft
-
-.. default-role:: code
-
-.. role:: python(code)
-   :language: python
-
-.. contents::
-
-
-.. code:: python
+.. code:: ipython3
 
     import pandas as pd
     import numpy as np
-
+    
     import matplotlib.pyplot as plt # some imports to set up plotting
     import seaborn as sns # pip install seaborn
-
+    
     import warnings
     warnings.filterwarnings('ignore')
-
+    
     # Graphics in retina format are more sharp and legible
     %config InlineBackend.figure_format = 'retina'
 
 Считываем данные
 ----------------
 
-.. code:: python
+.. code:: ipython3
 
     # Берем данные отсюда: https://github.com/Laggg/data--for--students
     # сначала считываем 2 строчки, чтобы понять разделитель колонок (по умолчанию разделитель - ",")
@@ -47,11 +32,11 @@
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-
+    
         .dataframe tbody tr th {
             vertical-align: top;
         }
-
+    
         .dataframe thead th {
             text-align: right;
         }
@@ -78,7 +63,7 @@
 
 
 
-.. code:: python
+.. code:: ipython3
 
     df = pd.read_csv('beauty.csv', sep=';')
     df.head()
@@ -93,11 +78,11 @@
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-
+    
         .dataframe tbody tr th {
             vertical-align: top;
         }
-
+    
         .dataframe thead th {
             text-align: right;
         }
@@ -190,109 +175,216 @@
 
 
 
+Наглядная схема по названием параметров
+---------------------------------------
+
+
 Строим некоторые виды графиков
 ------------------------------
 
-.. code:: python
+1) Обычный график, построенный по точкам. На вход может подаваться как
+   лист, так и массив, серия значений. Возможно использовать следующие
+   параметры:
 
-    # приведем пример графика с некоторыми параметрами, которые можно изменять.
-    # все комбинации параметров смотрите в официальной документации
-    # https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
-    plt.plot([1,2,3,1,3,2], linewidth=2, color='green', marker='*', linestyle='dashed', label='line 1')
-    plt.legend();
+-  linewidth ширина линии, соединяющей соседние точки
+-  color цвет линии
+-  marker вид точкек, которые соединяются линиями
+-  linestyle стиль линии (сплошная, прерывистая, точка-тире и т.д.)
+-  label подпись на легенде
+
+Приведем пример графика с некоторыми параметрами, которые можно
+изменять. Все комбинации параметров смотрите в официальной документации
+https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
+
+.. code:: ipython3
+
+    x = [1,2,3,1,3,2]
+    x = np.array([1,2,3,1,3,2])
+    x = pd.Series(np.array([1,2,3,1,3,2]))
+    
+    plt.figure(figsize=(8,4)) # можно указать явно ширину и высоту графика (строчка не обязательна)
+    plt.plot(x, linewidth=2, color='green', marker='*', linestyle='dashed', label='line_1')
+    plt.legend() # показывать легенду
+    plt.grid(color='gray', linestyle='-', linewidth=1.5) # включить отрисовку сетки c определенными параметрами
+    plt.yticks([0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5]) # можно явно указать, как подписывать ось
+    plt.xticks()
+    plt.xlabel('ось абсцисс')
+    plt.ylabel('ось ординат');
 
 
-.. image:: ../images/lab16/output_5_0.png
+
+.. image:: output_8_0.png
+   :width: 497px
+   :height: 265px
 
 
-.. code:: python
+2) Другой пример - scatter (где точки не соединяются прямыми линиями), с
+   указанием точек (x1,y1),(x2,y2),(x3,y3)…
 
-    data['wage'].plot();
+.. code:: ipython3
+
+    x = np.linspace(0, 5, 50) # создаем массив из 100 чисел float от 0 до 5 с равномернов шагом
+    y = x*(x - 2)*(x - 4)
+    
+    plt.figure(figsize=(8,4)) # можно указать явно ширину и высоту графика (строчка не обязательна)
+    plt.scatter(x, y, label='line_1')
+    plt.legend() # показывать легенду
+    plt.grid(linewidth=1) # включить отрисовку сетки c определенными параметрами
+    plt.yticks()
+    plt.xticks()
+    plt.xlabel('ось абсцисс')
+    plt.ylabel('ось ординат');
 
 
 
-.. image:: ../images/lab16/output_6_0.png
+.. image:: output_10_0.png
+   :width: 505px
+   :height: 261px
 
 
+2) Гистограмма - график, показывающий распределение какой-либо величины,
+   встречающуюся в данном объеме значений. По другому, график показыват
+   сколько раз встречается из выборки каждое значение в ней. Построим
+   гистограммы с помощью разных библиотек.
 
-.. code:: python
+Один из главных параметров bins - обратная величина к ширине столбцов на
+графике
+
+.. code:: ipython3
 
     df['wage'].hist(figsize=(6, 4), bins=100);
 
 
 
-.. image:: ../images/lab16/output_7_0.png
+.. image:: output_12_0.png
+   :width: 375px
+   :height: 248px
 
 
-.. code:: python
+.. code:: ipython3
 
     sns.distplot(df['wage'], bins=10);
 
 
 
-.. image:: ../images/lab16/output_8_0.png
+.. image:: output_13_0.png
+   :width: 378px
+   :height: 261px
 
 
-.. code:: python
+Можно сразу построить несколько гистограмм, относящихся к разным
+столбцам данных:
+
+.. code:: ipython3
 
     features = ['wage', 'exper']
     df[features].hist(figsize=(10, 4), bins=60);
 
 
 
-.. image:: ../images/lab16/output_9_0.png
+.. image:: output_15_0.png
+   :width: 594px
+   :height: 263px
 
 
-.. code:: python
+3) CountPlot - столбчатая диаграмма, чаще всего используется для
+   категориальных признаков в данных. Показывает, сколько трочек в df
+   имеют каждое из выбранного значения категориального признака.
 
-    sns.countplot(x='female', hue='looks', data=data);
+.. code:: ipython3
 
-
-
-.. image:: ../images/lab16/output_10_0.png
-
-
-.. code:: python
-
-    _, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
-
-    sns.countplot(x='female', data=data, ax=axes[0]);
-    sns.countplot(x='looks', data=data, ax=axes[1]);
+    sns.countplot(x='female', data=df);
 
 
 
-.. image:: ../images/lab16/output_11_0.png
+.. image:: output_17_0.png
+   :width: 388px
+   :height: 261px
 
 
-.. code:: python
+.. code:: ipython3
 
-    plt.pie(data.groupby('female')['wage'].count()); # круговая диаграмми (pie)
-
-
-
-.. image:: ../images/lab16/output_12_0.png
-
-
-.. code:: python
-
-    df[features].plot(kind='density', subplots=True, layout=(1, 2),
-                      sharex=False, figsize=(10, 4));
+    sns.countplot(y='female', data=df);
 
 
 
-.. image:: ../images/lab16/output_13_0.png
+.. image:: output_18_0.png
+   :width: 376px
+   :height: 261px
 
 
-.. code:: python
+Приведем пример для столбца look относительно параметра female в
+DataFrame df
+
+.. code:: ipython3
+
+    sns.countplot(x='female', hue='looks', data=df);
+
+
+
+.. image:: output_20_0.png
+   :width: 388px
+   :height: 261px
+
+
+На следующем примере покажем, как нарисовать несколько графиков на одной
+картинке: axes - части графика. axes[0] - левая часть, а axes[1] -
+правая. Аналогично можно создать сетку 2х2 для 4х графиков (но для 4х
+графиков нужно указывать уже 2 координаты, например, ax=axis[1][1]).
+
+.. code:: ipython3
+
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
+    
+    sns.countplot(x='female', data=df, ax=axes[0]);
+    sns.countplot(x='looks', data=df, ax=axes[1]);
+
+
+
+.. image:: output_22_0.png
+   :width: 723px
+   :height: 261px
+
+
+3) Круговая диаграмма отлично показывает соотношение частей:
+
+.. code:: ipython3
+
+    plt.pie(df.groupby('female')['wage'].count()); # круговая диаграмми (pie)
+
+
+
+.. image:: output_24_0.png
+   :width: 231px
+   :height: 231px
+
+
+5) Ящик с усами, или boxplot Box plot состоит из коробки (поэтому он и
+   называется box plot), усиков и точек. Коробка показывает
+   интерквартильный размах распределения, то есть соответственно 25%
+   (Q1) и 75% (Q3) перцентили.
+
+Черта внутри коробки обозначает медиану распределения.
+
+Усы отображают весь разброс точек кроме выбросов, то есть минимальные и
+максимальные значения, которые попадают в промежуток (Q1 - 1.5\ *IQR, Q3
++ 1.5*\ IQR), где IQR = Q3 - Q1 — интерквартильный размах.
+
+Точками на графике обозначаются выбросы (outliers) — те значения,
+которые не вписываются в промежуток значений, заданный усами графика.
+
+.. code:: ipython3
 
     sns.boxplot(x='wage', data=df);
 
 
 
-.. image:: ../images/lab16/output_14_0.png
+.. image:: output_26_0.png
+   :width: 352px
+   :height: 261px
 
 
-.. code:: python
+.. code:: ipython3
 
     _, axes = plt.subplots(1, 2, sharey=True, figsize=(6, 4))
     sns.boxplot(data=df['wage'], ax=axes[0]);
@@ -300,54 +392,74 @@
 
 
 
-.. image:: ../images/lab16/output_15_0.png
+.. image:: output_27_0.png
+   :width: 369px
+   :height: 248px
 
 
-.. code:: python
+Для большего понимания посмотреть на картинку из Wikipedia:
 
-    sns.jointplot(x='wage', y='exper', data=data, kind='scatter');
+6) joint plot: Для того, чтобы подробнее посмотреть на взаимосвязь двух
+   численных признаков, есть еще и joint plot — это гибрид scatter plot
+   и histogram. Посмотрим на то, как связаны между собой wage и exper.
 
+.. code:: ipython3
 
-
-.. image:: ../images/lab16/output_16_0.png
-
-
-.. code:: python
-
-    sns.jointplot('exper', 'wage', data=data, kind="kde", color="r");
-
-
-
-.. image:: ../images/lab16/output_17_0.png
-
-
-.. code:: python
-
-    df.groupby('looks').wage.sum().plot();
+    sns.jointplot(x='wage', y='exper', data=df, kind='scatter');
 
 
 
-.. image:: ../images/lab16/output_18_0.png
+.. image:: output_30_0.png
+   :width: 421px
+   :height: 423px
 
 
-.. code:: python
+.. code:: ipython3
+
+    sns.jointplot('exper', 'wage', data=df, kind="kde", color="r");
+
+
+
+.. image:: output_31_0.png
+   :width: 421px
+   :height: 423px
+
+
+После всего вышесказанного, нужно отметить, что можно делать некоторые
+операции над DataFrame, и уже к ним применять метод .plot(…)
+
+.. code:: ipython3
 
     df.groupby('looks').wage.sum().plot(kind='bar', rot=75, color='green');
 
 
 
-.. image:: ../images/lab16/output_19_0.png
+.. image:: output_33_0.png
+   :width: 381px
+   :height: 260px
+
+
+.. code:: ipython3
+
+    df[features].plot(kind='density', subplots=True, layout=(1, 2), 
+                      sharex=False, figsize=(10, 4));
+
+
+
+.. image:: output_34_0.png
+   :width: 615px
+   :height: 251px
 
 
 3D графики
 ----------
 
-.. code:: python
+.. code:: ipython3
 
     from mpl_toolkits.mplot3d import Axes3D
     from sklearn import datasets
     from sklearn.decomposition import PCA
-
+    
     # import some data to play with
     iris = datasets.load_iris()
     X = iris.data[:, :2]  # we only take the first two features.
@@ -355,15 +467,15 @@
     x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
     y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
     X_reduced = PCA(n_components=3).fit_transform(iris.data)
-
-
+    
+    
     # To getter a better understanding of interaction of the dimensions
     # plot the first three PCA dimensions
     fig = plt.figure(1, figsize=(8, 6))
     ax = Axes3D(fig, elev=-150, azim=110)
     ax.scatter(X_reduced[:, 0], X_reduced[:, 1], X_reduced[:, 2], c=y,
                cmap=plt.cm.Set1, edgecolor='k', s=40)
-
+    
     ax.set_title("First three PCA directions")
     ax.set_xlabel("1st eigenvector")
     ax.w_xaxis.set_ticklabels([])
@@ -375,7 +487,9 @@
 
 
 
-.. image:: ../images/lab16/output_21_0.png
+.. image:: output_36_0.png
+   :width: 590px
+   :height: 446px
 
 
 Создание анимации
@@ -385,33 +499,33 @@
 данными: https://hsto.org/webt/h7/vn/dt/h7vndtkzlinfkyoqzpcmjxecubu.gif
 из статьи про SVM https://habr.com/ru/company/ods/blog/484148/
 
-.. code:: python
+.. code:: ipython3
 
     import matplotlib.animation as animation
     from matplotlib.animation import PillowWriter
     import matplotlib.lines as mlines
-
+    
     from sklearn.datasets import load_iris
     from sklearn.decomposition import PCA
     from sklearn.model_selection import train_test_split
-
+    
     def newline(p1, p2, color=None): # функция отрисовки линии
         #function kredits to: https://fooobar.com/questions/626491/how-to-draw-a-line-with-matplotlib
         ax = plt.gca()
         xmin, xmax = ax.get_xbound()
-
+    
         if(p2[0] == p1[0]):
             xmin = xmax = p1[0]
             ymin, ymax = ax.get_ybound()
         else:
             ymax = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmax-p1[0])
             ymin = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmin-p1[0])
-
+    
         l = mlines.Line2D([xmin,xmax], [ymin,ymax], color=color)
         ax.add_line(l)
         return l
-
-
+    
+    
     def one_image(w, X, Y): # фунцкия отрисовки одного кадра
         axes = plt.gca()
         axes.set_xlim([-4,4])
@@ -420,8 +534,8 @@
         im = plt.scatter(X[:,0], X[:,1], c=[d1[y] for y in Y])
         im = newline([0,-w[2]/w[1]],[-w[2]/w[0],0], 'blue')
         return im
-
-
+    
+    
     # блок подготовки данных
     iris = load_iris()
     X = iris.data
@@ -430,7 +544,7 @@
     X = pca.fit_transform(X)
     Y = (Y == 2).astype(int)*2-1 # [0,1,2] --> [False,False,True] --> [0,1,1] --> [0,0,2] --> [-1,1,1]
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state=2020)
-
+    
     history_w = np.array([[ 1.40100620e-02,  3.82414425e-02,  9.29992169e-03],
            [ 9.34759319e-02,  1.38405275e-02, -2.07000784e-02],
            [ 1.77059209e-01,  2.08938874e-02, -5.07000782e-02],
@@ -481,38 +595,41 @@
            [ 5.57651268e-01,  2.83422349e-02, -3.20699993e-01],
            [ 5.53558401e-01,  3.77632078e-02, -3.50699990e-01],
            [ 5.12157603e-01,  5.03918360e-02, -3.80699987e-01]])
-
-
+    
+    
     fig = plt.figure()
     ims = [] # набиваем в этот список кадры с помощью цикла
     for i in range(50):
         im = one_image(history_w[i], X_train, Y_train)
         ims.append([im])
-
+    
     ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True, # используем волшебную команду
                                     repeat_delay=500)
     writer = PillowWriter(fps=20) # устанавливаем фпс
-
+    
     ani.save("my_demo.gif", writer='imagemagick') # сохраняем
 
 
 .. parsed-literal::
 
     MovieWriter imagemagick unavailable; trying to use <class 'matplotlib.animation.PillowWriter'> instead.
+    
 
 
+.. image:: output_38_1.png
+   :width: 383px
+   :height: 252px
 
-.. image:: ../images/lab16/output_23_1.gif
 
-
-Домашнее задание
+Домашнее задание:
 =================
 
 1) взять данные отсюда: https://github.com/Laggg/data–for–students
    (flight_delays.csv)
 
 2) для каждой задачи получить ответ на вопрос через pandas и
-   визуализировать его любым подходящим способом:
+   визуализировать его любым подходящим способом (у всех графиков должна
+   быть легенда, подписаны оси):
 
    -  доля всех задержек ко всем вылетам
    -  найти зависимость количества задержек от длины пути, который
@@ -526,7 +643,7 @@
    -  найти необычную зависимость количества задержек от имеющихся
       данных
 
-.. code:: python
+.. code:: ipython3
 
     import pandas as pd
     pd.read_csv('flight_delays.csv').head(10)
@@ -541,11 +658,11 @@
         .dataframe tbody tr th:only-of-type {
             vertical-align: middle;
         }
-
+    
         .dataframe tbody tr th {
             vertical-align: top;
         }
-
+    
         .dataframe thead th {
             text-align: right;
         }
@@ -692,3 +809,8 @@
 
 
 
+Очень полезные ссылки:
+----------------------
+
+-  https://habr.com/ru/post/468295/
+-  https://habr.com/ru/company/ods/blog/323210/
