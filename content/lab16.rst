@@ -3,7 +3,7 @@
 
 :date: 2020-25-02 19:00
 :summary: Визуализация
-:status: not_published
+:status: published
 
 .. default-role:: code
 
