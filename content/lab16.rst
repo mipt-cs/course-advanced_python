@@ -194,7 +194,7 @@
 Наглядная схема по названием параметров
 ---------------------------------------
 
-.. image:: ../images/lab16/anatomy_plot.png
+.. image:: ../images/lab16/anatomy_plot.jpg
    :width: 505px
    :height: 261px
 
