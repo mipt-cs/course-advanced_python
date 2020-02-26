@@ -4,6 +4,7 @@
 :date: 2020-25-02 19:00
 :summary: Визуализация
 :status: published
+:published: yes
 
 .. default-role:: code
 
