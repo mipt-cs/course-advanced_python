@@ -196,8 +196,8 @@
 ---------------------------------------
 
 .. image:: ../images/lab16/anatomy_plot.jpg
-   :width: 505px
-   :height: 261px
+   :width: 900px
+   :height: 550px
 
 Строим некоторые виды графиков
 ------------------------------
@@ -420,8 +420,8 @@ DataFrame df
 Для большего понимания посмотреть на картинку из Wikipedia:
 
 .. image:: ../images/lab16/box_plot.png
-   :width: 369px
-   :height: 248px
+   :width: 500px
+   :height: 400px
    
 
 6) joint plot: Для того, чтобы подробнее посмотреть на взаимосвязь двух
