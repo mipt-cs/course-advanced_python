@@ -649,6 +649,8 @@ DataFrame df
 Домашнее задание:
 =================
 
+ДЗ по 2м последним лабам (15 - pandas, 16 - визуализация)
+
 1) взять данные отсюда: https://github.com/Laggg/data–for–students
    (flight_delays.csv)
 
