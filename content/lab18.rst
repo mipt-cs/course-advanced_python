@@ -35,8 +35,8 @@ SQLite и Python имеют достаточно простое преобраз
 Common practice
 ---------------
 
-В этой части будт рассмотрены основные принципы работы с библиотекой. За описанием функций и методов и их аргументов
-обращайтесь к документации или разделу `SQLite API`_.
+В этой части будут рассмотрены основные принципы работы с библиотекой. За полным списком функций и методов и их
+аргументов обращайтесь к документации.
 
 Для работы с БД сначала необходимо создать объект `Connection`. Создается он при помощи функции `connect`, которой
 необходимо передать путь до файла БД или `:memory:` для создания БД непосредственно в RAM.
@@ -97,9 +97,7 @@ Common practice
     conn.close()
 
 Однако, работа с курсором напрямую необязательна. Класс `Connection` предоставляет методы-обертки над одноименными
-методами класса `Cursor`: `execute()`, `executemany()`, `executescript()`. Что особенно удобно в случае `SELECT`
-запроса. Нет необходимости использовать специальные методы курсора (`fetchone()`, `fetchmany()`, `fetchall()`) для
-получения результата запроса.
+методами класса `Cursor`: `execute()`, `executemany()`, `executescript()`. Эти методы возвращают курсор.
 
 .. code-block:: python
 
@@ -131,7 +129,7 @@ Common practice
 Стоит обратить внимание на метод `executemany()`. Данный метод позволяет применить один и тот же запрос для разных
 входных данных. Данные подаются в виде объекта-коллекции, итератора или генератора. Подстановки данных выполняюстя при
 помощи вопросительных знаков или именованных параметров. В случае вопросительных знаков данные подаются в виде кортежа,
-даже если подстваляется одно значение. Для именованных параметрови используется словарь.
+даже если подставляется одно значение. Для именованных параметров используется словарь.
 
 .. code-block:: python
 
@@ -154,28 +152,112 @@ Common practice
 
     conn.close()
 
-.. TODO:
-    executescript()
-    context manager
-    row
+В рассмотренных ранее примерах все изменения необходимо коммитить. Однако есть возможность применять эти изменения
+автоматически. Первый вариант - использовать `executescript()`. Этот метод принимает один аргумент — строку с
+полноценным SQL скриптом — и выполняет записанные в ней запросы. Не забывайте про `;` в конце каждого запроса в скрипте.
 
-SQLite API
+.. code-block:: python
+
+    import sqlite3
+
+    con = sqlite3.connect(":memory:")
+    cur = con.cursor()
+    cur.executescript("""
+        create table person(
+            firstname,
+            lastname,
+            age
+        );
+
+        create table book(
+            title,
+            author,
+            published
+        );
+
+        insert into book(title, author, published)
+        values (
+            'Dirk Gently''s Holistic Detective Agency',
+            'Douglas Adams',
+            1987
+        );
+        """)
+    con.close()
+
+
+Второй вариант — контекстный менеджер. Использование соединения в контекстном менеджере позволяет автоматически
+коммитить изменения в случае успеха и откатывать в случае ошибки.
+
+.. code-block:: python
+
+    import sqlite3
+
+    conn = sqlite3.connect(":memory:")
+    con.execute("create table person (id integer primary key, firstname varchar unique)")
+
+    # Successful, conn.commit() is called automatically afterwards
+    with conn:
+        conn.execute("insert into person(firstname) values (?)", ("Joe",))
+
+    # conn.rollback() is called after the with block finishes with an exception, the
+    # exception is still raised and must be caught
+    try:
+        with conn:
+            conn.execute("insert into person(firstname) values (?)", ("Joe",))
+    except sqlite3.IntegrityError:
+        print("couldn't add Joe twice")
+
+    # Connection object used as context manager only commits or rollbacks transactions,
+    # so the connection object should be closed manually
+    conn.close()
+
+Последнее, что надо рассмотреть, это возможность получать результаты `SELECT` в произвольном виде. По умолчанию, каждая
+строка представлена кортежем. Однако это представление можно поменять. Для этого используется атрибут соединения
+`row_factory`, которому можно присвоить функцию следующего вида:
+
+.. code-block:: python
+
+    def dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
+
+Здесь `cursor.description` возвращает список названий столбцов. Каждый столбец характеризуется кортежем из 7 элементов,
+имя в нулевом элементе.
+
+При необходимости, такая функция может создавать объекты пользовательского класса. Библиотека sqlite3 для удобства
+содержит класс `Row`. `Row` в основном ведет себя как кортеж, но при этом дополнительно поддерживает обращение по
+именам столбцов. Перепишем пример для `SELECT` с использованием этого класса.
+
+.. code-block:: python
+
+    import sqlite3
+
+    conn = sqlite3.connect("my_data.db")
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM stocks WHERE symbol='RHAT'")
+    r = c.fetchone()
+
+    print(r.keys())
+    for key in r.keys():
+        print(r[key]
+
+    conn.close()
+
+Упражнение
 ----------
 
-Connection
-==========
+Используя базу данных с предыдущей лабы, напишите консольное приложение для работы с ней.
+Ваше приложение должно поддерживать команды:
 
-Объекты этого класса поддерживают соединение с файлом БД. Объекты класса `Connection` создются только при помощи
-функции `connect()`.
+1. Вывести список книг
+2. Вывести список читателей
+3. Добавить книгу.
+4. Добавить читателя.
+5. Выдать книгу читателю
+6. Принять книгу.
 
-Cursor
-======
-
-Row
-===
-
-Exception
-=========
-
-Упражнения
-----------
+По желанию можно дополнительно добавить поддержку произвольных запросов.
