@@ -3,7 +3,7 @@
 
 :date: 2020-03-05 09:00
 :summary: Работа с sqlite3
-:status: draft
+:status: published
 
 .. default-role:: code
 
