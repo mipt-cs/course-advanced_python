@@ -475,9 +475,9 @@ JOIN
 Напоминаю, что весь текст хранится в юникоде, соответственно кирилица поддерживается. Если есть желание, то
 названия столбцов и данные таблицы можно вбивать на русском языке.
 
-Books (id, author, title, publish_year)
-Readers (id, name)
-Records (reader_id, book_id, taking_date, returning_date)
++ Books (id, author, title, publish_year)
++ Readers (id, name)
++ Records (reader_id, book_id, taking_date, returning_date)
 
 Обратите внимание, что данные в таблице Records должны быть связаны с данными из других таблиц.
 
