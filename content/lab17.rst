@@ -6,11 +6,10 @@
 :status: published
 
 .. default-role:: code
-
-.. contents:: Содержание
-
 .. role:: python(code)
    :language: python
+
+.. contents:: Содержание
 
 Базы данных и СУБД
 ------------------
@@ -70,8 +69,6 @@
 
 Язык запросов SQL и СУБД sqlite3
 --------------------------------
-
-.. TODO: possibly link to sqlite3.zip for win users
 
 Наиболее распространенным языком запросов в реляционной модели является **язык структурированных
 запросов** (structured query language, SQL).
