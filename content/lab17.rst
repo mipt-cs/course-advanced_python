@@ -34,7 +34,7 @@
 + атрибуты – именованные столбцы отношения;
 + домен – набор значений, которые могут принимать атрибуты.
 
-.. image:: {filename}/images/lab17/company.png
+.. image:: {static}/images/lab17/company.png
    :align: center
    :alt: Таблица company
 
@@ -59,7 +59,7 @@
 Обычно ключи используют для объединения данных из нескольких таблиц.
 Например¸ добавим еще одну таблицу:
 
-.. image:: {filename}/images/lab17/department.png
+.. image:: {static}/images/lab17/department.png
    :align: center
    :alt: Таблица department
 
