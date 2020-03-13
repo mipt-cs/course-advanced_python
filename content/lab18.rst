@@ -27,7 +27,7 @@ sqlite3. По возможности рекомендую ознакомится
 SQLite и Python имеют достаточно простое преобразование между типами:
 
 + NULL ⟷ None
-+ INTEGER ⟷ соответint
++ INTEGER ⟷ int
 + REAL ⟷ float
 + TEXT ⟷ str
 + BLOB ⟷ bytes
