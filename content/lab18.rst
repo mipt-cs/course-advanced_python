@@ -243,7 +243,7 @@ Common practice
 
     print(r.keys())
     for key in r.keys():
-        print(r[key]
+        print(r[key])
 
     conn.close()
 
