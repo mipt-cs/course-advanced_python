@@ -360,12 +360,205 @@ QFormLayout для добавления элементов использует 
 ------------------
 
 Часто приложения не ограничиваются набором базовых виджетов, которые отображают данные фиксированных типов. Иногда надо
-отображать более произвольные данные, например, видео или изображения. Так, библиотека matplotlib должна как-то
+отображать произвольные данные, например, видео или изображения. Также библиотека matplotlib должна как-то
 отрисовывать построенные графики. Для этих целей Qt5 имеет ряд инструментов. Один из них QPainter, который предоставляет
-API для векторной графики. Поверхностями для рисования являются объекты класса QPainterDevice. QWidget является
+API для векторной графики. Поверхностями для рисования являются объекты класса QPaintDevice. QWidget является
 наследником этого класса и идеально подходит для отображения произвольных данных. Сам по себе QWidget имеет максимально
 простой вид — просто чистое полотно, цвет — фон окна приложения. Сама отрисовка реализуется классом QPaintEngine,
 который растеризует объекты перед их отрисовкой поверх виджетов.
 
-.. todo:
-    draw example + task for it
+Для примера попробуем написать своеобразный "генератор модерн арта", который позволит ознакомится с некоторыми основными
+принципами работы с QPainter. Как было сказано выше, нам понадобится QPaintDevice. Для этого используем QWidget, от
+которого мы отнаследуем свой виджет для отрисовки. Код мы вынесем в отдельный файл, чтобы не городить кучу кода в одном
+файле.
+
+.. code-block:: python
+
+    from abc import ABC, abstractmethod
+    import random
+    import time
+
+    from PyQt5.QtWidgets import QWidget
+    # We need QtGui for drawing related classes
+    # and QtCore for some non-widget classes
+    from PyQt5 import QtGui, QtCore
+
+    # Seed initialization with "random" number
+    random.seed(time.time())
+
+
+    class Shape(ABC):
+        """
+        Base class for shapes, that we want to draw
+        """
+        def __init__(self, x, y, pen, brush):
+            self.x = x
+            self.y = y
+            self.pen = pen
+            self.brush = brush
+
+        @abstractmethod
+        def draw(self, painter):
+            painter.setPen(self.pen)
+            painter.setBrush(self.brush)
+
+
+    class Circle(Shape):
+        def __init__(self, x, y):
+            super().__init__(x, y,
+                            QtGui.QPen(QtGui.QColor(0, 0, 0), 2),
+                            QtGui.QBrush(QtGui.QColor(100, 200, 100)))
+
+        def draw(self, painter):
+            super().draw(painter)
+            painter.drawEllipse(self.x, self.y, 20, 20)
+
+
+    class Square(Shape):
+        def __init__(self, x, y):
+            super().__init__(x, y,
+                            QtGui.QPen(QtGui.QColor(255, 0, 0)),
+                            QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+
+        def draw(self, painter):
+            super().draw(painter)
+            painter.drawRect(self.x, self.y, 20, 20)
+
+
+    class Triangle(Shape):
+        def __init__(self, x, y):
+            super().__init__(x, y,
+                            QtGui.QPen(QtGui.QColor(0, 0, 0)),
+                            QtGui.QBrush(QtGui.QColor(100, 200, 200)))
+
+        def draw(self, painter):
+            super().draw(painter)
+            poly = QtGui.QPolygon([
+                QtCore.QPoint(self.x, self.y),
+                QtCore.QPoint(self.x + 10, self.y + 20),
+                QtCore.QPoint(self.x - 10, self.y + 20)
+            ])
+            painter.drawPolygon(poly)
+
+
+    class ImageWidget(QWidget):
+        """
+        This is our canvas-widget
+        """
+        def __init__(self):
+            super().__init__()
+            # Here we store all shapes, that need to be drawn
+            self.__shapes = []
+
+        def add_object(self, name):
+            x = random.randint(0, self.width() - 1)
+            y = random.randint(0, self.height() - 1)
+            if name == "square":
+                obj = Square(x, y)
+            elif name == "circle":
+                obj = Circle(x, y)
+            elif name == "triangle":
+                obj = Triangle(x, y)
+            else:
+                raise RuntimeError("unknown shape")
+            self.__shapes.append(obj)
+            self.update()
+
+        def clear(self):
+            self.__shapes = []
+            self.update()
+
+        # Actual drawing happens here
+        def paintEvent(self, _):
+            painter = QtGui.QPainter(self)
+            for obj in self.__shapes:
+                obj.draw(painter)
+
+Как видно из предоставленного кода, для отрисовки используется специальный метод `paintEvent()`. Внутри этого метода
+создается объект класса QPainter. QPainter принимает один аргумент — объект класса QPaintDevice. Важно знать, что
+отрисовка на виджете не может происходить вне `paintEvent()`. Как можно заметить, `paintEvent()` кроме self принимает
+еще один аргумент event, который позволяет узнать некоторые подробности события и управлять событием. Метод `update()`
+запрашивает вызов `paintEvent()`, который будет вызван как только управление вернется в цикл событий. Теперь отрисовка
+объектов. QPainter поддерживает ряд примитив, для которых есть специальные методы:
+
+- drawArc — дуга;
+- drawChord — хорда с отсеченной дугой;
+- drawConvexPolygon — выпуклый многоугольник;
+- drawEllipse — эллипс;
+- drawLine — отрезок;
+- drawPie — сектор;
+- drawPoint — точка;
+- drawPolygon — произвольный многоугольник;
+- drawPolyline — ломаная;
+- drawRect — прямоугольник.
+
+На этом список не заканчивается, есть еще ряд примитив. Кроме того QPainter поддерживает отрисовку глифов, картинок,
+текста. Далее, обратите внимание на два класса: QPen и QBrush. QPen отвечает за стиль контуров и текста, а QBrush — за
+заливку. По умолчанию заливка прозрачная, а контуры черные, толщиной в 1 пиксель. Заданные QPen и QBrush находятся в
+памяти QPainter до их смены или удаления объекта QPainter. Для установки цвета используется класс QColor. Его
+конструктор принимает аргументы в формате RGB, но сам по себе класс может работать и с другими цветовыми моделями
+(CMYK, HSL, HSV). Последнее, что надо отметить, это система координат. Начало кординат расположено в левом верхнем углу,
+ось абсцисс направлена вправо, ось ординат направлена вниз. При необходимости систему координат можно поменять при
+помощи преобразований.
+
+Чтобы наконец посмотреть, как работают хотя бы некоторые базовые вещи, перепишем код главного окна.
+
+.. code-block:: python
+
+    import sys
+    from PyQt5 import QtWidgets
+    # QtCore.Qt provides access to various flags, constants, etc.
+    from PyQt5.QtCore import Qt
+    # Don't forget to import your canvas-widget
+    from imagewidget import ImageWidget
+
+
+    class MainWindow(QtWidgets.QMainWindow):
+        def __init__(self):
+            super().__init__(flags=Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+            vlayout = QtWidgets.QVBoxLayout()
+            widget = QtWidgets.QWidget()
+            widget.setLayout(vlayout)
+            self.setCentralWidget(widget)
+            img_widget = ImageWidget()
+            vlayout.addWidget(img_widget)
+            hlayout = QtWidgets.QHBoxLayout()
+            vlayout.addLayout(hlayout)
+            button = QtWidgets.QPushButton("Square")
+            button.pressed.connect(lambda: img_widget.add_object("square"))
+            hlayout.addWidget(button)
+            button = QtWidgets.QPushButton("Circle")
+            button.pressed.connect(lambda: img_widget.add_object("circle"))
+            hlayout.addWidget(button)
+            button = QtWidgets.QPushButton("Triangle")
+            button.pressed.connect(lambda: img_widget.add_object("triangle"))
+            hlayout.addWidget(button)
+            button = QtWidgets.QPushButton("Clear")
+            button.pressed.connect(img_widget.clear)
+            hlayout.addWidget(button)
+            hlayout.addStretch()
+
+
+    if __name__ == "__main__":
+        app = QtWidgets.QApplication(sys.argv)
+
+        w = MainWindow()
+        w.setWindowTitle("ModernArt generator")
+        w.setFixedSize(300, 350)
+        w.show()
+
+        sys.exit(app.exec_())
+
+Упражнение №?
+=============
+
+Напишите программу, которая будет отрисовывать график функции. Пусть вашей функцией будет полином какой-нибудь степени,
+но не берите слишком большую степень. Программа должна поддерживать возможность изменения коэффициентов полинома прямо
+во время работы программы. Например, я беру полином 5 степень, мне надо задавать 5 коэффициентов. Для этого можно
+использовать 5 объектов QLineEdit (каждый под свой коэффициент), или один QLineEdit и перечислять коэффициенты чреез
+запятую. Проявите фантазию. По нажатию кнопки OK программа должна отрисовать график для заданных коэффициентов.
+
+Дополнительно: используйте QSlider для изменения качества сглаживания вашего графика. Попробуйте поиграть с другими
+функциями: синус, косинус, логарифм и тд.
+
+.. todo:tasks
