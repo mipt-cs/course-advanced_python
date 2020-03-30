@@ -2,7 +2,7 @@
 ############
 
 :date: 2020-04-02 09:00
-:summary: Cоздание графических приложений
+:summary: Cоздание графических приложений, ч. 1
 :status: published
 
 .. default-role:: code
