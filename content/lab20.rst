@@ -3,7 +3,7 @@
 
 :date: 2020-03-27 16:29
 :summary: flask blueprints
-:status: draft
+:status: published
 
 .. default-role:: code
 
