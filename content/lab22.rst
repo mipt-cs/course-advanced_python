@@ -138,7 +138,8 @@ QThread имеет метод `terminate()`, который принудител
 записанные (а значит испорченные) участки памяти. Второй механизм останова — методы `requestInterruption()` и
 `isInterruptionRequested()`. Первый выставляет флаг, который говорит, что пора завершать работу. Второй возвращает
 значение этого флага. Тем самым для цикла внутри `run()` одним из критериев останова будет равенство этого флага True,
-т.е. пора завершать работу. Для того, чтобы дождаться завершения потока, используйте метод `wait()`.
+т.е. пора завершать работу. Третий подход — методы `exit()` и `quit()`, которые используются при работе потока с циклом
+событий. Для того, чтобы дождаться завершения потока, используйте метод `wait()`.
 
 .. code-block:: python
 
@@ -174,6 +175,7 @@ QThread имеет метод `terminate()`, который принудител
          self.bar = QtWidgets.QProgressBar()
          self.bar.setMinimum(0)
          self.bar.setMaximum(MAX_ITER)
+         self.bar.setValue(0)
          vlayout.addWidget(self.bar)
          self.button = QtWidgets.QPushButton("Start")
          self.button.pressed.connect(self.process)
@@ -184,6 +186,7 @@ QThread имеет метод `terminate()`, который принудител
          self.processor = Processor(self)
          self.processor.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
          self.processor.status_changed.connect(self.button.setDisabled)
+         self.processor.finished.connect(lambda: self.bar.setValue(0))
          self.destroyed.connect(lambda: self.cleanup())
 
       def process(self):
@@ -213,12 +216,40 @@ QThread имеет метод `terminate()`, который принудител
 C++ объекта, как было рассказано выше.
 
 Второе — соединение сигнала `iteration_passed`. В примере выше мы используем прямое соединение, чтобы вызывать
-обновление полосы прогресса непосредственно в нашем  отдельном потоке. Иначе частые запросы просто заспамят очередь
-запросов в нашем основном потоке, и мы получим похожую проблему, чтобы была до разделения программы на два потока. Для
+обновление полосы прогресса непосредственно в нашем отдельном потоке. Иначе частые запросы просто заспамят очередь
+запросов в основном потоке, и мы получим похожую проблему, чтобы была до разделения программы на два потока. Для
 теста попробуйте убрать этот аргумент и посмотрите на результат.
+
+Также стоит отметить, что это не единственный способ работы с QThread. Другой способ использование рабочего объекта
+(worker-object approach), что имеет свои плюсы.
 
 QRunnable и QThreadPool
 =======================
+
+Пример выше — не совсем типичный пример использования QThread, хотя не является плохим решением. Обычно при
+использовании QThread поток запускается и живет на всем протяжении работы программы. В данном случае нам нужен отдельный
+поток на небольшой промежуток времени. Тут нам поможет класс QThreadPool, класс для управления отдельными потоками. Он
+может выделять отдельные потока на исполнение каких-либо операций и возвращать себе. Любое Qt приложение имеет
+глобальный пул потоков, который можно получить функцией `QThreadPool.globalInstance()`. QThreadPool работает с объектами
+класса QRunnable. Это класс для выделения части кода, который может быть исполнен в отдельном потоке. Реализация кода
+помещается в метод `run()`. Запуск кода происходит при помощи метода `start()` класса QThreadPool. Как только работа
+QRunnable завершится, QThreadPool сам удалит объект QRunnable (по желанию автоудаление можно отключить).
+
+Важной особенностью QRunnable является то, что он не является наследником класса QObject, т.е. не может содержать
+сигналы и слоты. Для этого используется вспомогательный объект, который будет содержать сигналы и слоты. Однако, тут
+есть свои подводные  камни. Если закрыть программу во время исполнения QRunnable, ProcessorWorker (а точнее скрываемый
+им C++ объект QObject) может быть удален  раньше Processor. MainWindow будет ждать завершение QRunnable при помощи
+метода `waitForDone()` класса QThreadPool. Пока QRunnable не завершится, есть возможность, что он обратится к сигналам
+от ProcessorWorker, чей C++ объект уже уничтожен. Привязав ProcessorWorker к MainWindow, мы обезапасим себя от такого,
+т.к. объект ProcessorWorker будет готов к удалению после того, как его родитель будет готов к этому (т.е. после
+завершения метода `cleanup()`). Главное, надо не забыть попросить приложение принудительно удалить объект (метод
+`deleteLater()`), когда он станет не нужен. После завершения QRunnable, он сам будет автоматически удален, что нельзя
+сказать про ProcessorWorker, привязанный к MainWindow. Таким образом мы удалим ProcessorWorker после смерти QRunnable,
+но раньше завершения программы.
+
+Другой особенностью QRunnable является отсутвие встроенных методов останова его работы. Однако это можно легко сделать,
+сымитировав методы `requestInterruption()` и `isInterruptionRequested()` класса QThread. В примере ниже это не сделано,
+но для вас это не должно составить труда.
 
 .. code-block:: python
 
@@ -232,12 +263,15 @@ QRunnable и QThreadPool
    class ProcessorWorker(QObject):
       iteration_passed = pyqtSignal(int)
       status_changed = pyqtSignal(bool)
+      finished = pyqtSignal()
 
 
    class Processor(QRunnable):
-      def __init__(self):
+      def __init__(self, parent):
          super().__init__()
-         self.signals = ProcessorWorker()
+         # we need parent to protect worker
+         # from beeing deleted before Processor
+         self.signals = ProcessorWorker(parent)
 
       def run(self):
          self.signals.status_changed.emit(True)
@@ -248,6 +282,10 @@ QRunnable и QThreadPool
                   i += 1
                   self.signals.iteration_passed.emit(i + 1)
          self.signals.status_changed.emit(False)
+         self.signals.finished.emit()
+         # now we ask application do delete worker
+         # since we don't need it anymore
+         self.signals.deleteLater()
 
 
    class MainWindow(QtWidgets.QMainWindow):
@@ -260,6 +298,7 @@ QRunnable и QThreadPool
          self.bar = QtWidgets.QProgressBar()
          self.bar.setMinimum(0)
          self.bar.setMaximum(MAX_ITER)
+         self.bar.setValue(0)
          vlayout.addWidget(self.bar)
          self.button = QtWidgets.QPushButton("Start")
          self.button.pressed.connect(self.process)
@@ -271,9 +310,10 @@ QRunnable и QThreadPool
          self.destroyed.connect(lambda: self.cleanup())
 
       def process(self):
-         processor = Processor()
+         processor = Processor(self)
          processor.signals.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
          processor.signals.status_changed.connect(self.button.setDisabled)
+         processor.signals.finished.connect(lambda: self.bar.setValue(0))
          self.thread_pool.start(processor)
 
       def cleanup(self):
@@ -296,7 +336,7 @@ QRunnable и QThreadPool
 .. code-block:: python
 
    import sys
-   from concurrent.futures import ThreadPoolExecutor, wait
+   from concurrent.futures import ThreadPoolExecutor
    from PyQt5 import QtWidgets
    from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -305,6 +345,7 @@ QRunnable и QThreadPool
    class MainWindow(QtWidgets.QMainWindow):
       iteration_passed = pyqtSignal(int)
       status_changed = pyqtSignal(bool)
+      finished = pyqtSignal()
 
       def __init__(self):
          super().__init__(flags=Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
@@ -315,6 +356,7 @@ QRunnable и QThreadPool
          self.bar = QtWidgets.QProgressBar()
          self.bar.setMinimum(0)
          self.bar.setMaximum(MAX_ITER)
+         self.bar.setValue(0)
          vlayout.addWidget(self.bar)
          self.button = QtWidgets.QPushButton("Start")
          self.button.pressed.connect(self.process)
@@ -323,16 +365,12 @@ QRunnable и QThreadPool
          button.pressed.connect(app.aboutQt)
          vlayout.addWidget(button)
          self.thread_pool = ThreadPoolExecutor()
-         self.destroyed.connect(lambda: self.cleanup())
          self.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
          self.status_changed.connect(self.button.setDisabled)
-         self.futures = []
+         self.finished.connect(lambda: self.bar.setValue(0))
 
       def process(self):
-         self.futures.append(self.thread_pool.submit(self.run))
-
-      def cleanup(self):
-         wait(self.futures)
+         self.thread_pool.submit(self.run)
 
       def run(self):
          self.status_changed.emit(True)
