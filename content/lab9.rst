@@ -3,7 +3,7 @@
 
 :date: 2019-11-11 09:00
 :summary: Тема 7. Часть 2. Итераторы и сопроцессы.
-:status: published
+:status: draft
 
 .. default-role:: code
 

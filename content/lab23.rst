@@ -3,7 +3,7 @@
 
 :date: 2020-04-23 09:00
 :summary: Классические методы машинного обучения, ч.1
-:status: published
+:status: draft
 
 .. default-role:: code
 

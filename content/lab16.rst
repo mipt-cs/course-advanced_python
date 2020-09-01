@@ -3,8 +3,8 @@
 
 :date: 2020-02-16 19:00
 :summary: Визуализация
-:status: published
-:published: yes
+:status: draft
+:draft: yes
 
 .. default-role:: code
 

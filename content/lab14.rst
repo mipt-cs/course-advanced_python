@@ -3,7 +3,7 @@
 
 :date: 2020-01-28 09:00
 :summary: Библиотека NumPy
-:status: published
+:status: draft
 
 .. default-role:: code
 .. role:: python(code)

@@ -3,7 +3,7 @@
 
 :date: 2019-12-02 09:00
 :summary: Работа с сокетами
-:status: published
+:status: draft
 
 .. default-role:: code
 

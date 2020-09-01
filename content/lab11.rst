@@ -3,7 +3,7 @@
 
 :date: 2019-11-25 09:00
 :summary: Тема 9. Сериализация и десериализация объектов.
-:status: published
+:status: draft
 
 .. default-role:: code
 

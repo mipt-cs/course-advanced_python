@@ -3,7 +3,7 @@ sqlite3 в Python
 
 :date: 2020-03-12 09:00
 :summary: Работа с sqlite3 в Python
-:status: published
+:status: draft
 
 .. default-role:: code
 
@@ -172,10 +172,10 @@ Common practice
         create table book(
             title,
             author,
-            published
+            draft
         );
 
-        insert into book(title, author, published)
+        insert into book(title, author, draft)
         values (
             'Dirk Gently''s Holistic Detective Agency',
             'Douglas Adams',
