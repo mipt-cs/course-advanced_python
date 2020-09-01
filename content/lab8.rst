@@ -4,7 +4,6 @@
 :date: 2019-11-04 09:00
 :summary: Тема 7. Часть 1. Генераторы и цикл for.
 :status: draft
-:draft: yes
 
 .. default-role:: code
 
