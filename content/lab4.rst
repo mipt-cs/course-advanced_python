@@ -3,7 +3,7 @@
 
 :date: 2019-09-19 19:00
 :summary: Обработка аргументов командной строки. Библиотека sys и argparse. Декораторы
-:status: draft
+:status: published
 
 .. default-role:: code
 
