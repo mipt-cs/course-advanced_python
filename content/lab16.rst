@@ -1,845 +1,1517 @@
-Визуализация в Python
-##################################################
+``NumPy``: матрицы и операции над ними
+######################################
 
-:date: 2020-02-16 19:00
-:summary: Визуализация
+:date: 2020-01-28 09:00
+:summary: Библиотека NumPy
 :status: draft
-:draft: yes
 
 .. default-role:: code
-
 .. role:: python(code)
    :language: python
 
 .. contents::
 
+``NumPy``: матрицы и операции над ними
+--------------------------------------
 
+Ссылка на `jupyter notebook`__ 
+
+__ {filename}/extra/lab14/2Numpy.ipynb
+
+В этом ноутбуке из сторонних библиотек нам понадобится только ``NumPy``.
+Для удобства импортируем ее под более коротким именем:
 
 .. code:: python
 
-    import pandas as pd
     import numpy as np
-    
-    import matplotlib.pyplot as plt # some imports to set up plotting
-    import seaborn as sns # pip install seaborn
-    
-    import warnings
-    warnings.filterwarnings('ignore')
-    
-    # Graphics in retina format are more sharp and legible
-    %config InlineBackend.figure_format = 'retina'
 
-Считываем данные
-----------------
+1. Создание матриц
+------------------
 
-.. code:: python
+Приведем несколько способов создания матриц в ``NumPy``.
 
-    # Берем данные отсюда: https://github.com/Laggg/data--for--students
-    # сначала считываем 2 строчки, чтобы понять разделитель колонок (по умолчанию разделитель - ",")
-    # в данном случае - разделитель колонок - символ ";"
-    pd.read_csv('beauty.csv', nrows=2)
+Самый простой способ — с помощью функции
+**numpy.array(list, dtype=None, ...)**.
 
+В качестве первого аргумента ей надо передать итерируемый объект,
+элементами которого являются другие итерируемые объекты одинаковой длины
+и содержащие данные одинакового типа.
 
+Второй аргумент является опциональным и определяет тип данных матрицы.
+Его можно не задавать, тогда тип данных будет определен из типа
+элементов первого аргумента. При задании этого параметра будет
+произведена попытка приведения типов.
 
-
-.. raw:: html
-
-    <div>
-    <style scoped>
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-    
-        .dataframe tbody tr th {
-            vertical-align: top;
-        }
-    
-        .dataframe thead th {
-            text-align: right;
-        }
-    </style>
-    <table border="1" class="dataframe">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>wage;exper;union;goodhlth;black;female;married;service;educ;looks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>0</td>
-          <td>5.73;30;0;1;0;1;1;1;14;4</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>4.28;28;0;1;0;1;1;0;12;3</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-
-
+Например, матрицу из списка списков целых чисел можно создать следующим
+образом:
 
 .. code:: python
 
-    df = pd.read_csv('beauty.csv', sep=';')
-    df.head()
-
-
-
-
-.. raw:: html
-
-    <div>
-    <style scoped>
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-    
-        .dataframe tbody tr th {
-            vertical-align: top;
-        }
-    
-        .dataframe thead th {
-            text-align: right;
-        }
-    </style>
-    <table border="1" class="dataframe">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>wage</th>
-          <th>exper</th>
-          <th>union</th>
-          <th>goodhlth</th>
-          <th>black</th>
-          <th>female</th>
-          <th>married</th>
-          <th>service</th>
-          <th>educ</th>
-          <th>looks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>0</td>
-          <td>5.73</td>
-          <td>30</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>14</td>
-          <td>4</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>4.28</td>
-          <td>28</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>1</td>
-          <td>1</td>
-          <td>0</td>
-          <td>12</td>
-          <td>3</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>7.96</td>
-          <td>35</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-          <td>10</td>
-          <td>4</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>11.57</td>
-          <td>38</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-          <td>1</td>
-          <td>1</td>
-          <td>16</td>
-          <td>3</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>11.42</td>
-          <td>27</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>16</td>
-          <td>3</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-
-
-
-Наглядная схема по названиям параметров
----------------------------------------
-
-.. image:: ../images/lab16/anatomy_plot.jpg
-   :width: 900px
-   :height: 550px
-
-Строим некоторые виды графиков
-------------------------------
-
-1) Обычный график, построенный по точкам. На вход может подаваться как
-   лист, так и массив, серия значений. Возможно использовать следующие
-   параметры:
-
--  linewidth ширина линии, соединяющей соседние точки
--  color цвет линии
--  marker вид точкек, которые соединяются линиями
--  linestyle стиль линии (сплошная, прерывистая, точка-тире и т.д.)
--  label подпись на легенде
-
-Приведем пример графика с некоторыми параметрами, которые можно
-изменять. Все комбинации параметров смотрите в официальной документации
-https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
-
-.. code:: python
-
-    x = [1,2,3,1,3,2]
-    x = np.array([1,2,3,1,3,2])
-    x = pd.Series(np.array([1,2,3,1,3,2]))
-    
-    plt.figure(figsize=(8,4)) # можно указать явно ширину и высоту графика (строчка не обязательна)
-    plt.plot(x, linewidth=2, color='green', marker='*', linestyle='dashed', label='line_1')
-    plt.legend() # показывать легенду
-    plt.grid(color='gray', linestyle='-', linewidth=1.5) # включить отрисовку сетки c определенными параметрами
-    plt.yticks([0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5]) # можно явно указать, как подписывать ось
-    plt.xticks()
-    plt.xlabel('ось абсцисс')
-    plt.ylabel('ось ординат');
-
-
-
-.. image:: ../images/lab16/output_8_0.png
-   :width: 497px
-   :height: 265px
-
-
-2) Другой пример - scatter (где точки не соединяются прямыми линиями), с
-   указанием точек (x1,y1),(x2,y2),(x3,y3)…
-
-.. code:: python
-
-    x = np.linspace(0, 5, 50) # создаем массив из 100 чисел float от 0 до 5 с равномернов шагом
-    y = x*(x - 2)*(x - 4)
-    
-    plt.figure(figsize=(8,4)) # можно указать явно ширину и высоту графика (строчка не обязательна)
-    plt.scatter(x, y, label='line_1')
-    plt.legend() # показывать легенду
-    plt.grid(linewidth=1) # включить отрисовку сетки c определенными параметрами
-    plt.yticks()
-    plt.xticks()
-    plt.xlabel('ось абсцисс')
-    plt.ylabel('ось ординат');
-
-
-
-.. image:: ../images/lab16/output_10_0.png
-   :width: 505px
-   :height: 261px
-
-
-2) Гистограмма - график, показывающий распределение какой-либо величины,
-   встречающуюся в данном объеме значений. По другому, график показыват
-   сколько раз встречается из выборки каждое значение в ней. Построим
-   гистограммы с помощью разных библиотек.
-
-Один из главных параметров bins - обратная величина к ширине столбцов на
-графике
-
-.. code:: python
-
-    df['wage'].hist(figsize=(6, 4), bins=100);
-
-
-
-.. image:: ../images/lab16/output_12_0.png
-   :width: 375px
-   :height: 248px
-
-
-.. code:: python
-
-    sns.distplot(df['wage'], bins=10);
-
-
-
-.. image:: ../images/lab16/output_13_0.png
-   :width: 378px
-   :height: 261px
-
-
-Можно сразу построить несколько гистограмм, относящихся к разным
-столбцам данных:
-
-.. code:: python
-
-    features = ['wage', 'exper']
-    df[features].hist(figsize=(10, 4), bins=60);
-
-
-
-.. image:: ../images/lab16/output_15_0.png
-   :width: 594px
-   :height: 263px
-
-
-3) CountPlot - столбчатая диаграмма, чаще всего используется для
-   категориальных признаков в данных. Показывает, сколько трочек в df
-   имеют каждое из выбранного значения категориального признака.
-
-.. code:: python
-
-    sns.countplot(x='female', data=df);
-
-
-
-.. image:: ../images/lab16/output_17_0.png
-   :width: 388px
-   :height: 261px
-
-
-.. code:: python
-
-    sns.countplot(y='female', data=df);
-
-
-
-.. image:: ../images/lab16/output_18_0.png
-   :width: 376px
-   :height: 261px
-
-
-Приведем пример для столбца look относительно параметра female в
-DataFrame df
-
-.. code:: python
-
-    sns.countplot(x='female', hue='looks', data=df);
-
-
-
-.. image:: ../images/lab16/output_20_0.png
-   :width: 388px
-   :height: 261px
-
-
-На следующем примере покажем, как нарисовать несколько графиков на одной
-картинке: axes - части графика. axes[0] - левая часть, а axes[1] -
-правая. Аналогично можно создать сетку 2х2 для 4х графиков (но для 4х
-графиков нужно указывать уже 2 координаты, например, ax=axis[1][1]).
-
-.. code:: python
-
-    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
-    
-    sns.countplot(x='female', data=df, ax=axes[0]);
-    sns.countplot(x='looks', data=df, ax=axes[1]);
-
-
-
-.. image:: ../images/lab16/output_22_0.png
-   :width: 723px
-   :height: 261px
-
-
-3) Круговая диаграмма отлично показывает соотношение частей:
-
-.. code:: python
-
-    plt.pie(df.groupby('female')['wage'].count()); # круговая диаграмми (pie)
-
-
-
-.. image:: ../images/lab16/output_24_0.png
-   :width: 231px
-   :height: 231px
-
-
-5) Ящик с усами, или boxplot Box plot состоит из коробки (поэтому он и
-   называется box plot), усиков и точек. Коробка показывает
-   интерквартильный размах распределения, то есть соответственно 25%
-   (Q1) и 75% (Q3) перцентили.
-
-Черта внутри коробки обозначает медиану распределения.
-
-Усы отображают весь разброс точек кроме выбросов, то есть минимальные и
-максимальные значения, которые попадают в промежуток (Q1 - 1.5\ *IQR, Q3
-+ 1.5*\ IQR), где IQR = Q3 - Q1 — интерквартильный размах.
-
-Точками на графике обозначаются выбросы (outliers) — те значения,
-которые не вписываются в промежуток значений, заданный усами графика.
-
-.. code:: python
-
-    sns.boxplot(x='wage', data=df);
-
-
-
-.. image:: ../images/lab16/output_26_0.png
-   :width: 352px
-   :height: 261px
-
-
-.. code:: python
-
-    _, axes = plt.subplots(1, 2, sharey=True, figsize=(6, 4))
-    sns.boxplot(data=df['wage'], ax=axes[0]);
-    sns.violinplot(data=df['wage'], ax=axes[1]);
-
-
-
-.. image:: ../images/lab16/output_27_0.png
-   :width: 369px
-   :height: 248px
-
-
-Для большего понимания посмотреть на картинку из Wikipedia:
-
-.. image:: ../images/lab16/box_plot.png
-   :width: 500px
-   :height: 400px
-   
-
-6) joint plot: Для того, чтобы подробнее посмотреть на взаимосвязь двух
-   численных признаков, есть еще и joint plot — это гибрид scatter plot
-   и histogram. Посмотрим на то, как связаны между собой wage и exper.
-
-.. code:: python
-
-    sns.jointplot(x='wage', y='exper', data=df, kind='scatter');
-
-
-
-.. image:: ../images/lab16/output_30_0.png
-   :width: 421px
-   :height: 423px
-
-
-.. code:: python
-
-    sns.jointplot('exper', 'wage', data=df, kind="kde", color="r");
-
-
-
-.. image:: ../images/lab16/output_31_0.png
-   :width: 421px
-   :height: 423px
-
-
-После всего вышесказанного, нужно отметить, что можно делать некоторые
-операции над DataFrame, и уже к ним применять метод .plot(…).
-
-То есть pd.series.</plot/hist/.../>(....) = plt.</plot/hist/.../>(pd.series, ....)
-
-.. code:: python
-
-    df.groupby('looks').wage.sum().plot(kind='bar', rot=75, color='green');
-
-
-
-.. image:: ../images/lab16/output_33_0.png
-   :width: 381px
-   :height: 260px
-
-
-.. code:: python
-
-    df[features].plot(kind='density', subplots=True, layout=(1, 2), 
-                      sharex=False, figsize=(10, 4));
-
-
-
-.. image:: ../images/lab16/output_34_0.png
-   :width: 615px
-   :height: 251px
-
-
-3D графики
-----------
-
-.. code:: python
-
-    from mpl_toolkits.mplot3d import Axes3D
-    from sklearn import datasets
-    from sklearn.decomposition import PCA
-    
-    # import some data to play with
-    iris = datasets.load_iris()
-    X = iris.data[:, :2]  # we only take the first two features.
-    y = iris.target
-    x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
-    y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
-    X_reduced = PCA(n_components=3).fit_transform(iris.data)
-    
-    
-    # To getter a better understanding of interaction of the dimensions
-    # plot the first three PCA dimensions
-    fig = plt.figure(1, figsize=(8, 6))
-    ax = Axes3D(fig, elev=-150, azim=110)
-    ax.scatter(X_reduced[:, 0], X_reduced[:, 1], X_reduced[:, 2], c=y,
-               cmap=plt.cm.Set1, edgecolor='k', s=40)
-    
-    ax.set_title("First three PCA directions")
-    ax.set_xlabel("1st eigenvector")
-    ax.w_xaxis.set_ticklabels([])
-    ax.set_ylabel("2nd eigenvector")
-    ax.w_yaxis.set_ticklabels([])
-    ax.set_zlabel("3rd eigenvector")
-    ax.w_zaxis.set_ticklabels([])
-    plt.show()
-
-
-
-.. image:: ../images/lab16/output_36_0.png
-   :width: 590px
-   :height: 446px
-
-
-Создание анимации
------------------
-
-Покажемсоздание анимации на примере построения разделябщей прямой между
-данными: https://hsto.org/webt/h7/vn/dt/h7vndtkzlinfkyoqzpcmjxecubu.gif
-из статьи про SVM https://habr.com/ru/company/ods/blog/484148/
-
-.. code:: python
-
-    import matplotlib.animation as animation
-    from matplotlib.animation import PillowWriter
-    import matplotlib.lines as mlines
-    
-    from sklearn.datasets import load_iris
-    from sklearn.decomposition import PCA
-    from sklearn.model_selection import train_test_split
-    
-    def newline(p1, p2, color=None): # функция отрисовки линии
-        #function kredits to: https://fooobar.com/questions/626491/how-to-draw-a-line-with-matplotlib
-        ax = plt.gca()
-        xmin, xmax = ax.get_xbound()
-    
-        if(p2[0] == p1[0]):
-            xmin = xmax = p1[0]
-            ymin, ymax = ax.get_ybound()
-        else:
-            ymax = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmax-p1[0])
-            ymin = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmin-p1[0])
-    
-        l = mlines.Line2D([xmin,xmax], [ymin,ymax], color=color)
-        ax.add_line(l)
-        return l
-    
-    
-    def one_image(w, X, Y): # фунцкия отрисовки одного кадра
-        axes = plt.gca()
-        axes.set_xlim([-4,4])
-        axes.set_ylim([-1.5,1.5])
-        d1 = {-1:'green', 1:'red'}
-        im = plt.scatter(X[:,0], X[:,1], c=[d1[y] for y in Y])
-        im = newline([0,-w[2]/w[1]],[-w[2]/w[0],0], 'blue')
-        return im
-    
-    
-    # блок подготовки данных
-    iris = load_iris()
-    X = iris.data
-    Y = iris.target
-    pca = PCA(n_components=2)
-    X = pca.fit_transform(X)
-    Y = (Y == 2).astype(int)*2-1 # [0,1,2] --> [False,False,True] --> [0,1,1] --> [0,0,2] --> [-1,1,1]
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state=2020)
-    
-    history_w = np.array([[ 1.40100620e-02,  3.82414425e-02,  9.29992169e-03],
-           [ 9.34759319e-02,  1.38405275e-02, -2.07000784e-02],
-           [ 1.77059209e-01,  2.08938874e-02, -5.07000782e-02],
-           [ 2.57582976e-01,  1.13119698e-02, -8.07000777e-02],
-           [ 2.57845336e-01,  3.30044268e-02, -1.10700077e-01],
-           [ 2.48875308e-01,  4.34713607e-02, -1.40700076e-01],
-           [ 2.10330535e-01,  2.29165461e-02, -1.70700074e-01],
-           [ 2.88030722e-01,  1.60452308e-02, -2.00700073e-01],
-           [ 3.65670311e-01,  6.38421381e-04, -2.30700071e-01],
-           [ 4.22698556e-01,  4.13726013e-03, -2.00700068e-01],
-           [ 3.91374597e-01, -2.71359690e-03, -2.30700066e-01],
-           [ 4.56157722e-01, -9.23192424e-03, -2.00700064e-01],
-           [ 4.56157718e-01, -9.23192415e-03, -2.00700062e-01],
-           [ 4.56157713e-01, -9.23192405e-03, -2.00700060e-01],
-           [ 5.15303640e-01, -1.46237611e-02, -1.70700058e-01],
-           [ 5.15303635e-01, -1.46237609e-02, -1.70700056e-01],
-           [ 5.15303630e-01, -1.46237608e-02, -1.70700055e-01],
-           [ 5.15303625e-01, -1.46237607e-02, -1.70700053e-01],
-           [ 5.15303619e-01, -1.46237605e-02, -1.70700051e-01],
-           [ 5.51273647e-01, -3.28065062e-02, -1.40700049e-01],
-           [ 5.51273642e-01, -3.28065059e-02, -1.40700048e-01],
-           [ 5.51273636e-01, -3.28065055e-02, -1.40700047e-01],
-           [ 5.66508857e-01,  5.17263051e-03, -1.70700045e-01],
-           [ 5.66508852e-01,  5.17263046e-03, -1.70700044e-01],
-           [ 5.66508846e-01,  5.17263040e-03, -1.70700042e-01],
-           [ 5.66508840e-01,  5.17263035e-03, -1.70700040e-01],
-           [ 5.48868641e-01,  1.97012529e-02, -2.00700038e-01],
-           [ 5.48868636e-01,  1.97012527e-02, -2.00700036e-01],
-           [ 5.48868630e-01,  1.97012525e-02, -2.00700034e-01],
-           [ 5.54086386e-01,  2.73468786e-02, -2.30700032e-01],
-           [ 5.96543457e-01,  1.00993879e-02, -2.00700030e-01],
-           [ 5.96543451e-01,  1.00993878e-02, -2.00700028e-01],
-           [ 5.96543445e-01,  1.00993877e-02, -2.00700026e-01],
-           [ 6.38206423e-01,  3.96740775e-03, -1.70700024e-01],
-           [ 6.38206417e-01,  3.96740771e-03, -1.70700022e-01],
-           [ 6.11201179e-01, -5.88772655e-03, -2.00700021e-01],
-           [ 6.52906839e-01, -1.43675546e-02, -1.70700019e-01],
-           [ 6.52906832e-01, -1.43675545e-02, -1.70700017e-01],
-           [ 6.52906826e-01, -1.43675543e-02, -1.70700015e-01],
-           [ 6.42197374e-01,  7.79748602e-04, -2.00700014e-01],
-           [ 6.03251852e-01,  1.06133678e-02, -2.30700012e-01],
-           [ 6.03251846e-01,  1.06133677e-02, -2.30700009e-01],
-           [ 6.05295634e-01,  3.17685316e-02, -2.60700007e-01],
-           [ 6.05295628e-01,  3.17685313e-02, -2.60700004e-01],
-           [ 6.05295622e-01,  3.17685310e-02, -2.60700002e-01],
-           [ 5.85487103e-01,  4.23576206e-02, -2.90699999e-01],
-           [ 5.85487097e-01,  4.23576202e-02, -2.90699996e-01],
-           [ 5.57651268e-01,  2.83422349e-02, -3.20699993e-01],
-           [ 5.53558401e-01,  3.77632078e-02, -3.50699990e-01],
-           [ 5.12157603e-01,  5.03918360e-02, -3.80699987e-01]])
-    
-    
-    fig = plt.figure()
-    ims = [] # набиваем в этот список кадры с помощью цикла
-    for i in range(50):
-        im = one_image(history_w[i], X_train, Y_train)
-        ims.append([im])
-    
-    ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True, # используем волшебную команду
-                                    repeat_delay=500)
-    writer = PillowWriter(fps=20) # устанавливаем фпс
-    
-    ani.save("my_demo.gif", writer='imagemagick') # сохраняем
+    a = np.array([1, 2, 3])   # Создаем одномерный массив
+    print(type(a))            # Prints "<class 'numpy.ndarray'>"
+    print(a.shape)            # Prints "(3,)" - кортеж с размерностями
+    print(a[0], a[1], a[2])   # Prints "1 2 3"
+    a[0] = 5                  # Изменяем значение элемента массива
+    print(a)                  # Prints "[5, 2, 3]"
+
+    b = np.array([[1,2,3],[4,5,6]])    # Создаем двухмерный массив
+    print(b.shape)                     # Prints "(2, 3)"
+    print(b[0, 0], b[0, 1], b[1, 0])   # Prints "1 2 4"
+    print(np.arange(1, 5)) #Cоздает вектор с эелементами от 1 до 4
 
 
 .. parsed-literal::
 
-    MovieWriter imagemagick unavailable; trying to use <class 'matplotlib.animation.PillowWriter'> instead.
-    
+    <class 'numpy.ndarray'>
+    (3,)
+    1 2 3
+    [5 2 3]
+    (2, 3)
+    1 2 4
+    [1 2 3 4]
 
-
-.. image:: ../images/lab16/output23_1.gif
-   :width: 383px
-   :height: 252px
-
-
-Домашнее задание:
-=================
-
-
-
-1) ДЗ по 2м последним лабам (15 - pandas, 16 - визуализация): Нужно взять данные отсюда: https://github.com/Laggg/data–for–students
-   (flight_delays.csv)
-
-2) для каждой задачи получить ответ на вопрос через pandas и
-   визуализировать его любым подходящим способом (у всех графиков должна
-   быть легенда, подписаны оси):
-
-   -  доля всех задержек ко всем вылетам
-   -  найти зависимость количества задержек от длины пути, который
-      предстоит пролететь самолету
-   -  топ 5 направлений, для которых чаще всего происходят задержки
-   -  в какие времена года чаще всего происходят задержки рейсов
-   -  найти топ 10 самых хороших перевозчиков, которые реже всего
-      задерживают свои рейсы
-   -  найти топ 10 самых безответственных аэропортов, в которых чаще
-      всего происходят задержки
-   -  найти необычную зависимость количества задержек от имеющихся
-      данных
 
 .. code:: python
 
-    import pandas as pd
-    pd.read_csv('flight_delays.csv').head(10)
+    matrix = np.array([[1, 2, 3], [2, 5, 6], [6, 7, 4]])
+    print ("Матрица:\n", matrix)
 
 
+.. parsed-literal::
+
+    Матрица:
+     [[1 2 3]
+     [2 5 6]
+     [6 7 4]]
 
 
-.. raw:: html
+Второй способ создания — с помощью встроенных функций
+**numpy.eye(N, M=None, ...)**, **numpy.zeros(shape, ...)**,
+**numpy.ones(shape, ...)**.
 
-    <div>
-    <style scoped>
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-    
-        .dataframe tbody tr th {
-            vertical-align: top;
-        }
-    
-        .dataframe thead th {
-            text-align: right;
-        }
-    </style>
-    <table border="1" class="dataframe">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>Month</th>
-          <th>DayofMonth</th>
-          <th>DayOfWeek</th>
-          <th>DepTime</th>
-          <th>UniqueCarrier</th>
-          <th>Origin</th>
-          <th>Dest</th>
-          <th>Distance</th>
-          <th>dep_delayed_15min</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>0</th>
-          <td>c-8</td>
-          <td>c-21</td>
-          <td>c-7</td>
-          <td>1934</td>
-          <td>AA</td>
-          <td>ATL</td>
-          <td>DFW</td>
-          <td>732</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>c-4</td>
-          <td>c-20</td>
-          <td>c-3</td>
-          <td>1548</td>
-          <td>US</td>
-          <td>PIT</td>
-          <td>MCO</td>
-          <td>834</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>2</th>
-          <td>c-9</td>
-          <td>c-2</td>
-          <td>c-5</td>
-          <td>1422</td>
-          <td>XE</td>
-          <td>RDU</td>
-          <td>CLE</td>
-          <td>416</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>3</th>
-          <td>c-11</td>
-          <td>c-25</td>
-          <td>c-6</td>
-          <td>1015</td>
-          <td>OO</td>
-          <td>DEN</td>
-          <td>MEM</td>
-          <td>872</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>4</th>
-          <td>c-10</td>
-          <td>c-7</td>
-          <td>c-6</td>
-          <td>1828</td>
-          <td>WN</td>
-          <td>MDW</td>
-          <td>OMA</td>
-          <td>423</td>
-          <td>Y</td>
-        </tr>
-        <tr>
-          <th>5</th>
-          <td>c-8</td>
-          <td>c-3</td>
-          <td>c-4</td>
-          <td>1918</td>
-          <td>NW</td>
-          <td>MEM</td>
-          <td>MCO</td>
-          <td>683</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>6</th>
-          <td>c-1</td>
-          <td>c-27</td>
-          <td>c-4</td>
-          <td>754</td>
-          <td>DL</td>
-          <td>PBI</td>
-          <td>LGA</td>
-          <td>1035</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>7</th>
-          <td>c-4</td>
-          <td>c-29</td>
-          <td>c-6</td>
-          <td>635</td>
-          <td>OH</td>
-          <td>MSP</td>
-          <td>CVG</td>
-          <td>596</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>8</th>
-          <td>c-7</td>
-          <td>c-28</td>
-          <td>c-5</td>
-          <td>735</td>
-          <td>AA</td>
-          <td>ONT</td>
-          <td>DFW</td>
-          <td>1189</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <th>9</th>
-          <td>c-6</td>
-          <td>c-20</td>
-          <td>c-2</td>
-          <td>2029</td>
-          <td>OO</td>
-          <td>DEN</td>
-          <td>PSC</td>
-          <td>853</td>
-          <td>N</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
+Первая функция создает единичную матрицу размера :math:`N \times M`;
+если :math:`M` не задан, то :math:`M = N`.
+
+Вторая и третья функции создают матрицы, состоящие целиком из нулей или
+единиц соответственно. В качестве первого аргумента необходимо задать
+размерность массива — кортеж целых чисел. В двумерном случае это набор
+из двух чисел: количество строк и столбцов матрицы.
+
+**Примеры:**
+
+.. code:: python
+
+    b = np.eye(5)
+    print ("Единичная матрица:\n", b)
 
 
+.. parsed-literal::
 
-Очень полезные ссылки:
-----------------------
+    Единичная матрица:
+     [[1. 0. 0. 0. 0.]
+     [0. 1. 0. 0. 0.]
+     [0. 0. 1. 0. 0.]
+     [0. 0. 0. 1. 0.]
+     [0. 0. 0. 0. 1.]]
 
--  https://habr.com/ru/post/468295/
--  https://habr.com/ru/company/ods/blog/323210/
+
+.. code:: python
+
+    c = np.ones((7, 5))
+    print ("Матрица, состоящая из одних единиц:\n", c)
+
+
+.. parsed-literal::
+
+    Матрица, состоящая из одних единиц:
+     [[1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1.]]
+
+
+.. code:: python
+
+    d = np.full((2,2), 7)  # Создает матрицу (1, 2) заполненую заданным значением
+    print(d)               # Prints "[[ 7.  7.]
+                           #          [ 7.  7.]]"
+
+    e = np.random.random((2,2))  # Создает еденичную матрицу (2, 2) заполненую случаными числами (0, 1)
+    print(e)                     # Might print "[[ 0.91940167  0.08143941]
+                                 #               [ 0.68744134  0.87236687]]"
+
+
+.. parsed-literal::
+
+    [[7 7]
+     [7 7]]
+    [[0.25744383 0.48056466]
+     [0.13767881 0.40578168]]
+
+
+**Обратите внимание: размерность массива задается не двумя аргументами
+функции, а одним — кортежем!**
+
+Вот так — **np.ones(7, 5)** — создать массив не получится, так как
+функции в качестве параметра ``shape`` передается ``7``, а не кортеж
+``(7, 5)``.
+
+И, наконец, третий способ — с помощью функции
+**numpy.arange([start, ]stop, [step, ], ...)**, которая создает
+одномерный массив последовательных чисел из промежутка
+**[start, stop)** с заданным шагом **step**, и *метода*
+**array.reshape(shape)**.
+
+Параметр **shape**, как и в предыдущем примере, задает размерность
+матрицы (кортеж чисел). Логика работы метода ясна из следующего примера:
+
+.. code:: python
+
+    v = np.arange(0, 24, 2)
+    print ("Вектор-столбец:\n", v)
+
+
+.. parsed-literal::
+
+    Вектор-столбец:
+     [ 0  2  4  6  8 10 12 14 16 18 20 22]
+
+
+.. code:: python
+
+    d = v.reshape((3, 4))
+    print ("Матрица:\n", d)
+
+
+.. parsed-literal::
+
+    Матрица:
+     [[ 0  2  4  6]
+     [ 8 10 12 14]
+     [16 18 20 22]]
+
+
+Более подробно о том, как создавать массивы в ``NumPy``, см.
+`документацию <http://docs.scipy.org/doc/numpy-1.10.1/user/basics.creation.html>`__.
+
+2. Индексирование
+-----------------
+
+Для получения элементов матрицы можно использовать несколько способов.
+Рассмотрим самые простые из них.
+
+Для удобства напомним, как выглядит матрица **d**:
+
+.. code:: python
+
+    print ("Матрица:\n", d)
+
+
+.. parsed-literal::
+
+    Матрица:
+     [[ 0  2  4  6]
+     [ 8 10 12 14]
+     [16 18 20 22]]
+
+
+Элемент на пересечении строки **i** и столбца **j** можно
+получить с помощью выражения **array[i, j]**.
+
+**Обратите внимание:** строки и столбцы нумеруются с нуля!
+
+.. code:: python
+
+    print ("Второй элемент третьей строки матрицы:", d[2, 1])
+
+
+.. parsed-literal::
+
+    Второй элемент третьей строки матрицы: 18
+
+
+Из матрицы можно получать целые строки или столбцы с помощью выражений
+**array[i, :]** или **array[:, j]** соответственно:
+
+.. code:: python
+
+    print ("Вторая строка матрицы d:\n", d[1, :])
+    print ("Четвертый столбец матрицы d:\n", d[:, 3])
+
+
+.. parsed-literal::
+
+    Вторая строка матрицы d:
+     [ 8 10 12 14]
+    Четвертый столбец матрицы d:
+     [ 6 14 22]
+
+
+Еще один способ получения элементов — с помощью выражения
+**array[list1, list2]**, где **list1**, **list2** —
+некоторые списки целых чисел. При такой адресации одновременно
+просматриваются оба списка и возвращаются элементы матрицы с
+соответствующими координатами. Следующий пример более понятно объясняет
+механизм работы такого индексирования:
+
+.. code:: python
+
+    print ("Элементы матрицы d с координатами (1, 2) и (0, 3):\n", d[[1, 0], [2, 3]])
+
+
+.. parsed-literal::
+
+    Элементы матрицы d с координатами (1, 2) и (0, 3):
+     [12  6]
+
+
+.. code:: python
+
+    # Slicing
+
+    # Создадим матрицу (3, 4)
+    # [[ 1  2  3  4]
+    #  [ 5  6  7  8]
+    #  [ 9 10 11 12]]
+    a = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12]])
+
+    # Используя слайсинг, созадим матрицу b из элементов матрицы а
+    # будем использовать 0 и 1 строку, а так же 1 и 2 столебц
+    # [[2 3]
+    #  [6 7]]
+    b = a[:2, 1:3]
+    print(b)
+
+    # ОБРАТИТЕ ВНИМАНИЕ НА ИЗМЕНЕНИЕ ИСХОДОЙ МАТРИЦЫ
+    print(a[0, 1])   # Prints "2"
+    b[0, 0] = 77     # b[0, 0] is the same piece of data as a[0, 1]
+    print(a[0, 1])   # Prints "77"
+
+
+.. parsed-literal::
+
+    [[2 3]
+     [6 7]]
+    2
+    77
+
+
+.. code:: python
+
+    # Integer array indexing
+
+    a = np.array([[1,2], [3, 4], [5, 6]])
+    print(a)
+    print()
+
+    # Пример Integer array indexing
+    # В результате получится массив размерности (3,)
+    # Обратите внимание, что до запятой идут индексы строк, после - столбцов
+    print(a[[0, 1, 2], [0, 1, 0]])  # Prints "[1 4 5]"
+    print()
+
+    # По-другому пример можно записать так
+    print(np.array([a[0, 0], a[1, 1], a[2, 0]]))  # Prints "[1 4 5]"
+
+
+.. parsed-literal::
+
+    [[1 2]
+     [3 4]
+     [5 6]]
+
+    [1 4 5]
+
+    [1 4 5]
+
+
+Примеры использования слайсинга:
+
+.. code:: python
+
+
+    # Создадим новый маассив, из которого будем выбирать эллементы
+    a = np.array([[1,2,3], [4,5,6], [7,8,9], [10, 11, 12]])
+
+    print(a)  # prints "array([[ 1,  2,  3],
+              #                [ 4,  5,  6],
+              #                [ 7,  8,  9],
+              #                [10, 11, 12]])"
+
+    # Создадим массив индексов
+    b = np.array([0, 2, 0, 1])
+
+    # Выберем из каждой строки элемент с индексом из b (индекс столбца берется из b)
+    print(a[np.arange(4), b])  # Prints "[ 1  6  7 11]"
+    print()
+
+    # Добавим к этим элементам 10
+    a[np.arange(4), b] += 10
+
+    print(a)  # prints "array([[11,  2,  3],
+              #                [ 4,  5, 16],
+              #                [17,  8,  9],
+              #                [10, 21, 12]])
+
+
+.. parsed-literal::
+
+    [[ 1  2  3]
+     [ 4  5  6]
+     [ 7  8  9]
+     [10 11 12]]
+    [ 1  6  7 11]
+
+    [[11  2  3]
+     [ 4  5 16]
+     [17  8  9]
+     [10 21 12]]
+
+
+.. code:: python
+
+    a = np.array([[1,2], [3, 4], [5, 6]])
+
+    bool_idx = (a > 2)   # Найдем эллементы матрицы a, которые больше 2
+                         # В результате получим матрицу b, такой же размерности, как и a
+
+    print(bool_idx)      # Prints "[[False False]
+    print()              #          [ True  True]
+                         #          [ True  True]]"
+
+    # Воспользуемся полученным массивом для создания нового массива, ранга 1
+    print(a[bool_idx])  # Prints "[3 4 5 6]"
+
+    # Аналогично
+    print(a[a > 2])     # Prints "[3 4 5 6]"
+
+
+.. parsed-literal::
+
+    [[False False]
+     [ True  True]
+     [ True  True]]
+
+    [3 4 5 6]
+    [3 4 5 6]
+
+
+.. code:: python
+
+    #Помните, что вы можете пользоваться сразу несколькими типами индексирования
+    a = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12]])
+
+    row_r1 = a[1, :]
+    row_r2 = a[1:2, :]
+    print(row_r1, row_r1.shape)  # Prints "[5 6 7 8] (4,)"
+    print(row_r2, row_r2.shape)  # Prints "[[5 6 7 8]] (1, 4)"
+
+
+.. parsed-literal::
+
+    [5 6 7 8] (4,)
+    [[5 6 7 8]] (1, 4)
+
+
+Более подробно о различных способах индексирования в массивах см.
+`документацию <http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html>`__.
+
+3. Векторы, вектор-строки и вектор-столбцы
+------------------------------------------
+
+Следующие два способа задания массива кажутся одинаковыми:
+
+.. code:: python
+
+    a = np.array([1, 2, 3])
+    b = np.array([[1], [2], [3]])
+
+Однако, на самом деле, это задание одномерного массива (то есть
+*вектора*) и двумерного массива:
+
+.. code:: python
+
+    print ("Вектор:\n", a)
+    print ("Его размерность:\n", a.shape)
+    print ("Двумерный массив:\n", b)
+    print ("Его размерность:\n", b.shape)
+
+
+.. parsed-literal::
+
+    Вектор:
+     [1 2 3]
+    Его размерность:
+     (3,)
+    Двумерный массив:
+     [[1]
+     [2]
+     [3]]
+    Его размерность:
+     (3, 1)
+
+
+**Обратите внимание:** *вектор* (одномерный массив) и *вектор-столбец*
+или *вектор-строка* (двумерные массивы) являются различными объектами в
+``NumPy``, хотя математически задают один и тот же объект. В случае
+одномерного массива кортеж **shape** состоит из одного числа и имеет
+вид **(n,)**, где **n** — длина вектора. В случае двумерных
+векторов в **shape** присутствует еще одна размерность, равная
+единице.
+
+В большинстве случаев неважно, какое представление использовать, потому
+что часто срабатывает приведение типов. Но некоторые операции не
+работают для одномерных массивов. Например, транспонирование (о нем
+пойдет речь ниже):
+
+.. code:: python
+
+    a = a.T
+    b = b.T
+
+.. code:: python
+
+    print ("Вектор не изменился:\n", a)
+    print ("Его размерность также не изменилась:\n", a.shape)
+    print ("Транспонированный двумерный массив:\n", b)
+    print ("Его размерность изменилась:\n", b.shape)
+
+
+.. parsed-literal::
+
+    Вектор не изменился:
+     [1 2 3]
+    Его размерность также не изменилась:
+     (3,)
+    Транспонированный двумерный массив:
+     [[1 2 3]]
+    Его размерность изменилась:
+     (1, 3)
+
+
+4. Datatypes
+------------
+
+Все элементы в массиве numpy принадлежат одному типу. В этом плане
+массивы ближе к C, чем к привычным вам листам питона. Numpy имеет
+множество встренных типов, подходящих для решения большинства задач.
+
+.. code:: python
+
+    x = np.array([1, 2])   # Автоматический выбор типа
+    print(x.dtype)         # Prints "int64"
+
+    x = np.array([1.0, 2.0])   # Автоматический выбор типа
+    print(x.dtype)             # Prints "float64"
+
+    x = np.array([1, 2], dtype=np.int64)   # Принудительное выставление типа
+    print(x.dtype)                         # Prints "int64"
+
+
+.. parsed-literal::
+
+    int32
+    float64
+    int64
+
+
+5. Математические операции
+--------------------------
+
+К массивам (матрицам) можно применять известные вам математические
+операции. Следут понимать, что при этом у элементов должны быть схожие
+размерности. Поведение в случае не совпадения размерностей хорошо
+описанно в документации numpy.
+
+.. code:: python
+
+    x = np.array([[1,2],[3,4]], dtype=np.float64)
+    y = np.array([[5,6],[7,8]], dtype=np.float64)
+    arr = np.array([1, 2])
+
+.. code:: python
+
+    # Сложение происходит поэлеметно
+
+    # [[ 6.0  8.0]
+    #  [10.0 12.0]]
+    print(x + y)
+    print()
+    print(np.add(x, y))
+    print('С числом')
+    print(x + 1)
+    print('C массивом другой размерности')
+    print(x + arr)
+
+
+.. parsed-literal::
+
+    [[ 6.  8.]
+     [10. 12.]]
+
+    [[ 6.  8.]
+     [10. 12.]]
+    С числом
+    [[2. 3.]
+     [4. 5.]]
+    C массивом другой размерности
+    [[2. 4.]
+     [4. 6.]]
+
+
+.. code:: python
+
+    # Вычитание
+    print(x - y)
+    print(np.subtract(x, y))
+
+
+.. parsed-literal::
+
+    [[-4. -4.]
+     [-4. -4.]]
+    [[-4. -4.]
+     [-4. -4.]]
+
+
+.. code:: python
+
+    # Деление
+    # [[ 0.2         0.33333333]
+    #  [ 0.42857143  0.5       ]]
+    print(x / y)
+    print(np.divide(x, y))
+
+
+.. parsed-literal::
+
+    [[0.2        0.33333333]
+     [0.42857143 0.5       ]]
+    [[0.2        0.33333333]
+     [0.42857143 0.5       ]]
+
+
+.. code:: python
+
+    # Другие функции
+    # [[ 1.          1.41421356]
+    #  [ 1.73205081  2.        ]]
+    print(np.sqrt(x))
+
+
+.. parsed-literal::
+
+    [[1.         1.41421356]
+     [1.73205081 2.        ]]
+
+
+6. Умножение матриц и столбцов
+------------------------------
+
+**Напоминание теории.** Операция **умножения** определена для двух
+матриц, таких что число столбцов первой равно числу строк второй.
+
+Пусть матрицы :math:`A` и :math:`B` таковы, что
+:math:`A \in \mathbb{R}^{n \times k}` и
+:math:`B \in \mathbb{R}^{k \times m}`. **Произведением** матриц
+:math:`A` и :math:`B` называется матрица :math:`C`, такая что
+:math:`c_{ij} = \sum_{r=1}^{k} a_{ir}b_{rj}`, где :math:`c_{ij}` —
+элемент матрицы :math:`C`, стоящий на пересечении строки с номером
+:math:`i` и столбца с номером :math:`j`.
+
+В ``NumPy`` произведение матриц вычисляется с помощью функции
+**numpy.dot(a, b, ...)** или с помощью *метода*
+**array1.dot(array2)**, где **array1** и **array2** —
+перемножаемые матрицы.
+
+.. code:: python
+
+    a = np.array([[1, 0], [0, 1]])
+    b = np.array([[4, 1], [2, 2]])
+    r1 = np.dot(a, b)
+    r2 = a.dot(b)
+
+.. code:: python
+
+    print ("Матрица A:\n", a)
+    print ("Матрица B:\n", b)
+    print ("Результат умножения функцией:\n", r1)
+    print ("Результат умножения методом:\n", r2)
+
+
+.. parsed-literal::
+
+    Матрица A:
+     [[1 0]
+     [0 1]]
+    Матрица B:
+     [[4 1]
+     [2 2]]
+    Результат умножения функцией:
+     [[4 1]
+     [2 2]]
+    Результат умножения методом:
+     [[4 1]
+     [2 2]]
+
+
+Матрицы в ``NumPy`` можно умножать и на векторы:
+
+.. code:: python
+
+    c = np.array([1, 2])
+    r3 = b.dot(c)
+
+.. code:: python
+
+    print ("Матрица:\n", b)
+    print ("Вектор:\n", c)
+    print ("Результат умножения:\n", r3)
+
+
+.. parsed-literal::
+
+    Матрица:
+     [[4 1]
+     [2 2]]
+    Вектор:
+     [1 2]
+    Результат умножения:
+     [6 6]
+
+
+**Обратите внимание:** операция ***** производит над матрицами
+покоординатное умножение, а не матричное!
+
+.. code:: python
+
+    r = a * b
+
+.. code:: python
+
+    print ("Матрица A:\n", a)
+    print ("Матрица B:\n", b)
+    print ("Результат покоординатного умножения через операцию умножения:\n", r)
+
+
+.. parsed-literal::
+
+    Матрица A:
+     [[1 0]
+     [0 1]]
+    Матрица B:
+     [[4 1]
+     [2 2]]
+    Результат покоординатного умножения через операцию умножения:
+     [[4 0]
+     [0 2]]
+
+
+Более подробно о матричном умножении в ``NumPy`` см.
+`документацию <http://docs.scipy.org/doc/numpy-1.10.0/reference/routines.linalg.html#matrix-and-vector-products>`__.
+
+7. Объединение массивов
+-----------------------
+
+Массивы можно Объединенять. Есть горизонтальное и вертикальное
+объединение.
+
+.. code:: python
+
+    a = np.floor(10*np.random.random((2,2)))
+    b = np.floor(10*np.random.random((2,2)))
+
+    print(a)
+    print(b)
+    print()
+
+
+    print(np.vstack((a,b)))
+    print()
+
+    print(np.hstack((a,b)))
+
+
+.. parsed-literal::
+
+    [[4. 0.]
+     [1. 4.]]
+    [[9. 7.]
+     [2. 6.]]
+
+    [[4. 0.]
+     [1. 4.]
+     [9. 7.]
+     [2. 6.]]
+
+    [[4. 0. 9. 7.]
+     [1. 4. 2. 6.]]
+
+
+Массивы можно переформировать при помощи метода, который задает новый
+многомерный массив. Следуя следующему примеру, мы переформатируем
+одномерный массив из десяти элементов во двумерный массив, состоящий из
+пяти строк и двух столбцов:
+
+.. code:: python
+
+    a = np.array(range(10), float)
+    print(a)
+    print()
+
+    # Превратим в матрицу
+    a = a.reshape((5, 2))
+    print(a)
+    print()
+
+    # Вернем обратно
+    print(a.flatten())
+
+    # Другой вариант
+    print(a.reshape((-1)))
+    # Превратим в марицу (9, 1)
+    print(a.reshape((-1, 1)))
+    # Превратим в марицу (1, 9)
+    print(a.reshape((1, -1)))
+
+
+.. parsed-literal::
+
+    [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+
+    [[0. 1.]
+     [2. 3.]
+     [4. 5.]
+     [6. 7.]
+     [8. 9.]]
+
+    [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    [[0.]
+     [1.]
+     [2.]
+     [3.]
+     [4.]
+     [5.]
+     [6.]
+     [7.]
+     [8.]
+     [9.]]
+    [[0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]]
+
+
+Задания: (Блок 1)
+=================
+
+Задание 1:
+~~~~~~~~~~
+
+Решите без использования циклов средставми NumPy (каждый пункт решается
+в 1-2 строчки)
+
+1. Создайте вектор с элементами от 12 до 42
+2. Создайте вектор из нулей длины 12, но его пятый елемент должен быть равен 1
+3. Создайте матрицу (3, 3), заполненую от 0 до 8
+4. Найдите все положительные числа в np.array([1,2,0,0,4,0])
+5. Умножьте матрицу размерности (5, 3) на (3, 2)
+6. Создайте матрицу (10, 10) так, чтобы на границе были 0, а внтури 1
+7. Создайте рандомный вектор и отсортируйте его
+8. Каков эквивалент функции enumerate для numpy массивов?
+9. \*Создайте рандомный вектор и выполните нормализацию столбцов (из каждого столбца вычесть среднее этого столбца, из каждого столбца вычесть sd этого столбца)
+10. \*Для заданного числа найдите ближайший к нему элемент в векторе
+11. \*Найдите N наибольших значений в векторе
+
+.. code:: python
+
+    # ваш код здесь
+
+Задание 2:
+~~~~~~~~~~
+
+| **Напишите полностью векторизованный вариант**
+| Дан трёхмерный массив, содержащий изображение, размера (height, width,
+  numChannels), а также вектор длины numChannels. Сложить каналы
+  изображения с указанными весами, и вернуть результат в виде матрицы
+  размера (height, width). Считать реальное изображение можно при помощи
+  функции ``scipy.misc.imread`` (если изображение не в формате png,
+  установите пакет pillow: ``conda install pillow``). Преобразуйте
+  цветное изображение в оттенки серого, использовав коэффициенты
+  np.array([0.299, 0.587, 0.114]).
+
+.. code:: python
+
+    # ваш код здесь
+
+8. Транспонирование матриц
+--------------------------
+
+**Напоминание теории.** **Транспонированной матрицей** :math:`A^{T}`
+называется матрица, полученная из исходной матрицы :math:`A` заменой
+строк на столбцы. Формально: элементы матрицы :math:`A^{T}` определяются
+как :math:`a^{T}_{ij} = a_{ji}`, где :math:`a^{T}_{ij}` — элемент
+матрицы :math:`A^{T}`, стоящий на пересечении строки с номером :math:`i`
+и столбца с номером :math:`j`.
+
+В ``NumPy`` транспонированная матрица вычисляется с помощью функции
+**numpy.transpose()** или с помощью *метода* **array.T**, где
+**array** — нужный двумерный массив.
+
+.. code:: python
+
+    a = np.array([[1, 2], [3, 4]])
+    b = np.transpose(a)
+    c = a.T
+
+.. code:: python
+
+    print ("Матрица:\n", a)
+    print ("Транспонирование функцией:\n", b)
+    print ("Транспонирование методом:\n",  c)
+
+
+.. parsed-literal::
+
+    Матрица:
+     [[1 2]
+     [3 4]]
+    Транспонирование функцией:
+     [[1 3]
+     [2 4]]
+    Транспонирование методом:
+     [[1 3]
+     [2 4]]
+
+
+См. более подробно о
+`numpy.transpose() <http://docs.scipy.org/doc/numpy-1.10.0/reference/generated/numpy.transpose.html>`__
+и
+`array.T <http://docs.scipy.org/doc/numpy-1.10.0/reference/generated/numpy.ndarray.T.html>`__
+в ``NumPy``.
+
+В следующих разделах активно используется модуль **numpy.linalg**,
+реализующий некоторые приложения линейной алгебры. Более подробно о
+функциях, описанных ниже, и различных других функциях этого модуля можно
+посмотреть в его
+`документации <http://docs.scipy.org/doc/numpy-1.10.0/reference/routines.linalg.html#linear-algebra-numpy-linalg>`__.
+
+9. Определитель матрицы
+-----------------------
+
+**Напоминание теории.** Для квадратных матриц существует понятие
+**определителя**.
+
+Пусть :math:`A` — квадратная матрица. **Определителем** (или
+**детерминантом**) матрицы :math:`A \in \mathbb{R}^{n \times n}` назовем
+число
+
+.. math::
+
+   \det A = \sum_{\alpha_{1}, \alpha_{2}, \dots, \alpha_{n}} (-1)^{N(\alpha_{1}, \alpha_{2}, \dots, \alpha_{n})} \cdot a_{\alpha_{1} 1} \cdot \cdot \cdot a_{\alpha_{n} n},
+
+где :math:`\alpha_{1}, \alpha_{2}, \dots, \alpha_{n}` — перестановка
+чисел от :math:`1` до :math:`n`,
+:math:`N(\alpha_{1}, \alpha_{2}, \dots, \alpha_{n})` — число инверсий в
+перестановке, суммирование ведется по всем возможным перестановкам длины
+:math:`n`.
+
+*Не стоит расстраиваться, если это определение понятно не до конца — в
+дальнейшем в таком виде оно не понадобится.*
+
+Например, для матрицы размера :math:`2 \times 2` получается:
+
+.. math::
+
+   \det \left( \begin{array}{cc} a_{11} & a_{12} \\ a_{21} & a_{22}  \end{array} \right) = a_{11} a_{22} - a_{12} a_{21}
+
+Вычисление определителя матрицы по определению требует порядка
+:math:`n!` операций, поэтому разработаны методы, которые позволяют
+вычислять его быстро и эффективно.
+
+В ``NumPy`` определитель матрицы вычисляется с помощью функции
+**numpy.linalg.det(a)**, где **a** — исходная матрица.
+
+.. code:: python
+
+    a = np.array([[1, 2, 1], [1, 1, 4], [2, 3, 6]], dtype=np.float32)
+    det = np.linalg.det(a)
+
+.. code:: python
+
+    print ("Матрица:\n", a)
+    print ("Определитель:\n", det)
+
+
+.. parsed-literal::
+
+    Матрица:
+     [[1. 2. 1.]
+     [1. 1. 4.]
+     [2. 3. 6.]]
+    Определитель:
+     -1.0
+
+
+Рассмотрим одно интересное свойство определителя. Пусть у нас есть
+параллелограмм с углами в точках
+:math:`(0, 0), (c,d), (a+c, b+d), (a, b)` (углы даны в порядке обхода по
+часовой стрелке). Тогда площадь этого параллелограмма можно вычислить
+как модуль определителя матрицы
+:math:`\left( \begin{array}{cc} a & c \\ b & d \end{array} \right)`.
+Похожим образом можно выразить и объем параллелепипеда через
+определитель матрицы размера :math:`3 \times 3`.
+
+10. Ранг матрицы
+----------------
+
+**Напоминание теории.** **Рангом матрицы** :math:`A` называется
+максимальное число линейно независимых строк (столбцов) этой матрицы.
+
+В ``NumPy`` ранг матрицы вычисляется с помощью функции
+**numpy.linalg.matrix_rank(M, tol=None)**, где **M** — матрица,
+**tol** — параметр, отвечающий за некоторую точность вычисления. В
+простом случае можно его не задавать, и функция сама определит
+подходящее значение этого параметра.
+
+.. code:: python
+
+    a = np.array([[1, 2, 3], [1, 1, 1], [2, 2, 2]])
+    r = np.linalg.matrix_rank(a)
+
+.. code:: python
+
+    print ("Матрица:\n", a)
+    print ("Ранг матрицы:", r)
+
+
+.. parsed-literal::
+
+    Матрица:
+     [[1 2 3]
+     [1 1 1]
+     [2 2 2]]
+    Ранг матрицы: 2
+
+
+С помощью вычисления ранга матрицы можно проверять линейную
+независимость системы векторов.
+
+Допустим, у нас есть несколько векторов. Составим из них матрицу, где
+наши векторы будут являться строками. Понятно, что векторы линейно
+независимы тогда и только тогда, когда ранг полученной матрицы совпадает
+с числом векторов. Приведем пример:
+
+.. code:: python
+
+    a = np.array([1, 2, 3])
+    b = np.array([1, 1, 1])
+    c = np.array([2, 3, 5])
+    m = np.array([a, b, c])
+
+.. code:: python
+
+    print (np.linalg.matrix_rank(m) == m.shape[0])
+
+
+.. parsed-literal::
+
+    True
+
+
+11. Системы линейных уравнений
+------------------------------
+
+**Напоминание теории.** **Системой линейных алгебраических уравнений**
+называется система вида :math:`Ax = b`, где
+:math:`A \in \mathbb{R}^{n \times m}, x \in \mathbb{R}^{m \times 1}, b \in \mathbb{R}^{n \times 1}`.
+В случае квадратной невырожденной матрицы :math:`A` решение системы
+единственно.
+
+В ``NumPy`` решение такой системы можно найти с помощью функции
+**numpy.linalg.solve(a, b)**, где первый аргумент — матрица
+:math:`A`, второй — столбец :math:`b`.
+
+.. code:: python
+
+    a = np.array([[3, 1], [1, 2]])
+    b = np.array([9, 8])
+    x = np.linalg.solve(a, b)
+
+.. code:: python
+
+    print ("Матрица A:\n", a)
+    print ("Вектор b:\n", b)
+    print ("Решение системы:\n", x)
+
+
+.. parsed-literal::
+
+    Матрица A:
+     [[3 1]
+     [1 2]]
+    Вектор b:
+     [9 8]
+    Решение системы:
+     [2. 3.]
+
+
+Убедимся, что вектор **x** действительно является решением системы:
+
+.. code:: python
+
+    print (a.dot(x))
+
+
+.. parsed-literal::
+
+    [9. 8.]
+
+
+Бывают случаи, когда решение системы не существует. Но хотелось бы все
+равно “решить” такую систему. Логичным кажется искать такой вектор
+:math:`x`, который минимизирует выражение
+:math:`\left\Vert Ax - b\right\Vert^{2}` — так мы приблизим выражение
+:math:`Ax` к :math:`b`.
+
+В ``NumPy`` такое псевдорешение можно искать с помощью функции
+**numpy.linalg.lstsq(a, b, ...)**, где первые два аргумента такие
+же, как и для функции **numpy.linalg.solve()**. Помимо решения
+функция возвращает еще три значения, которые нам сейчас не понадобятся.
+
+.. code:: python
+
+    a = np.array([[0, 1], [1, 1], [2, 1], [3, 1]])
+    b = np.array([-1, 0.2, 0.9, 2.1])
+    x, res, r, s = np.linalg.lstsq(a, b, rcond=None)
+
+.. code:: python
+
+    print ("Матрица A:\n", a)
+    print ("Вектор b:\n", b)
+    print ("Псевдорешение системы:\n", x)
+
+
+.. parsed-literal::
+
+    Матрица A:
+     [[0 1]
+     [1 1]
+     [2 1]
+     [3 1]]
+    Вектор b:
+     [-1.   0.2  0.9  2.1]
+    Псевдорешение системы:
+     [ 1.   -0.95]
+
+
+12. Обращение матриц
+--------------------
+
+**Напоминание теории.** Для квадратных невырожденных матриц определено
+понятие **обратной** матрицы.
+
+Пусть :math:`A` — квадратная невырожденная матрица. Матрица
+:math:`A^{-1}` называется **обратной матрицей** к :math:`A`, если
+
+.. math::
+
+   AA^{-1} = A^{-1}A = I,
+
+где :math:`I` — единичная матрица.
+
+В ``NumPy`` обратные матрицы вычисляются с помощью функции
+**numpy.linalg.inv(a)**, где **a** — исходная матрица.
+
+.. code:: python
+
+    a = np.array([[1, 2, 1], [1, 1, 4], [2, 3, 6]], dtype=np.float32)
+    b = np.linalg.inv(a)
+
+.. code:: python
+
+    print ("Матрица A:\n", a)
+    print ("Обратная матрица к A:\n", b)
+    print ("Произведение A на обратную должна быть единичной:\n", a.dot(b))
+
+
+.. parsed-literal::
+
+    Матрица A:
+     [[1. 2. 1.]
+     [1. 1. 4.]
+     [2. 3. 6.]]
+    Обратная матрица к A:
+     [[ 6.  9. -7.]
+     [-2. -4.  3.]
+     [-1. -1.  1.]]
+    Произведение A на обратную должна быть единичной:
+     [[1. 0. 0.]
+     [0. 1. 0.]
+     [0. 0. 1.]]
+
+
+13. Собственные числа и собственные вектора матрицы
+---------------------------------------------------
+
+**Напоминание теории.** Для квадратных матриц определены понятия
+**собственного вектора** и **собственного числа**.
+
+Пусть :math:`A` — квадратная матрица и
+:math:`A \in \mathbb{R}^{n \times n}`. **Собственным вектором** матрицы
+:math:`A` называется такой ненулевой вектор
+:math:`x \in \mathbb{R}^{n}`, что для некоторого
+:math:`\lambda \in \mathbb{R}` выполняется равенство
+:math:`Ax = \lambda x`. При этом :math:`\lambda` называется
+**собственным числом** матрицы :math:`A`. Собственные числа и
+собственные векторы матрицы играют важную роль в теории линейной алгебры
+и ее практических приложениях.
+
+В ``NumPy`` собственные числа и собственные векторы матрицы вычисляются
+с помощью функции **numpy.linalg.eig(a)**, где **a** — исходная
+матрица. В качестве результата эта функция выдает одномерный массив
+**w** собственных чисел и двумерный массив **v**, в котором по
+столбцам записаны собственные вектора, так что вектор **v[:, i]**
+соотвествует собственному числу **w[i]**.
+
+.. code:: python
+
+    a = np.array([[-1, -6], [2, 6]])
+    w, v = np.linalg.eig(a)
+
+.. code:: python
+
+    print ("Матрица A:\n", a)
+    print ("Собственные числа:\n", w)
+    print ("Собственные векторы:\n", v)
+
+
+.. parsed-literal::
+
+    Матрица A:
+     [[-1 -6]
+     [ 2  6]]
+    Собственные числа:
+     [2. 3.]
+    Собственные векторы:
+     [[-0.89442719  0.83205029]
+     [ 0.4472136  -0.5547002 ]]
+
+
+**Обратите внимание:** у вещественной матрицы собственные значения или
+собственные векторы могут быть комплексными.
+
+14. Расстояния между векторами
+------------------------------
+
+Вспомним некоторые нормы, которые можно ввести в пространстве
+:math:`\mathbb{R}^{n}`, и рассмотрим, с помощью каких библиотек и
+функций их можно вычислять в ``NumPy``.
+
+p-норма
+======================
+
+p-норма (норма Гёльдера) для вектора
+:math:`x = (x_{1}, \dots, x_{n}) \in \mathbb{R}^{n}` вычисляется по
+формуле:
+
+.. math::
+
+
+   \left\Vert x \right\Vert_{p} = \left( \sum_{i=1}^n \left| x_{i} \right|^{p} \right)^{1 / p},~p \geq 1.
+
+В частных случаях при: \* :math:`p = 1` получаем :math:`\ell_{1}` норму
+\* :math:`p = 2` получаем :math:`\ell_{2}` норму
+
+Далее нам понабится модуль ``numpy.linalg``, реализующий некоторые
+приложения линейной алгебры. Для вычисления различных норм мы используем
+функцию **numpy.linalg.norm(x, ord=None, ...)**, где **x** —
+исходный вектор, **ord** — параметр, определяющий норму (мы
+рассмотрим два варианта его значений — 1 и 2). Импортируем эту функцию:
+
+.. code:: python
+
+    from numpy.linalg import norm
+
+:math:`\ell_{1}` норма
+======================
+
+
+:math:`\ell_{1}` норма (также известная как `манхэттенское
+расстояние <https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%B8%D0%B5_%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D1%81%D0%BA%D0%B8%D1%85_%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B0%D0%BB%D0%BE%D0%B2>`__)
+для вектора :math:`x = (x_{1}, \dots, x_{n}) \in \mathbb{R}^{n}`
+вычисляется по формуле:
+
+.. math::
+
+
+    \left\Vert x \right\Vert_{1} = \sum_{i=1}^n \left| x_{i} \right|.
+
+Ей в функции **numpy.linalg.norm(x, ord=None, ...)** соответствует
+параметр **ord=1**.
+
+.. code:: python
+
+    a = np.array([1, 2, -3])
+    print('Вектор a:', a)
+
+
+.. parsed-literal::
+
+    Вектор a: [ 1  2 -3]
+
+
+.. code:: python
+
+    print('L1 норма вектора a:\n', norm(a, ord=1))
+
+
+.. parsed-literal::
+
+    L1 норма вектора a:
+     6.0
+
+
+:math:`\ell_{2}` норма
+======================
+
+:math:`\ell_{2}` норма (также известная как евклидова норма) для вектора
+:math:`x = (x_{1}, \dots, x_{n}) \in \mathbb{R}^{n}` вычисляется по
+формуле:
+
+.. math::
+
+
+    \left\Vert x \right\Vert_{2} = \sqrt{\sum_{i=1}^n \left( x_{i} \right)^2}.
+
+Ей в функции **numpy.linalg.norm(x, ord=None, ...)** соответствует
+параметр **ord=2**.
+
+.. code:: python
+
+    print ('L2 норма вектора a:\n', norm(a, ord=2))
+
+
+.. parsed-literal::
+
+    L2 норма вектора a:
+     3.7416573867739413
+
+
+Более подробно о том, какие еще нормы (в том числе матричные) можно
+вычислить, см.
+`документацию <http://docs.scipy.org/doc/numpy-1.10.0/reference/generated/numpy.linalg.norm.html>`__.
+
+15. Расстояния между векторами
+------------------------------
+
+Для двух векторов :math:`x = (x_{1}, \dots, x_{n}) \in \mathbb{R}^{n}` и
+:math:`y = (y_{1}, \dots, y_{n}) \in \mathbb{R}^{n}` :math:`\ell_{1}` и
+:math:`\ell_{2}` раccтояния вычисляются по следующим формулам
+соответственно:
+
+.. math::
+
+
+    \rho_{1}\left( x, y \right) = \left\Vert x - y \right\Vert_{1} = \sum_{i=1}^n \left| x_{i} - y_{i} \right|
+
+.. math::
+
+
+    \rho_{2}\left( x, y \right) = \left\Vert x - y \right\Vert_{2} =
+    \sqrt{\sum_{i=1}^n \left( x_{i} - y_{i} \right)^2}.
+
+.. code:: python
+
+    a = np.array([1, 2, -3])
+    b = np.array([-4, 3, 8])
+    print ('Вектор a:', a)
+    print ('Вектор b:', b)
+
+
+.. parsed-literal::
+
+    Вектор a: [ 1  2 -3]
+    Вектор b: [-4  3  8]
+
+
+.. code:: python
+
+    print ('L1 расстояние между векторами a и b:\n', norm(a - b, ord=1))
+    print ('L2 расстояние между векторами a и b:\n', norm(a - b, ord=2))
+
+
+.. parsed-literal::
+
+    L1 расстояние между векторами a и b:
+     17.0
+    L2 расстояние между векторами a и b:
+     12.12435565298214
+
+
+16. Скалярное произведение и угол между векторами
+-------------------------------------------------
+
+.. code:: python
+
+    a = np.array([0, 5, -1])
+    b = np.array([-4, 9, 3])
+    print ('Вектор a:', a)
+    print ('Вектор b:', b)
+
+
+.. parsed-literal::
+
+    Вектор a: [ 0  5 -1]
+    Вектор b: [-4  9  3]
+
+
+Скалярное произведение в пространстве :math:`\mathbb{R}^{n}` для двух
+векторов :math:`x = (x_{1}, \dots, x_{n})` и
+:math:`y = (y_{1}, \dots, y_{n})` определяется как:
+
+.. math::
+
+
+   \langle x, y \rangle = \sum_{i=1}^n x_{i} y_{i}.
+
+Длиной вектора :math:`x = (x_{1}, \dots, x_{n}) \in \mathbb{R}^{n}`
+называется квадратный корень из скалярного произведения, то есть длина
+равна евклидовой норме вектора:
+
+.. math::
+
+
+   \left| x \right| = \sqrt{\langle x, x \rangle} = \sqrt{\sum_{i=1}^n x_{i}^2} =  \left\Vert x \right\Vert_{2}.
+
+Теперь, когда мы знаем расстояние между двумя ненулевыми векторами и их
+длины, мы можем вычислить угол между ними через скалярное произведение:
+
+.. math::
+
+
+   \langle x, y \rangle = \left| x \right| | y | \cos(\alpha)
+   \implies \cos(\alpha) = \frac{\langle x, y \rangle}{\left| x \right| | y |},
+
+где :math:`\alpha \in [0, \pi]` — угол между векторами :math:`x` и
+:math:`y`.
+
+.. code:: python
+
+    cos_angle = np.dot(a, b) / norm(a) / norm(b)
+    print ('Косинус угла между a и b:', cos_angle)
+    print ('Сам угол:', np.arccos(cos_angle))
+
+
+.. parsed-literal::
+
+    Косинус угла между a и b: 0.8000362836474323
+    Сам угол: 0.6434406336093618
+
+
+17. Комплексные числа в питоне
+------------------------------
+
+**Напоминание теории.** **Комплексными числами** называются числа вида
+:math:`x + iy`, где :math:`x` и :math:`y` — вещественные числа, а
+:math:`i` — мнимая единица (величина, для которой выполняется равенство
+:math:`i^{2} = -1`). Множество всех комплексных чисел обозначается
+буквой :math:`\mathbb{C}` (подробнее про комплексные числа см.
+`википедию <https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BC%D0%BF%D0%BB%D0%B5%D0%BA%D1%81%D0%BD%D0%BE%D0%B5_%D1%87%D0%B8%D1%81%D0%BB%D0%BE>`__).
+
+В питоне комплескные числа можно задать следующим образом (**j**
+обозначает мнимую единицу):
+
+.. code:: python
+
+    a = 3 + 2j
+    b = 1j
+
+.. code:: python
+
+    print ("Комплексное число a:\n", a)
+    print ("Комплексное число b:\n", b)
+
+
+.. parsed-literal::
+
+    Комплексное число a:
+     (3+2j)
+    Комплексное число b:
+     1j
+
+
+С комплексными числами в питоне можно производить базовые арифметические
+операции так же, как и с вещественными числами:
+
+.. code:: python
+
+    c = a * a
+    d = a / (4 - 5j)
+
+.. code:: python
+
+    print ("Комплексное число c:\n", c)
+    print ("Комплексное число d:\n", d)
+
+
+.. parsed-literal::
+
+    Комплексное число c:
+     (5+12j)
+    Комплексное число d:
+     (0.0487804878048781+0.5609756097560976j)
+
+
+Задания: (Блок 2)
+=================
+
+Задание 3:
+~~~~~~~~~~
+
+Рассмотрим сложную математическую функцию на отрезке [1, 15]:
+
+f(x) = sin(x / 5) \* exp(x / 10) + 5 \* exp(-x / 2)
+
+.. figure:: {filename}/images/lab14/func.png
+   :alt: images/lab14/func.png
+
+
+Она может описывать, например, зависимость оценок, которые выставляют
+определенному сорту вина эксперты, в зависимости от возраста этого вина.
+Мы хотим приблизить сложную зависимость с помощью функции из
+определенного семейства. В этом задании мы будем приближать указанную
+функцию с помощью многочленов.
+
+Как известно, многочлен степени :math:`n` (то есть :math:`w_0` +
+:math:`w_1 x` + :math:`w_2 x^2` + :math:`\ldots` + :math:`w_n x^n`)
+однозначно определяется любыми n + 1 различными точками, через которые
+он проходит. Это значит, что его коэффициенты :math:`w_0`, … :math:`w_n`
+можно определить из следующей системы линейных уравнений:
+
+.. figure:: {filename}/images/lab14/eqs.png
+   :alt: images/lab14/eqs.png
+
+
+где через :math:`x_1, ..., x_n, x_{n+1}` обозначены точки, через которые
+проходит многочлен, а через :math:`f(x_1), ..., f(x_n), f(x_{n+1})` —
+значения, которые он должен принимать в этих точках.
+
+Воспользуемся описанным свойством, и будем находить приближение функции
+многочленом, решая систему линейных уравнений.
+
+1. Сформируйте систему линейных уравнений (то есть задайте матрицу
+   коэффициентов A и свободный вектор b) для многочлена первой степени,
+   который должен совпадать с функцией f в точках 1 и 15. Решите данную
+   систему с помощью функции scipy.linalg.solve. Нарисуйте функцию f и
+   полученный многочлен. Хорошо ли он приближает исходную функцию?
+2. Повторите те же шаги для многочлена второй степени, который совпадает
+   с функцией f в точках 1, 8 и 15. Улучшилось ли качество
+   аппроксимации?
+3. Повторите те же шаги для многочлена третьей степени, который
+   совпадает с функцией f в точках 1, 4, 10 и 15. Хорошо ли он
+   аппроксимирует функцию? Коэффициенты данного многочлена (четыре числа
+   в следующем порядке: w_0, w_1, w_2, w_3) являются ответом на задачу.
+   Округлять коэффициенты не обязательно, но при желании можете
+   произвести округление до второго знака (т.е. до числа вида 0.42)

@@ -1,8 +1,8 @@
-Создание Web сайтов на Python. flask
-##################################################
+sqlite3 в Python
+################
 
-:date: 2020-03-27 16:29
-:summary: flask blueprints
+:date: 2020-03-12 09:00
+:summary: Работа с sqlite3 в Python
 :status: draft
 
 .. default-role:: code
@@ -12,412 +12,252 @@
 .. role:: python(code)
    :language: python
 
-.. role:: bash(code)
-   :language: bash
+Библиотека sqlite3
+------------------
 
-.. raw:: html
+На прошлой неделе вы познакомились с реляционными базами данных и языком запросов SQL. Для работы с БД мы использовали
+СУБД SQLite. Сегодня мы будем использовать SQLite библиотеку прямо из Python. Для этих целей есть стандартная библиотека
+sqlite3. По возможности рекомендую ознакомится с ее `официальной документацией`__.
 
-    <style>
-    td, th{
-        border-style:dashed solid;
-        border-width:1px;
-        border-color:rgba(0,0,0,0.5);
-    }
-    </style>
+.. __: https://docs.python.org/3/library/sqlite3.html
 
+Соответствие типов данных
+-------------------------
 
-Введение
---------
-В предыдущей работе, вы познакомились с основами использования flask. В данной работе, рассмотрим способы обмена данными между flask и браузером, использование чертежей.
+SQLite и Python имеют достаточно простое преобразование между типами:
 
-Обмен данными между flask и браузером
--------------------------------------
++ NULL ⟷ None
++ INTEGER ⟷ int
++ REAL ⟷ float
++ TEXT ⟷ str
++ BLOB ⟷ bytes
 
-Передать информацию странице сайта можно по средствам особого вида url и при помощи особых методов запроса данных.
+Common practice
+---------------
 
-Передача по url
-===============
+В этой части будут рассмотрены основные принципы работы с библиотекой. За полным списком функций и методов и их
+аргументов обращайтесь к документации.
 
-Некоторая, написанная вами функция, может принимать параметры, передаваемые flask по средствам обработки строки запроса.
-В примере ниже, функция `get_user_info` будет запускаться для адресов `/user` и `/user/<int:N>`.
-Текст `<int:N>` (*без пробелов*) показывает flask, что после `/user/` должно быть целое число (`int`), которое необходимо передать функции под именем `N`.
-Если тип не задан, то передаётся строка.
-Поскольку, в случае `/user` никакое `N` не передаётся, то необходимо определить значение `N` «по умолчанию».
+Для работы с БД сначала необходимо создать объект `Connection`. Создается он при помощи функции `connect`, которой
+необходимо передать путь до файла БД или `:memory:` для создания БД непосредственно в RAM.
 
-.. code:: python
+.. code-block:: python
 
-    @bp.route("/user")
-    @bp.route("/user/<int:N>")
-    def get_user_info(N=-1):
-        if N < 0:
-            return Response(status=503)
-        else:
-            return render_template("user_info.html", user_n=N)
+    import sqlite3
+    conn = sqlite3.connect("my_data.db")
 
-`return Response(status=503)` возвращает браузеру информацию, что переданы некорректные данные (ошибка 503).
+Когда соединение создано, можно работать с БД. Для этого используется специальный объект `Cursor`, получит который
+можно методом `Connection.cursor()`. При помощи метода `Cursor.execute()` курсор исполняет написанный на языке SQL
+запрос. Следует помнить, что запросы на изменение БД носят временный характер. Для сохранения изменений необходимо
+использовать `Connection.commit()`, а для отката изменений `Connection.rollback()`.  По завершении работы с БД не
+забывайте закрывать соединение.
 
-*узнать url можно по url_for('get_user_info', N=2)*
+.. code-block:: python
 
-HTML формы
-==========
+    c = conn.cursor()
 
-Рассмотрим следующий `html` блок, определяющий блок ввода данных:
+    # Create table
+    c.execute('''CREATE TABLE stocks
+                 (date TEXT, trans TEXT, symbol TEXT, qty REAL, price REAL)''')
 
-.. code:: html
+    # Insert a row of data
+    c.execute('''INSERT INTO stocks VALUES ('2006-01-05', 'BUY', 'RHAT', 100, 35.14),
+                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                 ('2006-04-06', 'SELL', 'IBM', 500, 53.00)''')
 
-    <form method="post" action='{{ url_for('login') }}'>
-      <label for="username">Username</label>
-      <input name="username" id="username" required>
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required>
-      <input type="submit" value="Log In">
-    </form>
+    # Save (commit) the changes
+    conn.commit()
 
+    # We can also close the connection if we are done with it.
+    # Just be sure any changes have been committed or they will be lost.
+    conn.close()
 
-Браузер отобразит её следующим образом
+Запрос `SELECT` несколько отличается. Для получения его результатов необходимо использовать методы
 
-.. raw:: html
++ `fetchone()` — возвращает следующую строку из результата
++ `fetchmany()` — возвращает указанное количество строк
++ `fetchall()` — возвращает все оставшиеся строки
 
-    <form method="post" style="text-align:center;padding:10px;border:1px solid black; background-color:white;">
-      <label for="username">Username</label>
-      <input type="username" name="username" required> <br/>
-      <label for="password">Password</label>
-      <input type="password" name="password" required> <br/>
-      <input type="submit" value="Log In">
-    </form>
+Или использовать курсор как итератор.
 
-`<input type="submit" value="Log In">` создаёт кнопку, инициирующую отправку данных.
-Обрабатывать данные будет функция `login`, указанная в параметре `action=`.
-Данные будут переданы по именам, заданным в параметрах `name` — `username` и `password`.
-Для доступа к ним необходимо использовать `flask.request`.
-Метод передачи данных — `POST`. Альтернативный вариант (передача данных в строке url) — `GET`.
+.. code-block:: python
 
-Пример функции, обрабатывающей запрос от данной формы:
+    import sqlite3
 
-.. code:: python
+    conn = sqlite3.connect("my_data.db")
+    c = conn.cursor()
 
-    @app.route("/login", methods=("GET", "POST"))
-    def login():
+    c.execute("SELECT * FROM stocks WHERE symbol='RHAT'")
+    print(c.fetchone())
 
-        if request.method == "POST":
-            # переходим сюда, если были переданы данные
-            username = request.form["username"]
-            password = request.form["password"]
-            db = get_db() # берём информацию о базе данных (функция определена отдельно)
-            error = None
-            user = db.execute(
-                "SELECT * FROM user WHERE username = ?", (username,)
-            ).fetchone() # получаем запись из базы данных
+    for row in c.execute("SELECT * FROM stocks ORDER BY price"):
+        print(row)
 
-            if user is None:
-                error = "Incorrect username."
-            elif not check_password_hash(user["password"], password): # проверяем пароль
-                error = "Incorrect password."
+    conn.close()
 
-            if error is None:
-                # отчищаем информацию о текущей сессии взаимодействия браузера
-                # и сохраняем информацию о текущем пользователе на сервере
-                # получить доступ к данной информации можно в любой функции через flask.session
-                session.clear()
-                session["user_id"] = user["id"]
-                return redirect(url_for("index")) # перенаправляем пользователя на главную страницу
+Однако, работа с курсором напрямую необязательна. Класс `Connection` предоставляет методы-обертки над одноименными
+методами класса `Cursor`: `execute()`, `executemany()`, `executescript()`. Эти методы возвращают курсор.
 
-        return render_template("auth/login.html")
+.. code-block:: python
 
-*P.S. существуют ещё методы `PUT`, `PATCH`, `DELETE` использование которых из браузера возможно по средствам javascript*
+    import sqlite3
 
-Использование blueprints
-------------------------
+    persons = [
+        ("Hugo", "Boss"),
+        ("Calvin", "Klein")
+        ]
 
-Поскольку помещать весь функционал вашего web сайта в один файл `__init__.py` не самая здравая идея, возникает вопрос, как можно разделить функционал сайта на отдельные файлы.
-Для этой функции необходимо использовать механизм чертежей (blueprint).
+    conn = sqlite3.connect(":memory:")
 
-Blueprint создаётся по аналогии с простым сайтом `flask` и подключается к основному сайту.
-Для демонстрации, воспользуемся примером__ с сайта__
+    # Create the table
+    conn.execute("create table person(firstname, lastname)")
 
+    # Fill the table
+    conn.executemany("insert into person(firstname, lastname) values (?, ?)", persons)
 
-__  {static}/extras/lab20/flaskr.zip
-__  https://flask.palletsprojects.com/en/1.1.x/
+    # Print the table contents
+    for row in conn.execute("select firstname, lastname from person"):
+        print(row)
 
-Файл `__init__.py` выглядит следующим образом:
+    print("I just deleted", conn.execute("delete from person").rowcount, "rows")
 
+    # close is not a shortcut method and it's not called automatically,
+    # so the connection object should be closed manually
+    conn.close()
 
-.. code:: python
+Стоит обратить внимание на метод `executemany()`. Данный метод позволяет применить один и тот же запрос для разных
+входных данных. Данные подаются в виде объекта-коллекции, итератора или генератора. Подстановки данных выполняюстя при
+помощи вопросительных знаков или именованных параметров. В случае вопросительных знаков данные подаются в виде кортежа,
+даже если подставляется одно значение. Для именованных параметров используется словарь.
 
-    import os
+.. code-block:: python
 
-    from flask import Flask
+    import sqlite3
 
-    def create_app(test_config=None):
-        # Создаём сайт flask
+    conn = sqlite3.connect(":memory:")
+    cur = conn.cursor()
+    cur.execute("create table people (name_last, age)")
 
-        app = Flask(__name__, instance_relative_config=True)
+    who = "Yeltsin"
+    age = 72
 
-        # конфигурация сайта по умолчанию
-        app.config.from_mapping(
-            SECRET_KEY="dev", # ключ шифрования сессии (необходимо менять при релизе сайта)
-            DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"), # информация о базе данных пользователя
-        )
+    # This is the qmark style:
+    cur.execute("insert into people values (?, ?)", (who, age))
 
-        app.config.from_pyfile("config.py", silent=True) # обновляем настройки из файла (если он есть)
+    # And this is the named style:
+    cur.execute("select * from people where name_last=:who and age=:age", {"who": who, "age": age})
 
-        try:
-            os.makedirs(app.instance_path) # создаём instance директорию (вдруг её нет)
-        except OSError:
-            pass
+    print(cur.fetchone())
 
-        # загружаем файл работы с базой данных db.py
-        from flaskr import db
+    conn.close()
 
-        db.init_app(app)  #  подключаем базу данных к сайту, дабы иметь к ней доступ отовсюду
+В рассмотренных ранее примерах все изменения необходимо коммитить. Однако есть возможность применять эти изменения
+автоматически. Первый вариант - использовать `executescript()`. Этот метод принимает один аргумент — строку с
+полноценным SQL скриптом — и выполняет записанные в ней запросы. Не забывайте про `;` в конце каждого запроса в скрипте.
 
-        # Загружаем чертежи страниц
-        from flaskr import auth, blog
+.. code-block:: python
 
-        app.register_blueprint(auth.bp) #  регистрируем их на нашем сайте
-        app.register_blueprint(blog.bp) #
+    import sqlite3
 
-        # определяем главную страницу сайта.
-        # можно воспользоваться @app.route("/")
+    con = sqlite3.connect(":memory:")
+    cur = con.cursor()
+    cur.executescript("""
+        create table person(
+            firstname,
+            lastname,
+            age
+        );
 
-        app.add_url_rule("/", endpoint="blog.index")
+        create table book(
+            title,
+            author,
+            draft
+        );
 
-        return app
+        insert into book(title, author, draft)
+        values (
+            'Dirk Gently''s Holistic Detective Agency',
+            'Douglas Adams',
+            1987
+        );
+        """)
+    con.close()
 
-Здесь простая главная страница сайта с подключением и регистрацией blueprint-ов
 
-Теперь посмотрим на `auth.py`:
+Второй вариант — контекстный менеджер. Использование соединения в контекстном менеджере позволяет автоматически
+коммитить изменения в случае успеха и откатывать в случае ошибки.
 
-.. code:: python
+.. code-block:: python
 
-    # много разных импортов
+    import sqlite3
 
-    from flaskr.db import get_db # импортируем функцию get_db для доступа к базе данных
+    conn = sqlite3.connect(":memory:")
+    con.execute("create table person (id integer primary key, firstname varchar unique)")
 
-    # создаём blueprint, передавая ему имя ``auth`` и подключением на сайт к ``/auth``
-    bp = Blueprint("auth", __name__, url_prefix="/auth")
+    # Successful, conn.commit() is called automatically afterwards
+    with conn:
+        conn.execute("insert into person(firstname) values (?)", ("Joe",))
 
+    # conn.rollback() is called after the with block finishes with an exception, the
+    # exception is still raised and must be caught
+    try:
+        with conn:
+            conn.execute("insert into person(firstname) values (?)", ("Joe",))
+    except sqlite3.IntegrityError:
+        print("couldn't add Joe twice")
 
-    def login_required(view):
-        """Декоратор требующий пользователя залогиниться"""
-        @functools.wraps(view)
-        def wrapped_view(**kwargs):
-            if g.user is None:
-                return redirect(url_for("auth.login"))
-            return view(**kwargs)
-        return wrapped_view
+    # Connection object used as context manager only commits or rollbacks transactions,
+    # so the connection object should be closed manually
+    conn.close()
 
+Последнее, что надо рассмотреть, это возможность получать результаты `SELECT` в произвольном виде. По умолчанию, каждая
+строка представлена кортежем. Однако это представление можно поменять. Для этого используется атрибут соединения
+`row_factory`, которому можно присвоить функцию следующего вида:
 
-    @bp.before_app_request
-    def load_logged_in_user():
-        """
-        если пользователь залогинился,
-        то вся информация о нём будет храниться в ``flask.g.user``
-        доступ к flask.g имеется у любой flask функции
-        """
-        user_id = session.get("user_id")
+.. code-block:: python
 
-        if user_id is None:
-            g.user = None
-        else:
-            g.user = (
-                get_db().execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
-            )
+    def dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
 
+Здесь `cursor.description` возвращает список названий столбцов. Каждый столбец характеризуется кортежем из 7 элементов,
+имя в нулевом элементе.
 
-    @bp.route("/register", methods=("GET", "POST"))
-    def register():
-        # Регистрация нового пользователя по адресу /auth/register
-        # /auth берётся из Blueprint("auth", __name__, url_prefix="/auth")
+При необходимости, такая функция может создавать объекты пользовательского класса. Библиотека sqlite3 для удобства
+содержит класс `Row`. `Row` в основном ведет себя как кортеж, но при этом дополнительно поддерживает обращение по
+именам столбцов. Перепишем пример для `SELECT` с использованием этого класса.
 
-        if request.method == "POST":
-            username = request.form["username"]
-            password = request.form["password"]
-            db = get_db()
-            error = None
+.. code-block:: python
 
-            # тут надо проверить данные на корректность
+    import sqlite3
 
-            if error is None:
-                db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
-                )
-                db.commit()
-                return redirect(url_for("auth.login"))
+    conn = sqlite3.connect("my_data.db")
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
 
-        return render_template("auth/register.html")
+    c.execute("SELECT * FROM stocks WHERE symbol='RHAT'")
+    r = c.fetchone()
 
+    print(r.keys())
+    for key in r.keys():
+        print(r[key])
 
-    @bp.route("/login", methods=("GET", "POST"))
-    def login():
-        # эта функция рассмотрена выше
+    conn.close()
 
-    @bp.route("/logout")
-    @login_required  # данная страница работает только если пользователь залогинился
-    def logout():
-        """Clear the current session, including the stored user id."""
-        session.clear()
-        return redirect(url_for("index"))
+Упражнение
+----------
 
+Используя базу данных с предыдущего занятия, напишите консольное приложение для работы с ней.
+Ваше приложение должно поддерживать команды:
 
-И, конечно, необходимо рассмотреть `db.py`
+1. Вывести список книг
+2. Вывести список читателей
+3. Добавить книгу.
+4. Добавить читателя.
+5. Выдать книгу читателю
+6. Принять книгу.
 
-
-.. code:: python
-
-    # тут импорты
-
-    def get_db():
-        # функция получения доступа к базе данных
-        if "db" not in g:
-            # если это первый запрос на подключение то подключаемся
-            g.db = sqlite3.connect(
-                current_app.config["DATABASE"], detect_types=sqlite3.PARSE_DECLTYPES
-            )
-            g.db.row_factory = sqlite3.Row
-
-        return g.db
-
-
-    def close_db(e=None):
-        '''прописываем отключение'''
-        db = g.pop("db", None)
-
-        if db is not None:
-            db.close()
-
-
-    def init_db():
-        """Здесь функция очистки базы данных и её создания по файлу ``schema.sql``"""
-        db = get_db()
-
-        with current_app.open_resource("schema.sql") as f:
-            db.executescript(f.read().decode("utf8"))
-
-
-    # ниже
-    @click.command("init-db")
-    @with_appcontext
-    def init_db_command():
-        init_db()
-        click.echo("Initialized the database.")
-
-
-    def init_app(app):
-        """Процесс подключения базы к сайту
-        """
-        app.teardown_appcontext(close_db) # необходимо закрыть базу данных по закрытию сайта
-        app.cli.add_command(init_db_command) # подключаем команду flask
-
-
-Обратим внимание на блок ниже
-
-.. code:: python
-
-    @click.command("init-db")
-    @with_appcontext
-    def init_db_command():
-        init_db()
-        click.echo("Initialized the database.")
-
-Фактически, мы видим процесс создания пустой базы данных, но с подключением её на `cli` команду `init-db`.
-данная конструкция (вместе с `app.cli.add_command(init_db_command)`) позволяет провести операцию создания базы данных
-из командной строки:
-
-.. code:: bash
-
-    $ echo Определяем параметры сайта
-    $ export FLASK_APP=flaskr
-    $ export FLASK_ENV=development
-    $ echo инициализируем пустую базу данных
-    $ flask init-db
-    $ echo запускаем сайт
-    $ flask run
-
-Естественно, что запускать инициализацию базы данных необходимо только один раз (иначе она постоянно будет обнуляться).
-
-
-Блочная структура папки templates
-=================================
-
-При создании html templates сайта, естественно, когда общий для всех страниц сайта шаблон описан только в одном файле.
-Все остальные шаблоны только модифицируют базовый шаблон.
-
-Рассмотрим `base.html` из примера выше
-
-.. code:: html
-
-    <!doctype html>
-    <title>{% block title %}{% endblock %} - Flaskr</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <nav>
-      <h1><a href="{{ url_for('blog.index') }}">Flaskr</a></h1>
-      <ul>
-        {% if g.user %}
-          <li><span>{{ g.user['username'] }}</span>
-          <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-        {% else %}
-          <li><a href="{{ url_for('auth.register') }}">Register</a>
-          <li><a href="{{ url_for('auth.login') }}">Log In</a>
-        {% endif %}
-      </ul>
-    </nav>
-    <section class="content">
-      <header>
-        {% block header %}{% endblock %}
-      </header>
-      {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-      {% endfor %}
-      {% block content %}{% endblock %}
-    </section>
-
-Здесь, сайт определяет блоки `title`, `header` и `content`, общую для всех страниц навигацию `<nav> ... </nav>` и блок сообщений сервера:
-
-.. code:: html
-
-      {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-      {% endfor %}
-
-Такие сообщения определяются при помощи `flask.flush(message)`. При этом имя пользователя и кнопка `Log Out` выводяться только тогда, когда есть информация о пользователе в `flask.g.user`:
-
-.. code:: html
-
-        {% if g.user %}
-          <li><span>{{ g.user['username'] }}</span>
-          <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-        {% else %}
-          <li><a href="{{ url_for('auth.register') }}">Register</a>
-          <li><a href="{{ url_for('auth.login') }}">Log In</a>
-        {% endif %}
-
-При этом, содержимое блоков определяется, как в `auth/login.html`
-
-.. code:: html
-
-    {% extends 'base.html' %}
-
-    {% block header %}
-      <h1>{% block title %}Log In{% endblock %}</h1>
-    {% endblock %}
-
-    {% block content %}
-      <form method="post">
-        <label for="username">Username</label>
-        <input name="username" id="username" required>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
-        <input type="submit" value="Log In">
-      </form>
-    {% endblock %}
-
-Здесь, за основу берётся `base.html` (команда `extends`) и определяется содержимое блоков `header`, `title` (определяется внутри `header`) и `content` с формой `POST` запроса к текущей странице.
-
-Задача
-======
-
-#. Скачайте себе и запустите сайт из обучения flask.
-#. Допишите в таблицу пользователей поля с email-ом пользователя его уровенем доступа (админ или простой пользователь)
-#. Напишите свой модуль, позволяющий администратору изменять информацию обо всех пользователях сайта
+По желанию можно дополнительно добавить поддержку произвольных запросов.
