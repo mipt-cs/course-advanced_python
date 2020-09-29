@@ -636,7 +636,7 @@ P.S. Если понимаете, что совсем не поняли, пер�
 
 2. Скачайте архив `arithmetic_dragons`_
 
-.. _`arithmetic_dragons`: {filename}/extra/lab05/arithmetic_dragons
+.. _`arithmetic_dragons`: extra/lab05/arithmetic_dragons.zip
 
 3. Реализуйте следующие классы:
 
