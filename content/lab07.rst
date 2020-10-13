@@ -3,7 +3,7 @@
 
 :date: 2020-10-13 09:00
 :summary: ООП. Абстрактный класс. Декомпозиция программы.
-:status: draft
+:status: published
 
 .. default-role:: code
 
