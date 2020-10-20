@@ -2,8 +2,8 @@
 #####################
 
 :date: 2019-11-04 09:00
-:summary: Тема 7. Часть 1. Генераторы и цикл for.
-:status: draft
+:summary: Генераторы и цикл for.
+:status: published
 
 .. default-role:: code
 
@@ -32,14 +32,14 @@
     2
     3
     4
-    
+
 
 При помощи этого цикла можно итерироваться по любому объекту-коллекции:
 
 .. code:: python
 
     lst = ["qwerty", 12345, 34.42]
-    
+
     for i in lst:
         print(i)
 
@@ -49,7 +49,7 @@
     qwerty
     12345
     34.42
-    
+
 
 Но в таком случае встает вопрос, что же общего между объектом-коллекцией
 и диапазоном значений? ``range`` является функцией. Попробуем
@@ -58,7 +58,7 @@
 .. code:: python
 
     a = range(5)
-    
+
     print("object:\n\t", a)
     print("type:\n\t", type(a))
     print("Methods and attributes:\n\t", dir(a))
@@ -72,7 +72,7 @@
          <class 'range'>
     Methods and attributes:
          ['__bool__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'count', 'index', 'start', 'step', 'stop']
-    
+
 
 То есть ``range`` -- это класс и мы вызываем его конструктор. Объект
 этого класса является итерируемым, а значит с ним может работать цикл
@@ -82,7 +82,7 @@
 .. code:: python
 
     iterator = iter(a)
-    
+
     print("object:\n\t", iterator)
     print("type:\n\t", type(iterator))
     print("Methods and attributes:\n\t", dir(iterator))
@@ -96,7 +96,7 @@
          <class 'range_iterator'>
     Methods and attributes:
          ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__length_hint__', '__lt__', '__ne__', '__new__', '__next__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setstate__', '__sizeof__', '__str__', '__subclasshook__']
-    
+
 
 Итератор — объект, который знает свое текущее состояние и может
 вычислить следующее значение. Такой подход не приводит к созданию
@@ -123,7 +123,7 @@
     2
     3
     4
-    
+
 
 Но что же происходит, когда мы пытаемся получить следующий объект, но
 его не существует?
@@ -142,9 +142,9 @@
 
     <ipython-input-19-4ce711c44abc> in <module>()
     ----> 1 next(iterator)
-    
 
-    StopIteration: 
+
+    StopIteration:
 
 
 В таком случае выпадает ошибка ``StopIteration``, которая говорит, что
@@ -181,9 +181,9 @@ python (кроме ``range``).
 
     def baz(value):
         return value * value
-    
+
     lst = [1, 2, 3, 4, 5]
-    
+
     for i in map(baz, lst):
         print(i)
 
@@ -195,7 +195,7 @@ python (кроме ``range``).
     9
     16
     25
-    
+
 
 **zip(iterable[, iterable, ...])**
 
@@ -209,19 +209,19 @@ python (кроме ``range``).
     names = ["Alex", "Bob", "Alice", "John", "Ann"]
     age = [25, 17, 34, 24, 42]
     sex = ["M", "M", "F", "M", "F"]
-    
+
     for values in zip(names, age, sex):
         print("name: {:>10} age: {:3} sex: {:2}".format(*values))
 
 
 .. parsed-literal::
 
-    name:       Alex age:  25 sex: M 
-    name:        Bob age:  17 sex: M 
-    name:      Alice age:  34 sex: F 
-    name:       John age:  24 sex: M 
-    name:        Ann age:  42 sex: F 
-    
+    name:       Alex age:  25 sex: M
+    name:        Bob age:  17 sex: M
+    name:      Alice age:  34 sex: F
+    name:       John age:  24 sex: M
+    name:        Ann age:  42 sex: F
+
 
 **filter(func, iterable)**
 
@@ -234,7 +234,7 @@ python (кроме ``range``).
         if abs((34-x*x))**0.5 > x:
             return True
         return False
-    
+
     for i in filter(bar, [0, 1, 2, 3, 4, 5]):
         print(i)
 
@@ -246,7 +246,7 @@ python (кроме ``range``).
     2
     3
     4
-    
+
 
 **enumerate(iterable, start=0)**
 
@@ -256,7 +256,7 @@ python (кроме ``range``).
 .. code:: python
 
     names = ["Alex", "Bob", "Alice", "John", "Ann"]
-    
+
     for idx, elem in enumerate(names, 1):
         print("{:02}: {:>7}".format(idx, elem))
 
@@ -268,7 +268,7 @@ python (кроме ``range``).
     03:   Alice
     04:    John
     05:     Ann
-    
+
 
 Кажется, что концепция генерации объектов налету, без предварительного
 выделения памяти под целый массив, является довольно удобной и полезной.
@@ -301,19 +301,19 @@ python (кроме ``range``).
             if (_next - b)*(_current - b) <= 0:
                 break
             _current = _next
-                
+
     for i in my_range(5):
         print(i, end = " ")
     print()
-    
+
     for i in my_range(1, 5):
         print(i, end = " ")
     print()
-    
+
     for i in my_range(1, 10, 2):
         print(i, end = " ")
     print()
-    
+
     for i in my_range(10, 0, -3):
         print(i, end = " ")
     print()
@@ -321,11 +321,11 @@ python (кроме ``range``).
 
 .. parsed-literal::
 
-    0 1 2 3 4 
-    1 2 3 4 
-    1 3 5 7 9 
-    10 7 4 1 
-    
+    0 1 2 3 4
+    1 2 3 4
+    1 3 5 7 9
+    10 7 4 1
+
 
 Упражнение 2
 ============
@@ -449,7 +449,7 @@ python (кроме ``range``).
 
     def get_cartesian_product(a, b):
         raise RuntimeError("Not implemented")
-    
+
     get_cartesian_product([1, 2], [3, 4]) == [(1, 3), (1, 4), (2, 3), (2, 4)]
 
 Упражнение №2
@@ -463,7 +463,7 @@ python (кроме ``range``).
 
     def get_permutations(s, n):
         raise RuntimeError("Not implemented")
-    
+
     get_permutations("cat", 2) == ["ac", "at", "ca", "ct", "ta", "tc"]
 
 Упражнение №3
@@ -477,7 +477,7 @@ k и возвращать все возможные комбинации из с
 
     def get_combinations(s, n):
         raise RuntimeError("Not implemented")
-    
+
     get_combinations("cat", 2) == ["a", "c", "t", "ac", "at", "ct"]
 
 Упражнение №4
@@ -491,7 +491,7 @@ k и возвращать все возможные комбинации из с
 
     def get_combinations_with_r(s, n):
         raise RuntimeError("Not implemented")
-    
+
     get_combinations_with_r("cat", 2) == ["aa", "ac", "at", "cc", "ct", "tt"]
 
 Упражнение №5
@@ -504,7 +504,7 @@ k и возвращать все возможные комбинации из с
 
     def compress_string(s):
         raise RuntimeError("Not implemented")
-    
+
     compress_string('1222311') == [(1, 1), (3, 2), (1, 3), (2, 1)]
 
 Упражнение №6
@@ -519,7 +519,7 @@ k и возвращать все возможные комбинации из с
 
     def maximize(lists, m):
         raise RuntimeError("Not implemented")
-    
+
     lists = [
         [5, 4],
         [7, 8, 9],
