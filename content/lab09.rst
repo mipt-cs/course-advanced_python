@@ -1,9 +1,9 @@
 Итераторы и сопроцессы
 ######################
 
-:date: 2019-11-11 09:00
-:summary: Тема 7. Часть 2. Итераторы и сопроцессы.
-:status: draft
+:date: 2020-10-27 09:00
+:summary: Итераторы и сопроцессы.
+:status: published
 
 .. default-role:: code
 
@@ -52,19 +52,19 @@ Jupyter-notebook
         def __init__(self, value, nxt=None):
             self.value = value
             self.nxt = nxt
-            
+
         def get_value(self):
             return self.value
-        
+
         def get_next(self):
             return self.nxt
-        
+
     class LinkedLiset:
         def __init__(self):
             self.start = None
             self.length = 0
             self.last = None
-            
+
         def add(self, value):
             elem = Node(value)
             if self.start is None:
@@ -74,10 +74,10 @@ Jupyter-notebook
                 self.last.nxt = elem
                 self.last = elem
             self.length += 1
-        
+
         def __len__(self):
             return self.length
-        
+
         def __getitem__(self, idx):
             if idx >= self.length:
                 raise IndexError("Index out of range")
@@ -85,11 +85,11 @@ Jupyter-notebook
             for i in range(idx):
                 current = current.get_next()
             current.get_value()
-            
+
         def __iter__(self):
             self.__curr = self.start
             return self
-            
+
         def __next__(self):
             if self.__curr is None:
                 raise StopIteration()
@@ -102,7 +102,7 @@ Jupyter-notebook
     lst = LinkedLiset()
     for i in range(10):
         lst.add(i*i)
-        
+
     for i in lst:
         print(i)
 
@@ -119,7 +119,7 @@ Jupyter-notebook
     49
     64
     81
-    
+
 
 При подобном подходе изменения в процессе итерации по основному объекту
 приведут к изменению и при итерации. Для сохранения состояния объекта на
@@ -197,7 +197,7 @@ Jupyter-notebook
         while True:
             x = yield x
             print("Got value", x)
-    
+
     coroutine = print_coroutine()
     print(next(coroutine))
     for i in range(10):
@@ -227,7 +227,7 @@ Jupyter-notebook
     8
     Got value 9
     9
-    
+
 
 При инициализации сопрограммы вызывается функция ``next``, которая
 возвращает управление в основную программу в момент первого вызова
@@ -250,10 +250,10 @@ Jupyter-notebook
 
     class PrintCurrent(Exception):
         pass
-    
+
     class PrintSum(Exception):
         pass
-    
+
     def sum_coroutine():
         print("Starting coroutine")
         s = 0
@@ -268,7 +268,7 @@ Jupyter-notebook
                     yield s
         finally:
             print("Stop coroutine")
-        
+
     coroutine = sum_coroutine()
     next(coroutine)
     for i in range(12):
@@ -279,14 +279,14 @@ Jupyter-notebook
         if i%3 == 0:
             print("Current sum:", coroutine.throw(PrintSum))
             next(coroutine)
-    
+
     print()
     print(coroutine.throw(PrintCurrent))
     next(coroutine)
-    
+
     print(coroutine.throw(PrintSum))
     next(coroutine)
-    
+
     coroutine.close()
 
 
@@ -303,11 +303,11 @@ Jupyter-notebook
     Current element: 8
     Current sum: 45
     Current element: 10
-    
+
     11
     66
     Stop coroutine
-    
+
 
 Упражнение 4
 ============
@@ -325,7 +325,7 @@ Jupyter-notebook
 использоваться для контроля потока выполнения программы. Пранировщик
 задач распределяет ресурсы, запуская задачу, которая ожидает выполнения,
 не допуская простоев. Таким образом реализуется асинхронное выполнение
-программ, в том числе в библиотеке asyncio.
+программ.
 
 Однако, иногда в процессе итерирования, может возникнуть ситуация, в
 которй необходимо запустить итерацию внутри сопроцесса и передать
@@ -337,15 +337,15 @@ Jupyter-notebook
     def generator1():
         for i in range(5):
             yield f"Generator 1: {i}"
-            
+
     def generator2():
         for i in range(5):
             yield f"Generator 2: {i}"
-            
+
     def generator():
         yield from generator1()
         yield from generator2()
-        
+
     for i in generator():
         print(i)
 
@@ -362,7 +362,7 @@ Jupyter-notebook
     Generator 2: 2
     Generator 2: 3
     Generator 2: 4
-    
+
 
 Это же можно осуществить не только с генераторами, но и с сопрограммами.
 Исключения которые создаются в методе ``throw`` автоматически
@@ -372,7 +372,7 @@ Jupyter-notebook
 
     class Terminate(Exception):
         pass
-    
+
     def inner_coroutine():
         print("Inner coroutine started")
         try:
@@ -384,7 +384,7 @@ Jupyter-notebook
                     break
         finally:
             print("Inner coroutine finished")
-        
+
     def outer_coroutine():
         print("Outer coroutine started")
         try:
@@ -392,9 +392,9 @@ Jupyter-notebook
             print(f"Outer: {x}")
             x = yield
             print(f"Outer: {x}")
-            
+
             yield from inner_coroutine()
-            
+
             x = yield
             print(f"Outer: {x}")
         finally:
@@ -428,7 +428,7 @@ Jupyter-notebook
     Inner coroutine finished
     Outer: 6
     Outer coroutine finished
-    
+
 
 Упражнение 5
 ============
@@ -457,7 +457,7 @@ Jupyter-notebook
         import random
         for i in range(random.randint(10, 20)):
             yield f"{username} message{i}"
-            
+
     def establish_connection(auth=True):
         import random
         id = f"{random.randint(0,100000000):010}"
@@ -485,7 +485,7 @@ Jupyter-notebook
     0081575115 message5
     0081575115 message6
     disconnect 0081575115
-    
+
 
 Пример данных, приходящих от неавторизованного пользователя:
 
@@ -509,7 +509,7 @@ Jupyter-notebook
     0015354373 message10
     0015354373 message11
     0015354373 message12
-    
+
 
 Данные от неавторизованных или разлогиненных пользователей
 обрабатываться не должны.
@@ -532,5 +532,5 @@ Jupyter-notebook
 
 .. code:: python
 
-    for i in connection(): 
+    for i in connection():
         print(i)
