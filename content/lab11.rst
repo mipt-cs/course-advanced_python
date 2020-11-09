@@ -263,7 +263,69 @@ Futures
 какой-либо задачи. Это может быть информация о том, что задача ещё не
 обработана или уже полученный результат; а может быть вообще исключение.
 
-.. TODO: finish
+Одна из особенностей футур, что мы можем запустить задачу на исполнение в одной корутине, а получить
+результат выполнения в другой. У футур есть 4 возможных состояния:
++ ожидание (pending)
++ выполнение (running)
++ выполнено (done)
++ отменено (cancelled)
+
+Когда футура находится в состояние **done**, у неё можно получить
+результат выполнения. В состояниях **pending** и **running** такая
+операция приведёт к исключению **InvalidStateError**, а в случае
+**canelled** будет **CancelledError**, и наконец, если исключение
+произошло в самой корутине, оно будет сгенерировано снова при попытке
+получить результат.
+
+Узнать состояние футуры можно с помощью методов **done()** или **cancelled()**,
+Вызов **result()** возвращает ожидаемый результат. Для получения исключения есть метод **exception()**.
+Для отмены выполнения футуры есть метод **cancel()**. И **result()** и **exception()** выбросят
+CancelledError, если футура была остановлена в процессе работы.
+
+Ожидание окончания футуры можно сделать при помощи функции **wait_for()**. Первый аргумент - футура,
+второй - таймаут (None, если таймаут не нужен).
+
+.. code:: python
+
+    import asyncio
+
+    async def set_after(delay, value):
+        # Sleep for *delay* seconds.
+        await asyncio.sleep(delay)
+
+        # Set *value* as a result of *fut* Future.
+        return value
+
+    async def main():
+        # Run "set_after()" coroutine in a parallel Task.
+        fut = asyncio.ensure_future(
+            set_after(1, '... world'))
+
+        print('hello ...')
+
+        # Wait until *fut* has a result (1 second)
+        await asyncio.wait_for(fut, None)
+        # and print it.
+        print(fut.result())
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()
+
+Возможен запуск футуры при помощи await.
+
+.. code:: python
+
+    async def main():
+         # Run "set_after()" coroutine in a parallel Task.
+        fut = asyncio.ensure_future(
+            set_after(1, '... world'))
+
+        print('hello ...')
+
+        # Wait until *fut* has a result (1 second) and print it.
+        # Alternative way to get a result, just use it.
+        print(await fut)
 
 Упраженения на дом
 ==================
@@ -349,31 +411,10 @@ cs.mipt.ru/advanced_python/lessons/labX.html и выбора первой, в к
     ioloop = asyncio.get_event_loop()
     ioloop.run_until_complete(asynchronous())
 
-Для правильной реализации немного теории.
-
-Возможные состояния футур: - ожидание (pending) - выполнение (running) -
-выполнено (done) - отменено (cancelled)
-
-Когда футура находится в состояние **done**, у неё можно получить
-результат выполнения. В состояниях **pending** и **running** такая
-операция приведёт к исключению **InvalidStateError**, а в случае
-**canelled** будет **CancelledError**, и наконец, если исключение
-произошло в самой корутине, оно будет сгенерировано снова (также, как
-это сделано при вызове exception).
-
-Узнать состояние футуры с помощью методов **done**, **cancelled** или
-**running**, но не забывайте, что в случае **done** вызов **result**
-может вернуть как ожидаемый результат, так и исключение, которое
-возникло в процессе работы.
-
-Для отмены выполнения футуры есть метод **cancel** (он то нам и
-требуется для корректного завершения работы)
-
-Теперь мы изучили достаточно для того, чтобы написать простого чат бота,
-который будет делать что-то полезное.
-
 aiogram
 -------
+
+Это библиотека для написания асинхронного Telegram бота.
 
 Упражнение №3
 +++++++++++++
