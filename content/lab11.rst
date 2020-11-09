@@ -3,7 +3,7 @@
 
 :date: 2020-11-10 09:00
 :summary: Работа с асинхронными операциями.
-:status: draft
+:status: published
 
 .. default-role:: code
 
