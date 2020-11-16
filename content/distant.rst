@@ -31,7 +31,7 @@
 +----------+-----------------+-------------------+
 | Б06-803  | `Google Meet`__ | Пн. 15:30 — 18:30 |
 +----------+-----------------+-------------------+
-| Б06-804  | Нет данных      | Вт. 17:05 — 20:00 |
+| Б06-804  | `Google Meet`__ | Вт. 17:05 — 20:00 |
 +----------+-----------------+-------------------+
 | Б06-805  | `Google Meet`__ | Пн. 15:30 — 18:30 |
 +----------+-----------------+-------------------+
@@ -48,7 +48,7 @@
 __ https://zoom.us/j/99416616589?pwd=L2ZPRTlmRDNCTmFDaktQQVYvd3Njdz09
 __ https://meet.jit.si/gertsev_oop_b06802
 __ http://meet.google.com/qyj-edqd-obo
-
+__ https://meet.google.com/goq-yyrw-pkq
 __ http://meet.google.com/nyy-gzwc-tww
 __ http://meet.google.com/ycu-pkwf-mid
 __ http://meet.google.com/egi-pfus-fxn
