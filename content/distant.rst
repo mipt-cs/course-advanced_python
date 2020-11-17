@@ -35,7 +35,7 @@
 +----------+-----------------+-------------------+
 | Б06-805  | `Google Meet`__ | Пн. 15:30 — 18:30 |
 +----------+-----------------+-------------------+
-| Б06-806  | Нет данных      | Вт. 17:05 — 20:00 |
+| Б06-806  | `Skype`__       | Вт. 17:05 — 20:00 |
 +----------+-----------------+-------------------+
 | **ФАКИ**                                       |
 +----------+-----------------+-------------------+
@@ -50,5 +50,7 @@ __ https://meet.jit.si/gertsev_oop_b06802
 __ http://meet.google.com/qyj-edqd-obo
 __ https://meet.google.com/goq-yyrw-pkq
 __ http://meet.google.com/nyy-gzwc-tww
+__ https://join.skype.com/cHdYacCZhqeU
+
 __ http://meet.google.com/ycu-pkwf-mid
 __ http://meet.google.com/egi-pfus-fxn
