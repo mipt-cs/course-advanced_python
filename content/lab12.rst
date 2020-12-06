@@ -1,9 +1,9 @@
 Регулярные выражения
 ####################
 
-:date: 2019-11-18
+:date: 2020-11-17
 :summary: Изучение регулярных выражений и их использование
-:status: draft
+:status: published
 
 .. default-role:: code
 .. contents:: Содержание
@@ -104,27 +104,27 @@ Sublime Text, Notepad++ и т.д.), поскольку этот механизм
 .. code-block:: pycon
 
    >>> import re
-   >>> 
+   >>>
    >>> s = 'с самого начала у меня была какая-то тактика, и я её придерживался'
-   >>> 
+   >>>
    >>> re.match('с самого', s)
    <_sre.SRE_Match object; span=(0, 8), match='с самого'>
-   >>> 
+   >>>
    >>> re.match('была', s)
    >>> re.search('была', s)
    <_sre.SRE_Match object; span=(23, 27), match='была'>
-   >>> 
+   >>>
    >>> re.findall('и', s)
    ['и', 'и', 'и', 'и']
-   >>> 
+   >>>
    >>> re.split(' ', s)
    ['с', 'самого', 'начала', 'у', 'меня', 'была', 'какая-то', 'тактика,', 'и', 'я', 'её', 'придерживался']
    >>> re.split(',', s)
    ['с самого начала у меня была какая-то тактика', ' и я её придерживался']
-   >>> 
+   >>>
    >>> re.sub('придерживался', 'использовал', s)
    'с самого начала у меня была какая-то тактика, и я её использовал'
-   >>> 
+   >>>
    >>> regexp = re.compile('с самого')
    >>> regexp.match(s)
    <_sre.SRE_Match object; span=(0, 8), match='с самого'>
@@ -416,7 +416,7 @@ Sublime Text, Notepad++ и т.д.), поскольку этот механизм
    <_sre.SRE_Match object; span=(1, 3), match='bb'>
    >>> re.search(r'(a|b|c)\1', 'abcc')
    <_sre.SRE_Match object; span=(2, 4), match='cc'>
-   
+
 Группы можно использовать внутри строки замены в функции `re.sub`__:
 
 .. __: https://docs.python.org/3/library/re.html#re.sub
@@ -438,7 +438,7 @@ Sublime Text, Notepad++ и т.д.), поскольку этот механизм
 .. __: https://docs.python.org/3/library/re.html#match-objects
 
 .. code-block:: pycon
- 
+
    >>> import re
    >>> re.match('(?P<group1>a|b)(?P<group2>c|d)', 'ac').groups()
    ('a', 'c')
