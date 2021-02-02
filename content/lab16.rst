@@ -1,9 +1,9 @@
 ``NumPy``: матрицы и операции над ними
 ######################################
 
-:date: 2020-01-28 09:00
+:date: 2021-02-02 09:00
 :summary: Библиотека NumPy
-:status: draft
+
 
 .. default-role:: code
 .. role:: python(code)
