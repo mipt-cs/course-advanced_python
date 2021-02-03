@@ -1,9 +1,9 @@
 ``NumPy``: матрицы и операции над ними
 ######################################
 
-:date: 2021-02-02 09:00
+:date: 2021-02-09 09:00
 :summary: Библиотека NumPy
-
+:status: draft
 
 .. default-role:: code
 .. role:: python(code)
@@ -14,7 +14,7 @@
 ``NumPy``: матрицы и операции над ними
 --------------------------------------
 
-Ссылка на `jupyter notebook`__ 
+Ссылка на `jupyter notebook`__
 
 __ {filename}/extra/lab14/2Numpy.ipynb
 
