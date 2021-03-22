@@ -36,7 +36,8 @@ PyQt5: многопоточность GUI программ и дизайн ин�
 `__del__()` может обратиться к объектам, которые уже были уничтожены, что приведет к падению программы. Поэтому, при
 работе с Qt используйте сигнал `destroyed`, который есть у QObject. Этот сигнал срабатывает непосредственно перед
 удалением C++ объекта, что позволит корректно освободить ресурсы. Но и тут есть один момент. С этим сигналом нельзя
-связать метод класса. Но можно связать лямбда-функцию, которая просто вызывает метод класса для освобождения ресурсов.
+связать метод этого же класса (что логично, т.к. происходит удаление этого самого объекта).
+Но можно связать лямбда-функцию, которая освобождает ресурсы.
 
 .. code-block:: python
 
@@ -175,6 +176,8 @@ QThread
 
 
    class MainWindow(QtWidgets.QMainWindow):
+      process = Signal()
+
       def __init__(self):
          super().__init__(flags=Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
          vlayout = QtWidgets.QVBoxLayout()
@@ -193,18 +196,12 @@ QThread
          button.pressed.connect(app.aboutQt)
          vlayout.addWidget(button)
          self.processor = Processor(self)
+         self.process.connect(self.processor.start)
          self.processor.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
          self.processor.status_changed.connect(self.button.setDisabled)
          self.processor.finished.connect(lambda: self.bar.setValue(0))
-         self.destroyed.connect(lambda: self.cleanup())
-
-      def process(self):
-         self.processor.start()
-
-      def cleanup(self):
-         if self.processor:
-               self.processor.requestInterruption()
-               self.processor.wait()
+         self.destroyed.connect(self.processor.requestInterruption)
+         self.destroyed.connect(self.processor.wait)
 
 
    if __name__ == "__main__":
@@ -232,7 +229,83 @@ C++ объекта, как было рассказано выше.
 Worker-object approach
 ======================
 
-TBD
+Подход с наследованием QThread имеет большой минус — созданный объект такого класса принадлежит тому потоку, в котором
+он был создан. Соответственно, все его слоты будут выполняться в этом самом потоке. Если необходимо перенести выполнение
+слотов в новый поток, за который отвечает наш объект, то нужно использовать рабочий объект (worker-object approach).
+
+.. code-block:: python
+
+   import sys
+   from PyQt5 import QtWidgets
+   from PyQt5.QtCore import Qt, QThread, QObject, pyqtSignal
+
+   MAX_ITER = 1000000
+
+
+   class Processor(QObject):
+      iteration_passed = pyqtSignal(int)
+      status_changed = pyqtSignal(bool)
+      finished = pyqtSignal()
+
+      def do_work(self):
+         self.status_changed.emit(True)
+         with open("out.txt", "w") as f:
+               i = 0
+               while i < MAX_ITER:
+                  f.write("{}\n".format(i))
+                  i += 1
+                  self.iteration_passed.emit(i + 1)
+         self.status_changed.emit(False)
+         self.finished.emit()
+
+
+   class MainWindow(QtWidgets.QMainWindow):
+      process = pyqtSignal()
+
+      def __init__(self):
+         super().__init__(flags=Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+         vlayout = QtWidgets.QVBoxLayout()
+         widget = QtWidgets.QWidget()
+         widget.setLayout(vlayout)
+         self.setCentralWidget(widget)
+         self.bar = QtWidgets.QProgressBar()
+         self.bar.setMinimum(0)
+         self.bar.setMaximum(MAX_ITER)
+         self.bar.setValue(0)
+         vlayout.addWidget(self.bar)
+         self.button = QtWidgets.QPushButton("Start")
+         self.button.pressed.connect(self.process)
+         vlayout.addWidget(self.button)
+         button = QtWidgets.QPushButton("About")
+         button.pressed.connect(app.aboutQt)
+         vlayout.addWidget(button)
+         self.thread = QThread(self)
+         # Worker-object must have no parent
+         self.processor = Processor()
+         self.processor.moveToThread(self.thread)
+         self.thread.finished.connect(self.processor.deleteLater)
+         self.process.connect(self.processor.do_work)
+         self.processor.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
+         self.processor.status_changed.connect(self.button.setDisabled)
+         self.processor.finished.connect(lambda: self.bar.setValue(0))
+         self.destroyed.connect(self.thread.quit)
+         self.destroyed.connect(self.thread.wait)
+         self.thread.start()
+
+
+   if __name__ == "__main__":
+      app = QtWidgets.QApplication(sys.argv)
+
+      w = MainWindow()
+      w.setFixedSize(300, 150)
+      w.show()
+
+      res = app.exec_()
+      sys.exit(res)
+
+Важным моментом является то, что рабочий объект не должен иметь родителя при создании. Это является важным условием
+для использование метода `moveToThread()`. Обратите внимание, что дял завершения потока используется метод `quit()`,
+так как оригинальный QThread работает на основе цикла событий.
 
 QRunnable и QThreadPool
 =======================
@@ -265,7 +338,7 @@ QRunnable завершится, QThreadPool сам удалит объект QRu
 
    import sys
    from PyQt5 import QtWidgets
-   from PyQt5.QtCore import Qt, QRunnable, QThreadPool, QObject, Signal
+   from PyQt5.QtCore import Qt, QRunnable, QThreadPool, QObject, pyqtSignal
 
    MAX_ITER = 1000000
 
@@ -316,7 +389,7 @@ QRunnable завершится, QThreadPool сам удалит объект QRu
          button.pressed.connect(app.aboutQt)
          vlayout.addWidget(button)
          self.thread_pool = QThreadPool(self)
-         self.destroyed.connect(lambda: self.cleanup())
+         self.destroyed.connect(self.thread_pool.waitForDone)
 
       def process(self):
          processor = Processor(self)
@@ -325,9 +398,6 @@ QRunnable завершится, QThreadPool сам удалит объект QRu
          processor.finished.connect(lambda: self.bar.setValue(0))
          processor.setAutoDelete(True)
          self.thread_pool.start(processor)
-
-      def cleanup(self):
-         self.thread_pool.waitForDone()
 
 
    if __name__ == "__main__":
@@ -511,7 +581,7 @@ QtDesigner
          self.ui.start_button.pressed.connect(self.process)
          self.ui.about_button.pressed.connect(app.aboutQt)
          self.thread_pool = QThreadPool.globalInstance()
-         self.destroyed.connect(lambda: self.cleanup())
+         self.destroyed.connect(self.thread_pool.waitForDone)
 
       def process(self):
          processor = Processor(self)
@@ -519,9 +589,6 @@ QtDesigner
          processor.status_changed.connect(self.ui.start_button.setDisabled)
          processor.finished.connect(lambda: self.ui.bar.setValue(0))
          self.thread_pool.start(processor)
-
-      def cleanup(self):
-         self.thread_pool.waitForDone()
 
 
    if __name__ == "__main__":
@@ -579,7 +646,7 @@ QtDesigner
          self.start_button.pressed.connect(self.process)
          self.about_button.pressed.connect(app.aboutQt)
          self.thread_pool = QThreadPool.globalInstance()
-         self.destroyed.connect(lambda: self.cleanup())
+         self.destroyed.connect(self.thread_pool.waitForDone)
 
       def process(self):
          processor = Processor(self)
@@ -587,9 +654,6 @@ QtDesigner
          processor.status_changed.connect(self.start_button.setDisabled)
          processor.finished.connect(lambda: self.bar.setValue(0))
          self.thread_pool.start(processor)
-
-      def cleanup(self):
-         self.thread_pool.waitForDone()
 
 
    if __name__ == "__main__":
