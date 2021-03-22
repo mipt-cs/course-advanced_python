@@ -17,7 +17,7 @@ PyQt5: многопоточность GUI программ и дизайн ин�
 
 .. _Qt5: https://doc.qt.io/qt-5/
 .. _PyQt5: https://www.riverbankcomputing.com/static/Docs/PyQt5/index.html
-.. _PySide2: https://doc.qt.io/qtforpython/
+.. _PySide2: https://doc.qt.io/qtforpython-5/index.html
 
 Напомню, что полезно обращаться к документации библиотеки: Qt5_, PyQt5_, PySide2_.
 
