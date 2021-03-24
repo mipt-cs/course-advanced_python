@@ -59,7 +59,7 @@ Jupyter-notebook
         def get_next(self):
             return self.nxt
 
-    class LinkedLiset:
+    class LinkedList:
         def __init__(self):
             self.start = None
             self.length = 0
@@ -99,7 +99,7 @@ Jupyter-notebook
 
 .. code:: python
 
-    lst = LinkedLiset()
+    lst = LinkedList()
     for i in range(10):
         lst.add(i*i)
 
