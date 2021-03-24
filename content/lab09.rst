@@ -84,7 +84,7 @@ Jupyter-notebook
             current = self.start
             for i in range(idx):
                 current = current.get_next()
-            current.get_value()
+            return current.get_value()
 
         def __iter__(self):
             self.__curr = self.start
