@@ -137,7 +137,7 @@ Blueprint создаётся по аналогии с простым сайто�
 
 
 __  {static}/extras/lab20/flaskr.zip
-__  https://flask.palletsprojects.com/en/1.1.x/
+__  https://flask.palletsprojects.com/en/1.1.x/tutorial/
 
 Файл `__init__.py` выглядит следующим образом:
 
