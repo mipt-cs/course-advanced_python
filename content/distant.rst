@@ -1,9 +1,9 @@
 ДИСТАНЦИОНКА
 ###########################################
 
-:date: 2020-08-01 09:00
+:date: 2021-08-01 09:00
 :summary: Ссылки на дистанционно проводимые занятия
-:status: published
+:status: draft
 :published: yes
 
 .. default-role:: code

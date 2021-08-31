@@ -1,9 +1,9 @@
 Работа с сокетами.
 ###############################
 
-:date: 2020-12-01 09:00
+:date: 2021-12-01 09:00
 :summary: Работа с сокетами
-:status: published
+:status: draft
 
 .. default-role:: code
 

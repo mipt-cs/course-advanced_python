@@ -1,9 +1,9 @@
 Многопоточность в Python. Библиотеки threading и multiprocessing.
 #################################################################
 
-:date: 2020-11-03 09:00
+:date: 2021-11-03 09:00
 :summary: Работа с потоками и подпроцессами в Python
-:status: published
+:status: draft
 
 .. default-role:: code
 

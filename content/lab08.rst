@@ -1,9 +1,9 @@
 Генераторы и цикл for
 #####################
 
-:date: 2020-10-20 09:00
+:date: 2021-10-20 09:00
 :summary: Генераторы и цикл for.
-:status: published
+:status: draft
 
 .. default-role:: code
 

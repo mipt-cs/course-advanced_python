@@ -1,9 +1,9 @@
 Работа с файлами
 ################
 
-:date: 2020-09-14 19:00
+:date: 2021-09-14 19:00
 :summary: Работа с файлами
-:status: published
+:status: draft
 
 .. default-role:: code
 

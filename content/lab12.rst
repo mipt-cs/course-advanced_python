@@ -1,9 +1,9 @@
 Регулярные выражения
 ####################
 
-:date: 2020-11-17
+:date: 2021-11-17
 :summary: Изучение регулярных выражений и их использование
-:status: published
+:status: draft
 
 .. default-role:: code
 .. contents:: Содержание

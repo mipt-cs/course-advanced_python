@@ -1,9 +1,9 @@
 Библиотека pickle
 #################
 
-:date: 2020-11-24 09:00
+:date: 2021-11-24 09:00
 :summary: Сериализация и десериализация объектов.
-:status: published
+:status: draft
 
 .. default-role:: code
 

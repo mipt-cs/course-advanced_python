@@ -1,9 +1,9 @@
 ООП и диаграммы классов UML
 ####################################
 
-:date: 2020-09-29 13:00
+:date: 2021-09-29 13:00
 :summary: ООП и диаграммы классов UML
-:status: published
+:status: draft
 :published: yes
 
 
