@@ -1,9 +1,9 @@
 Создание Web сайтов на Python. Основы flask и HTML
 ##################################################
 
-:date: 2021-03-12 09:00
+:date: 2021-03-16 09:00
 :summary: Введение в flask и HTML
-:status: draft
+
 
 .. default-role:: code
 

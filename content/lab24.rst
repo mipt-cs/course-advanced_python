@@ -1,9 +1,9 @@
 PyQt5: многопоточность GUI программ и дизайн интерфейса
 #######################################################
 
-:date: 2021-04-09 09:00
+:date: 2021-04-06 09:00
 :summary: Cоздание графических приложений, ч.2
-:status: draft
+
 
 .. default-role:: code
 
@@ -17,7 +17,7 @@ PyQt5: многопоточность GUI программ и дизайн ин�
 
 .. _Qt5: https://doc.qt.io/qt-5/
 .. _PyQt5: https://www.riverbankcomputing.com/static/Docs/PyQt5/index.html
-.. _PySide2: https://doc.qt.io/qtforpython/
+.. _PySide2: https://doc.qt.io/qtforpython-5/index.html
 
 Напомню, что полезно обращаться к документации библиотеки: Qt5_, PyQt5_, PySide2_.
 
@@ -36,11 +36,8 @@ PyQt5: многопоточность GUI программ и дизайн ин�
 `__del__()` может обратиться к объектам, которые уже были уничтожены, что приведет к падению программы. Поэтому, при
 работе с Qt используйте сигнал `destroyed`, который есть у QObject. Этот сигнал срабатывает непосредственно перед
 удалением C++ объекта, что позволит корректно освободить ресурсы. Но и тут есть один момент. С этим сигналом нельзя
-связать метод класса. Но можно связать лямбда-функцию, которая просто вызывает метод класса для освобождения ресурсов.
-
-.. code-block:: python
-
-   self.destroyed.connect(lambda: self.cleanup())
+связать метод этого же класса (что логично, т.к. происходит удаление этого самого объекта).
+Но можно связать лямбда-функцию, которая освобождает ресурсы.
 
 Типы соединения
 ---------------
@@ -175,6 +172,8 @@ QThread
 
 
    class MainWindow(QtWidgets.QMainWindow):
+      process = Signal()
+
       def __init__(self):
          super().__init__(flags=Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
          vlayout = QtWidgets.QVBoxLayout()
@@ -193,18 +192,12 @@ QThread
          button.pressed.connect(app.aboutQt)
          vlayout.addWidget(button)
          self.processor = Processor(self)
+         self.process.connect(self.processor.start)
          self.processor.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
          self.processor.status_changed.connect(self.button.setDisabled)
          self.processor.finished.connect(lambda: self.bar.setValue(0))
-         self.destroyed.connect(lambda: self.cleanup())
-
-      def process(self):
-         self.processor.start()
-
-      def cleanup(self):
-         if self.processor:
-               self.processor.requestInterruption()
-               self.processor.wait()
+         self.destroyed.connect(self.processor.requestInterruption)
+         self.destroyed.connect(self.processor.wait)
 
 
    if __name__ == "__main__":
@@ -229,15 +222,92 @@ C++ объекта, как было рассказано выше.
 запросов в основном потоке, и мы получим похожую проблему, чтобы была до разделения программы на два потока. Для
 теста попробуйте убрать этот аргумент и посмотрите на результат.
 
-Также стоит отметить, что это не единственный способ работы с QThread. Другой способ использование рабочего объекта
-(worker-object approach), что имеет свои плюсы.
+Worker-object approach
+======================
+
+Подход с наследованием QThread имеет большой минус — созданный объект такого класса принадлежит тому потоку, в котором
+он был создан. Соответственно, все его слоты будут выполняться в этом самом потоке. Если необходимо перенести выполнение
+слотов в новый поток, за который отвечает наш объект, то нужно использовать рабочий объект (worker-object approach).
+
+.. code-block:: python
+
+   import sys
+   from PyQt5 import QtWidgets
+   from PyQt5.QtCore import Qt, QThread, QObject, pyqtSignal
+
+   MAX_ITER = 1000000
+
+
+   class Processor(QObject):
+      iteration_passed = pyqtSignal(int)
+      status_changed = pyqtSignal(bool)
+      finished = pyqtSignal()
+
+      def do_work(self):
+         self.status_changed.emit(True)
+         with open("out.txt", "w") as f:
+               i = 0
+               while i < MAX_ITER:
+                  f.write("{}\n".format(i))
+                  i += 1
+                  self.iteration_passed.emit(i + 1)
+         self.status_changed.emit(False)
+         self.finished.emit()
+
+
+   class MainWindow(QtWidgets.QMainWindow):
+      process = pyqtSignal()
+
+      def __init__(self):
+         super().__init__(flags=Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+         vlayout = QtWidgets.QVBoxLayout()
+         widget = QtWidgets.QWidget()
+         widget.setLayout(vlayout)
+         self.setCentralWidget(widget)
+         self.bar = QtWidgets.QProgressBar()
+         self.bar.setMinimum(0)
+         self.bar.setMaximum(MAX_ITER)
+         self.bar.setValue(0)
+         vlayout.addWidget(self.bar)
+         self.button = QtWidgets.QPushButton("Start")
+         self.button.pressed.connect(self.process)
+         vlayout.addWidget(self.button)
+         button = QtWidgets.QPushButton("About")
+         button.pressed.connect(app.aboutQt)
+         vlayout.addWidget(button)
+         self.thread = QThread(self)
+         # Worker-object must have no parent
+         self.processor = Processor()
+         self.processor.moveToThread(self.thread)
+         self.thread.finished.connect(self.processor.deleteLater)
+         self.process.connect(self.processor.do_work)
+         self.processor.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
+         self.processor.status_changed.connect(self.button.setDisabled)
+         self.processor.finished.connect(lambda: self.bar.setValue(0))
+         self.destroyed.connect(self.thread.quit)
+         self.destroyed.connect(self.thread.wait)
+         self.thread.start()
+
+
+   if __name__ == "__main__":
+      app = QtWidgets.QApplication(sys.argv)
+
+      w = MainWindow()
+      w.setFixedSize(300, 150)
+      w.show()
+
+      res = app.exec_()
+      sys.exit(res)
+
+Важным моментом является то, что рабочий объект не должен иметь родителя при создании. Это является важным условием
+для использование метода `moveToThread()`. Обратите внимание, что для завершения потока используется метод `quit()`,
+так как оригинальный QThread работает на основе цикла событий.
 
 QRunnable и QThreadPool
 =======================
 
-Пример выше — не совсем типичный пример использования QThread, хотя не является плохим решением. Обычно при
-использовании QThread поток запускается и живет на всем протяжении работы программы. В данном случае нам нужен отдельный
-поток на небольшой промежуток времени. Тут нам поможет класс QThreadPool, класс для управления отдельными потоками. Он
+Обычно при использовании QThread поток запускается и живет на всем протяжении работы программы. В данном случае нам нужен
+отдельный поток на небольшой промежуток времени. Тут нам поможет класс QThreadPool, класс для управления отдельными потоками. Он
 может выделять отдельные потока на исполнение каких-либо операций и возвращать себе. Любое Qt приложение имеет
 глобальный пул потоков, который можно получить функцией `QThreadPool.globalInstance()`. QThreadPool работает с объектами
 класса QRunnable. Это класс для выделения части кода, который может быть исполнен в отдельном потоке. Реализация кода
@@ -269,32 +339,31 @@ QRunnable завершится, QThreadPool сам удалит объект QRu
    MAX_ITER = 1000000
 
 
-   class ProcessorWorker(QObject):
+   # Here we use multiple inheritence
+   # to use signal/slot mechanism
+   # from QRunnable
+   class Processor(QRunnable, QObject):
       iteration_passed = pyqtSignal(int)
       status_changed = pyqtSignal(bool)
       finished = pyqtSignal()
 
-
-   class Processor(QRunnable):
       def __init__(self, parent):
-         super().__init__()
-         # we need parent to protect worker
-         # from being deleted before Processor
-         self.signals = ProcessorWorker(parent)
+         # Since we use multiple inheritence
+         # it's more convenient to use
+         # this syntax to call __init__ function
+         QRunnable.__init__(self)
+         QObject.__init__(self, parent)
 
       def run(self):
-         self.signals.status_changed.emit(True)
+         self.status_changed.emit(True)
          with open("out.txt", "w") as f:
                i = 0
                while i < MAX_ITER:
                   f.write("{}\n".format(i))
                   i += 1
-                  self.signals.iteration_passed.emit(i + 1)
-         self.signals.status_changed.emit(False)
-         self.signals.finished.emit()
-         # now we ask application do delete worker
-         # since we don't need it anymore
-         self.signals.deleteLater()
+                  self.iteration_passed.emit(i + 1)
+         self.status_changed.emit(False)
+         self.finished.emit()
 
 
    class MainWindow(QtWidgets.QMainWindow):
@@ -316,17 +385,15 @@ QRunnable завершится, QThreadPool сам удалит объект QRu
          button.pressed.connect(app.aboutQt)
          vlayout.addWidget(button)
          self.thread_pool = QThreadPool(self)
-         self.destroyed.connect(lambda: self.cleanup())
+         self.destroyed.connect(self.thread_pool.waitForDone)
 
       def process(self):
          processor = Processor(self)
-         processor.signals.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
-         processor.signals.status_changed.connect(self.button.setDisabled)
-         processor.signals.finished.connect(lambda: self.bar.setValue(0))
+         processor.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
+         processor.status_changed.connect(self.button.setDisabled)
+         processor.finished.connect(lambda: self.bar.setValue(0))
+         processor.setAutoDelete(True)
          self.thread_pool.start(processor)
-
-      def cleanup(self):
-         self.thread_pool.waitForDone()
 
 
    if __name__ == "__main__":
@@ -337,7 +404,6 @@ QRunnable завершится, QThreadPool сам удалит объект QRu
       w.show()
 
       sys.exit(app.exec_())
-
 
 Библиотека concurrent
 =====================
@@ -416,7 +482,7 @@ QRunnable завершится, QThreadPool сам удалит объект QRu
 распараллеливания. Ваша программа должна поддерживать прием/отправку текстовых сообщений по сети. При запуске должно
 появляться диалоговое окно, в котором нужно указать имя/никнейм и IP собеседника. Чтобы не писать еще одну отдельную
 программу, в диалогом окне должна быть возможность запустить программу как сервер (например, поставить галочку в
-QCheckBox). В таком случае указывать IP собеседника не надо. Дял сетевых взаимодействий можете использовать встроенные
+QCheckBox). В таком случае указывать IP собеседника не надо. для сетевых взаимодействий можете использовать встроенные
 средства, сторонние библиотеки или модуль QtNetwork.
 
 QtDesigner
@@ -476,28 +542,25 @@ QtDesigner
    # Or you can use pyuic5 + import insted of this
 
 
-   class ProcessorWorker(QObject):
+   class Processor(QRunnable, QObject):
       iteration_passed = pyqtSignal(int)
       status_changed = pyqtSignal(bool)
       finished = pyqtSignal()
 
-
-   class Processor(QRunnable):
       def __init__(self, parent):
-         super().__init__()
-         self.signals = ProcessorWorker(parent)
+         QRunnable.__init__(self)
+         QObject.__init__(self, parent)
 
       def run(self):
-         self.signals.status_changed.emit(True)
+         self.status_changed.emit(True)
          with open("out.txt", "w") as f:
                i = 0
                while i < MAX_ITER:
                   f.write("{}\n".format(i))
                   i += 1
-                  self.signals.iteration_passed.emit(i + 1)
-         self.signals.status_changed.emit(False)
-         self.signals.finished.emit()
-         self.signals.deleteLater()
+                  self.iteration_passed.emit(i + 1)
+         self.status_changed.emit(False)
+         self.finished.emit()
 
 
    class MainWindow(QtWidgets.QMainWindow):
@@ -514,17 +577,14 @@ QtDesigner
          self.ui.start_button.pressed.connect(self.process)
          self.ui.about_button.pressed.connect(app.aboutQt)
          self.thread_pool = QThreadPool.globalInstance()
-         self.destroyed.connect(lambda: self.cleanup())
+         self.destroyed.connect(self.thread_pool.waitForDone)
 
       def process(self):
          processor = Processor(self)
-         processor.signals.iteration_passed.connect(self.ui.bar.setValue, Qt.DirectConnection)
-         processor.signals.status_changed.connect(self.ui.start_button.setDisabled)
-         processor.signals.finished.connect(lambda: self.ui.bar.setValue(0))
+         processor.iteration_passed.connect(self.ui.bar.setValue, Qt.DirectConnection)
+         processor.status_changed.connect(self.ui.start_button.setDisabled)
+         processor.finished.connect(lambda: self.ui.bar.setValue(0))
          self.thread_pool.start(processor)
-
-      def cleanup(self):
-         self.thread_pool.waitForDone()
 
 
    if __name__ == "__main__":
@@ -550,28 +610,25 @@ QtDesigner
    MAX_ITER = 1000000
 
 
-   class ProcessorWorker(QObject):
-      iteration_passed = pyqtSignal(int)
+   class Processor(QRunnable, QObject):
+      ration_passed = pyqtSignal(int)
       status_changed = pyqtSignal(bool)
       finished = pyqtSignal()
 
-
-   class Processor(QRunnable):
       def __init__(self, parent):
-         super().__init__()
-         self.signals = ProcessorWorker(parent)
+         QRunnable.__init__(self)
+         QObject.__init__(self, parent)
 
       def run(self):
-         self.signals.status_changed.emit(True)
+         self.status_changed.emit(True)
          with open("out.txt", "w") as f:
                i = 0
                while i < MAX_ITER:
                   f.write("{}\n".format(i))
                   i += 1
-                  self.signals.iteration_passed.emit(i + 1)
-         self.signals.status_changed.emit(False)
-         self.signals.finished.emit()
-         self.signals.deleteLater()
+                  self.iteration_passed.emit(i + 1)
+         self.status_changed.emit(False)
+         self.finished.emit()
 
 
    class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -585,17 +642,14 @@ QtDesigner
          self.start_button.pressed.connect(self.process)
          self.about_button.pressed.connect(app.aboutQt)
          self.thread_pool = QThreadPool.globalInstance()
-         self.destroyed.connect(lambda: self.cleanup())
+         self.destroyed.connect(self.thread_pool.waitForDone)
 
       def process(self):
          processor = Processor(self)
-         processor.signals.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
-         processor.signals.status_changed.connect(self.start_button.setDisabled)
-         processor.signals.finished.connect(lambda: self.bar.setValue(0))
+         processor.iteration_passed.connect(self.bar.setValue, Qt.DirectConnection)
+         processor.status_changed.connect(self.start_button.setDisabled)
+         processor.finished.connect(lambda: self.bar.setValue(0))
          self.thread_pool.start(processor)
-
-      def cleanup(self):
-         self.thread_pool.waitForDone()
 
 
    if __name__ == "__main__":

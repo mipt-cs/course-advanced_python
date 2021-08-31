@@ -4,7 +4,6 @@
 :date: 2021-09-01 09:00
 :summary: Повторение материала прошлого года
 :status: published
-:published: yes
 
 
 .. default-role:: code
