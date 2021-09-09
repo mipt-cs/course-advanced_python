@@ -59,7 +59,7 @@ Jupyter-notebook
         def get_next(self):
             return self.nxt
 
-    class LinkedLiset:
+    class LinkedList:
         def __init__(self):
             self.start = None
             self.length = 0
@@ -84,7 +84,7 @@ Jupyter-notebook
             current = self.start
             for i in range(idx):
                 current = current.get_next()
-            current.get_value()
+            return current.get_value()
 
         def __iter__(self):
             self.__curr = self.start
@@ -99,7 +99,7 @@ Jupyter-notebook
 
 .. code:: python
 
-    lst = LinkedLiset()
+    lst = LinkedList()
     for i in range(10):
         lst.add(i*i)
 
@@ -441,7 +441,7 @@ Jupyter-notebook
 
 1) Корутина ``connect_user`` принимает данные авторизации от
    пользователя, открывает файл с названием .txt и создает на его основе
-   корутину ``цrite_to_file``
+   корутину ``write_to_file``
 
 2) Корутина ``write_to_file(f_obj)`` записывает переданное планировщиком
    задач сообщение пользователя, которые записываются в файловый объект,
