@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mipt-cs/course-advanced_python.svg?branch=master)](https://travis-ci.org/mipt-cs/course-advanced_python)
+![Build Status](https://github.com/mipt-cs/course-advanced_python/actions/workflows/html_deploy.yml/badge.svg?branch=master)
 
 
 # Курс "Продвинутое программирование на Python"

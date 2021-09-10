@@ -1,0 +1,21 @@
+name: html_deploy
+on:
+  push:
+    branches:
+      - master
+jobs:
+  main_job:
+    runs-on: ubuntu-latest
+    environment: deployment
+    env:
+      DEPLOY_KEYS: ${{ secrets.DEPLOY_KEYS }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+      - run: pip install pelican beautifulsoup4 pelican-youtube
+      - run: base64 -d <<< $DEPLOY_KEYS | tar -xz -C $HOME
+      - run: make html
+      - run: make rsync_upload
