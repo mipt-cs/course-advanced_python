@@ -3,7 +3,7 @@
 
 :date: 2021-02-09 9:00
 :summary: Библиотека Pandas
-
+:status: draft
 
 .. default-role:: code
 

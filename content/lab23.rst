@@ -3,7 +3,7 @@
 
 :date: 2021-03-30 09:00
 :summary: Cоздание графических приложений, ч. 1
-
+:status: draft
 
 .. default-role:: code
 

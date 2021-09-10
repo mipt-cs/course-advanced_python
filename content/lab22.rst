@@ -3,7 +3,7 @@
 
 :date: 2021-03-23 16:29
 :summary: flask blueprints
-
+:status: draft
 
 .. default-role:: code
 

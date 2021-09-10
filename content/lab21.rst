@@ -3,7 +3,7 @@
 
 :date: 2021-03-16 09:00
 :summary: Введение в flask и HTML
-
+:status: draft
 
 .. default-role:: code
 

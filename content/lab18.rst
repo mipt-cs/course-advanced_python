@@ -3,7 +3,7 @@
 
 :date: 2021-02-16 9:00
 :summary: Визуализация
-
+:status: draft
 
 .. default-role:: code
 

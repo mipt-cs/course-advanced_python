@@ -3,7 +3,7 @@
 
 :date: 2021-09-08 09:00
 :summary: Повторение работы в командной строке Linux
-:status: draft
+:status: published
 
 
 .. default-role:: code
