@@ -3,7 +3,7 @@
 
 :date: 2021-10-03 19:00
 :summary: ООП. Специальные методы.
-:status: draft
+:status: published
 
 .. default-role:: code
 
