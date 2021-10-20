@@ -3,7 +3,7 @@
 
 :date: 2021-10-20 09:00
 :summary: Генераторы и цикл for.
-:status: draft
+:status: published
 
 .. default-role:: code
 
