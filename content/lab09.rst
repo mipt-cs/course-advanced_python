@@ -3,7 +3,7 @@
 
 :date: 2021-10-27 09:00
 :summary: Итераторы и сопроцессы.
-:status: draft
+:status: published
 
 .. default-role:: code
 
