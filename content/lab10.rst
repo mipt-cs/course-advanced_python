@@ -1,9 +1,9 @@
-Многопоточность в Python. Библиотеки threading и multiprocessing.
-#################################################################
+Асинхронное программирование. Библиотека asyncio.
+#################################################
 
 :date: 2021-11-03 09:00
-:summary: Работа с потоками и подпроцессами в Python
-:status: draft
+:summary: Работа с асинхронными операциями.
+:status: published
 
 .. default-role:: code
 
@@ -12,572 +12,448 @@
 
 .. contents::
 
-Процесс и поток
-===============
+Параллелизм и конкурентность
+============================
 
-Процесс - исполняемый экземпляр какой-либо программы. Каждый процесс состоит из следующих элементов:
+В программировании эти два понятия достаточно близки друг к другу, однако в то же время
+имеют существенную разницу.
 
-+ образ машинного кода;
-+ область памяти, в которую включается исполняемый код, данные процесса (входные и выходные данные), стек вызовов и куча (для хранения динамически создаваемых данных);
-+ дескрипторы операционной системы (например, файловые дескрипторы);
-+ состояние процесса.
++  **Parallel execution** (параллелизм) — исполнение нескольких задач
+   одновременно. Для достижения параллелизма необходимо физическое
+   одноврменное исполнение задач (multithreading и multiprocessing).
++  **Concurrency** (конкурентность) — две или более задачи могут
+   запускаться, выполняться и завершаться в перекрывающиеся периоды
+   времени.
 
-В целях стабильности и безопасности, в современных операционных системы каждый процесс имеет прямой доступ только с своим собственным ресурсам.
-Доступ к ресурсам другого процесса возможен через межпроцессное взаимодействие (например, посредством файлов, при помощи именованных и неименованных каналов и другие).
+Основным отличием конкурентности является то, что это логическое распараллеливание программы.
+Если в вашем ПК только одно ядро, то в один момент времени может исполняться только одна задача.
+Однако в случае конкурентности исполенение задач может приостанавливаться с целью переключения на
+другие задачи. Тем самым прогресс исполнения нескольких задач может идти одновременно по нескольким
+задачам даже в случае физически невозможного их одновременного исполнения.
 
-Сам процесс может быть разделен на так называемые потоки. Поток (поток выполнения, thread) - наименьшая единица обработки, исполнение которой может быть назначено ядром операционной системы.
-В отличии от нескольких процессов, потоки существуют внутри одного процесса и имеют доступ к ресурсам этого процесса. Каждый поток обладет собственным набором регистров и собственным стеком вызова, но доступ к ним имеют и другие потоки.
+Асинхронные операции и обратные вызовы
+======================================
 
-.. image:: http://www.cs.miami.edu/home/visser/Courses/CSC322-09S/Content/UNIXProgramming/Threads.JPG
-   :width: 500
-   :align: center
-   :alt: Sharing data between threads
+Как упоминалось в предыдущей теме, мы можем хотим продолжать вычисления параллельно с операциями
+ввода/вывода. Такие операции достаточно медленные, и их вызов блокирует поток исполнения программы. Поэтому эти операции выносили в отдельный поток.
 
-При работе с потоками стоит учесть несколько моментов:
-
-+ одно ядро процессора в один момент может исполнять только один поток;
-+ потоки одного процесса могут исполняться физически одновременно (на разных ядрах);
-+ бессмысленно порождать потоков больше, чем у вас есть ядер.
-
-Потоки имеют несколько применений. Первое - ускорение работы программы.
-Ускорение достигается за счет параллельного выполнения независимых друг от друга вычислений.
-Например, при численном интегрировании область интегрирования может быть разбита на 3 участка.
-На каждый участок создается свой поток, в котором численно вычислется интеграл для конкретного участка.
-Второе - независимое исполнение операций. Отличие этого случая от первого хорошо видно на следующем примере.
-Пусть есть приложение с графическим интерфейсом, где весь код выполняется в одном потоке.
-При выполнении какой-нибудь долгой операции (например, копирование файла) интерфейс приложения просто перестанет отвечать до тех пор, пока долгий процесс не завершится.
-В таком случае в один поток помещается работа графического интерфейса, в другой - остальные вычисления.
-В таком случае интерфейс позволит проводить другие операции даже во время выполнения долгой операции в другом потоке (например, заполнение прогресс бара в процессе копирования файла).
-
-threading
-=========
-
-В Python работа с потоками осуществляется при помощи стандартной библиотеки threading.
-В библиотеке представлен класс Thread для создания потока выполнения.
-Задание исполняемого кода в отдельном потоке возможно двумя способами:
-
-+ передача исполняемого объекта (функции) в конструктор класса;
-+ переопределение функции run() в классе-наследнике.
-
-После того, как объект создан, поток запускается путем вызова метода start(). Рассмотрим простой пример:
+Асинхронные операции ввода/вывода позволяют программе продолжать выполнение, не дожидаясь результата
+их исполнения. Как только такая операция завершается, вызывается исполнение функции обратного вызова
+(**callback**).
+Это написанная вами функция, в которой можно реализовать необходимую логику.
 
 .. code:: python
 
-    import threading
-    import sys
+    # функция, отвечающая за обработку ответа
+    def handle_response(response):
+        print('\n{:.70}...'.format(response.body))
 
+    # создание объекта для общения с сетью
+    http_client = AsyncHTTPClient()
 
-    def thread_job(number):
-        print('Hello {}'.format(number))
-        sys.stdout.flush()
+    # неблокирующий вызов функции!
+    # после вызова функции fetch будет выполняться следующий за этой строчкой код без ожидания получения ответа
+    # ответ с сайта будет обработан функцией handle_response (так называемым callback'ом)
+    http_client.fetch('http://yandex.ru', callback=handle_response)
 
+Проблема данного подхода заключается в том, что внутри одной callback функции может быть вызвана
+другая и т.д. Такой код становится трудно читаем, а стек вызова становится достаточно запутанным.
 
-    def run_threads(count):
-        threads = [
-            threading.Thread(target=thread_job, args=(i,))
-            for i in range(0, count)
-        ]
-        for thread in threads:
-            thread.start()  # каждый поток должен быть запущен
-        for thread in threads:
-            thread.join()  # дожидаемся исполнения всех потоков
+Корутины и asyncio
+==================
 
+**Корутина** (coroutine) - подпрограмма (функция), которая может начинаться, приостанавливаться и
+завершаться в произвольный момент времени. Корутины описываются синтаксисом async/await.
 
-    run_threads(4)
-    print(finish)
-
-Конструктор класса Thread имеет следующие аргументы:
-
-+ group должно быть None; зарезервировано для будующих реализаций Python 3;
-+ target является исполняемым объектом (по умолчанию равен None, ничего не исполняется);
-+ name обозначет имя потока (по умолчанию имя генерируется автоматически);
-+ args - кортеж аргументов для исполняемого объекта;
-+ kwargs - словарь именованных аргументов для исполняемого объекта;
-+ daemon равное True обозначет служебный поток (служебные потоки завершаются принудительно при завершении процесса); по умолчанию False.
-
-В Python выполнение программы заканчивается, когда все неслужебные потоки завершены. Модифицировав программу выше, мы все еще получим корректно работающий код:
+Сходу рассмотрим несколько примеров.
 
 .. code:: python
 
-    import threading
-    import sys
+    import asyncio
+
+    async def main():
+        print('hello')
+        await asyncio.sleep(1)
+        print('world')
+
+    loop = asyncio.get_event_loop()
+    # Blocking call which returns when the main() coroutine is done
+    loop.run_until_complete(main())
+    loop.close()
+
+В этом примере:
+
+1. Упарвление будет передано в корутину main;
+2. Напечатается hello;
+3. Управление будет передано в корутину sleep;
+4. В течении одной секунды программа "спит";
+5. Управление вернется в main;
+6. Напечатается wolrd;
+7. Корутина main, а далее сама программа завершаются.
+
+Следующий пример напечатает “hello” после ожидания в 1 секунду, а затем напечатает “world” после ожидания в 2 секунды:
+
+.. code:: python
+
+    import asyncio
     import time
 
+    async def say_after(delay, what):
+        await asyncio.sleep(delay)
+        print(what)
 
-    def thread_job(number):
-        time.sleep(2)  # "усыпляем" поток на 2 сек
-        print('Hello {}'.format(number))
-        sys.stdout.flush()
+    async def main():
+        print(f"started at {time.strftime('%X')}")
 
+        await say_after(1, 'hello')
+        await say_after(2, 'world')
 
-    def run_threads(count):
-        threads = [
-            threading.Thread(target=thread_job, args=(i,))
-            for i in range(1, count)
-        ]
-        for thread in threads:
-            thread.start()  # каждый поток должен быть запущен
+        print(f"finished at {time.strftime('%X')}")
 
+    loop = asyncio.get_event_loop()
+    # Blocking call which returns when the main() coroutine is done
+    loop.run_until_complete(main())
+    loop.close()
 
-    run_threads(1)
-    print(finish)
+В следующем примере мы запустим две задачи на параллельное исполнение.
 
-Как можно увидеть, программа завершается без ошибок (с кодом 0), но теперь строка "finish" печатается раньше строки "Hello 0",
-т.к. главный поток теперь не ждет завершения работы других потоков.
-Метод join() используется для блокирования исполнения родительского потока до тех пор, пока созданный поток не завершится.
-Это нужно в случаях, когда для работы потока-родителя необходим результат работы потока-потомка.
-Вспомним пример с численным интегрированием.
-Вычисление итогового значения интеграла выполняется в главном потоке, но это возможно только после завершения вычислений в побочных потоках.
-В таком случае главный поток нужно просто приостановить до тех пор, пока не завершатся все побочные потоки.
-Метод join() может принимать один аргумент - таймаут в секундах.
-Если таймаут задан, join() бликирует работу на указанное время. Если по истечении времени ожидаемый поток не будет завершен, join() все равно разблокирует работу потока, вызвашего его.
-Проверить, исполняется ли поток можно методом is_alive(). Подробнее ознакомиться с функционалом библиотеки можно в официальной документации по threading_.
+.. code:: python
 
-.. _threading: https://docs.python.org/3/library/threading.html
+    import asyncio
+    import time
+
+    async def say_after(delay, what):
+        await asyncio.sleep(delay)
+        print(what)
+
+    loop = asyncio.get_event_loop()
+    # Ожидание завершения обоих операций должно занять около 2х секунд
+    print(f"started at {time.strftime('%X')}")
+    loop.run_until_complete(asyncio.gather(
+        say_after(1, 'hello'),
+        say_after(2, 'world')
+    ))
+    print(f"finished at {time.strftime('%X')}")
+    loop.close()
+
+asyncio абстракции
+------------------
+
+При работе с асинхронностью мы встретились с понятием **цикл событий** (event loop). Это программная конструкция, которая управляет выполнением различных задач: регистрирует поступление и запускает в
+подходящий момент.
+
+C помощью синтаксиса **await** мы определяем места, где можно
+переключиться на другие ожидающие выполнения задачи.
+
+Рассмотрим подробнее следующий пример:
+
+.. code:: python
+
+    import asyncio
+
+    async def compute(a, b):
+        print('Compute...')
+        await asyncio.sleep(1.0)
+        return a + b
+
+    async def print_sum(a, b):
+        result = await compute(a, b)
+        print('{} + {} = {}'.format(a, b, result))
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(print_sum(1, 2))
+    loop.close()
+
+.. image:: https://camo.githubusercontent.com/de86a2c33affd5101ddc77b69a274823e643bda2/687474703a2f2f6e746f6c6c2e6f72672f7374617469632f696d616765732f74756c69705f636f726f2e706e67
+   :width: 700
+   :align: center
+   :alt: Visualisation of the example compute/print_sum
+
+Начиная с версии Python 3.7 синтаксис работы с библиотекой (а именно создание цикла событий) был упрощен.
+Подробнее про библиотеку можно узнать здесь_.
+
+.. _здесь: https://docs.python.org/3/library/asyncio.html
 
 Упражнение №1
--------------
++++++++++++++
 
-Запустите следующий код. В чем проблема данного кода? Всегда ли counter
-= 10 после исполнения кода программы?
-
-.. code:: python
-
-    import threading
-    import sys
-
-
-    def thread_job():
-        global counter
-        old_counter = counter
-        counter = old_counter + 1
-        print('{} '.format(counter), end='')
-        sys.stdout.flush()
-
-
-    counter = 0
-    threads = [threading.Thread(target=thread_job) for _ in range(10)]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join()
-    print(counter)
-
-
-Демонстрация "проблемности" кода:
+Что будет напечатано и почему?
 
 .. code:: python
 
-    import threading
-    import random
-    import time
-    import sys
+    import asyncio
 
+    async def factorial(name, number):
+        f = 1
+        for i in range(2, number + 1):
+            print(f"Task {name}: Compute factorial({i})...")
+            await asyncio.sleep(1)
+            f *= i
+        print(f"Task {name}: factorial({number}) = {f}")
 
-    def thread_job():
-        global counter
-        old_counter = counter
-        time.sleep(random.randint(0, 1))
-        counter = old_counter + 1
-        print('{} '.format(counter), end='')
-        sys.stdout.flush()
+    async def main():
+        await asyncio.gather(
+            factorial("A", 2),
+            factorial("B", 3),
+            factorial("C", 4),
+        )
 
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()
 
-    counter = 0
-    threads = [threading.Thread(target=thread_job) for _ in range(10)]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join()
-    print(counter)
+Waiting & timeouts
+------------------
 
-Почему так происходит? Есть несколько возможных решений этой проблемы.
+Иногда выполнение операции может занять очень длительное время.
+Например, вы до сих пор не получили ответ от сервера.
+В случае отсутствия соединения ваша операция может висеть бесконечно долго.
+В таком случае на асинхронные операции имеет смысл выставлять timeout.
+Пример на выставление timeout:
 
 .. code:: python
 
-    import threading
-    import random
-    import time
-    import sys
+    import asyncio
 
+    async def eternity():
+        # Sleep for one hour
+        await asyncio.sleep(3600)
+        print('yay!')
 
-    def thread_job():
-        lock.acquire()  # mutex
-        global counter
-        old_counter = counter
-        time.sleep(random.randint(0, 1))
-        counter = old_counter + 1
-        print('{} '.format(counter), end='')
-        sys.stdout.flush()
+    async def main():
+        # Wait for at most 1 second
+        try:
+            await asyncio.wait_for(eternity(), timeout=1.0)
+        except asyncio.TimeoutError:
+            print('timeout!')
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+
+async with
+----------
+
+Асинхронный контекстный менеджер - это контекстный менджер, который
+умеет приостанавливать выполнение в методах входа и выхода:
+*\_\_aenter\_\_()*, *\_\_aexit\_\_()*
+
+.. code:: python
+
+    lock = asyncio.Lock()
+
+    # ... later
+    await lock.acquire()
+    try:
+        # access shared state
+    finally:
         lock.release()
 
+.. code:: python
 
-    lock = threading.Lock()
-    counter = 0
-    threads = [threading.Thread(target=thread_job) for _ in range(10)]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join()
-    print(counter)
+    lock = asyncio.Lock()
+
+    # ... later
+    async with lock:
+        # access shared state
+
+Futures
+-------
+
+**Футуры** (futures) — объекты, в которых хранится текущий результат выполнения
+какой-либо задачи. Это может быть информация о том, что задача ещё не
+обработана или уже полученный результат; а может быть вообще исключение.
+
+Одна из особенностей футур, что мы можем запустить задачу на исполнение в одной корутине, а получить
+результат выполнения в другой. У футур есть 4 возможных состояния:
++ ожидание (pending)
++ выполнение (running)
++ выполнено (done)
++ отменено (cancelled)
+
+Когда футура находится в состояние **done**, у неё можно получить
+результат выполнения. В состояниях **pending** и **running** такая
+операция приведёт к исключению **InvalidStateError**, а в случае
+**canelled** будет **CancelledError**, и наконец, если исключение
+произошло в самой корутине, оно будет сгенерировано снова при попытке
+получить результат.
+
+Узнать состояние футуры можно с помощью методов **done()** или **cancelled()**,
+Вызов **result()** возвращает ожидаемый результат. Для получения исключения есть метод **exception()**.
+Для отмены выполнения футуры есть метод **cancel()**. И **result()** и **exception()** выбросят
+CancelledError, если футура была остановлена в процессе работы.
+
+Ожидание окончания футуры можно сделать при помощи функции **wait_for()**. Первый аргумент - футура,
+второй - таймаут (None, если таймаут не нужен).
 
 .. code:: python
 
-    import threading
-    import random
-    import time
-    import sys
+    import asyncio
 
+    async def set_after(delay, value):
+        # Sleep for *delay* seconds.
+        await asyncio.sleep(delay)
 
-    def thread_job():
-        with lock:
-            global counter
-            old_counter = counter
-            time.sleep(random.randint(0, 1))
-            counter = old_counter + 1
-            print('{} '.format(counter), end='')
-            sys.stdout.flush()
+        # Set *value* as a result of *fut* Future.
+        return value
 
+    async def main():
+        # Run "set_after()" coroutine in a parallel Task.
+        fut = asyncio.ensure_future(
+            set_after(1, '... world'))
 
-    lock = threading.Lock()
-    counter = 0
-    threads = [threading.Thread(target=thread_job) for _ in range(10)]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join()
-    print(counter)
+        print('hello ...')
 
-Вариант с контекстным менеджером более предпочтителен. Вспомните работу с файлами при помощи with.
-По завершении with файл автоматически закрывался. В данном случае похожая ситуация.
-Для того, чтобы запретить нескольким потокам параллельно выполнять некоторые участки кода, мы используем Lock (в UNIX системах более известен как мьютекс (mutex)).
-Мьютекс может быть в двух состояниях: свободен и заблокирован.
-Если какой-либо поток пытается заблокировать уже заблокированный мьютекс, то поток блокируется до тех пор, пока мьютекс не освободится. Причем если несколько потоков претендует на блокирование мьютекса, то потоки просто выстраиваются в очередь.
-Главная проблема - не освобожденный мьютекс. Отсутствие строчки lock.release() может повесить остальные потоки в бесконечное ожидание.
-Контекстный менеджер позволит избежать этой проблемы. Как только он закончится, все захваченные им ресурсы будут освобождены, в том числе мьютекс.
+        # Wait until *fut* has a result (1 second)
+        await asyncio.wait_for(fut, None)
+        # and print it.
+        print(fut.result())
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()
+
+Возможен запуск футуры при помощи await.
+
+.. code:: python
+
+    async def main():
+         # Run "set_after()" coroutine in a parallel Task.
+        fut = asyncio.ensure_future(
+            set_after(1, '... world'))
+
+        print('hello ...')
+
+        # Wait until *fut* has a result (1 second) and print it.
+        # Alternative way to get a result, just use it.
+        print(await fut)
+
+Упраженения на дом
+==================
+
+aiohttp
+-------
+
+Рядом с asyncio создано огромное количество асинхронных модулей для
+решения всевозможных задач. **aiohttp** - лишь одна из них. Это
+асинхронный HTTP Клиент/Сервер
+
+В следующем примере получаем содержимое страницы google.com:
+(при отсутствии доступа в интернет, cs.mipt.ru)
+
+.. code:: python
+
+    import aiohttp
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://google.com') as resp:
+            text = await resp.text()
+            print('{:.70}...'.format(text))
+
+Реализация простого сервера:
+
+.. code:: python
+
+    from aiohttp import web
+
+    async def handle(request):
+        name = request.match_info.get('name', 'Anonymous')
+        text = 'Hello, ' + name
+        # ...
+        # здесь идет некоторая дополнительная логика с async/await
+        #
+        return web.Response(text=text)
+
+    app = web.Application()
+    app.add_routes([web.get('/', handle),
+                    web.get('/{name}', handle)])
+
+    web.run_app(app)
+
 
 Упражнение №2
--------------
++++++++++++++
 
-Иногда бывает нужно узнать доступность набора ip адресов. Неэффективный
-вариант представлен ниже.
+Узнать свой IP адрес. Есть куча сервисов, которые позволяют узнать ваш
+ip. Но на момент запуска программы вы не знаете какой из сервисов
+доступен. Вместо того, чтобы опрашивать каждый из этих сервисов
+последовательно, можно запустить все запросы конкурентно и выбрать
+первый успешный.
 
-Реализуйте то же самое, но используя threading.
+При отсутствии доступа в интернет симулируйте задачу через cs.mipt.ru (к примеру, получение страниц вида
+cs.mipt.ru/advanced_python/lessons/labX.html и выбора первой, в которой количество символов больше, чем N)
+
+Потребуется **asyncio.wait()** и параметр **return\_when**
 
 .. code:: python
 
-    import os, re
+    from collections import namedtuple
+    import time
+    import asyncio
+    from concurrent.futures import FIRST_COMPLETED
+    import aiohttp
 
-    received_packages = re.compile(r"(\d) received")
-    status = ("no response", "alive but losses", "alive")
+    Service = namedtuple('Service', ('name', 'url', 'ip_attr'))
 
-    for suffix in range(20, 30):
-        ip = "192.168.178." + str(suffix)
-        ping_out = os.popen("ping -q -c2 " + ip, "r")  # получение вердикта
-        print("... pinging ", ip)
-        while True:
-            line = ping_out.readline()
-            if not line:
-                break
-            n_received = received_packages.findall(line)
-            if n_received:
-                print(ip + ": " + status[int(n_received[0])])
+    SERVICES = (
+        Service('ipify', 'https://api.ipify.org?format=json', 'ip'),
+        Service('ip-api', 'http://ip-api.com/json', 'query')
+    )
 
-Global Interpreter Lock (GIL)
-=============================
-CPython - популярная реализация интерпретатора - имеет встроенный механизм, который обеспечивает выполнение ровно одного потока в любой момент времени.
-GIL облегчает реализацию интерпретатора, защищая объекты от одновременного доступа из нескольких потоков.
-По этой причине, создание несколько потоков не приведет к их одновременному исполнению на разных ядрах процессора.
+    async def fetch_ip(service):
+        # получение ip
 
-.. image:: https://uwpce-pythoncert.github.io/SystemDevelopment/_images/gil.png
-   :width: 500
-   :align: center
-   :alt: GIL visualisation
 
-Однако, некоторые модули, как стандартные, так и сторонние, созданы для освобождения GIL при выполнении тяжелых вычислительных операций (например, сжатие или хеширование). К тому же, GIL всегда свободен при выполнении операций ввода-вывода.
+    async def asynchronous():
+        # TODO:
+        # создание футур для сервисов
+        # используйте FIRST_COMPLETED
+
+    ioloop = asyncio.get_event_loop()
+    ioloop.run_until_complete(asynchronous())
+
+aiogram
+-------
+
+Это библиотека для написания асинхронного Telegram бота.
 
 Упражнение №3
--------------
++++++++++++++
 
-Написать программу, которая будет находить сумму чисел массива с
-использованием N потоков. Запустить с разным параметром N.
-Убедиться, что несмотря на увеличение N, ускорения подсчета не происходит.
-Причина этому - GIL. В Python **вычисления** распараллеливать бессмысленно.
-Замерить время работы можно с помощью библиотеки time (ответ в секундах):
+Напишите телеграм бота, который будет на сообщение присылать
+соответствующее изображение
 
-.. code:: python
-
-    start = time.time()
-    # код, время работы которого надо замерить
-    print(time.time() - start)
-
-Упражнение №4
--------------
-
-Запустите на исполнение, замерив время работы. Перепишите с помощью потоков и опять замерьте время.
-
-При отсутствии доступа к интернету укажите доступные адреса urls ниже.
-К примеру:
-http://cs.mipt.ru/advanced_python/lessons/lab1.html
-http://cs.mipt.ru/advanced_python/lessons/lab2.html
-и т.д.
+-  установить aiogram 1.4 - асинхронная обертка над api телеграмма
+-  поговорить с @FatherBot, создать бота и запомнить выданный токен
+-  В рф нужно использовать впн или прокси (в сети есть огромное
+   количество списков адресов)
+-  разобраться с примером эхо бота ниже
+-  написать требуемый функционал (картинки можно запрашивать через поиск
+   яндекса или гугла, существуют готовые api, можно написать и
+   самостоятельно)
 
 .. code:: python
 
-    import urllib.request
-    import time
+    from aiogram import Bot, types
+    from aiogram.dispatcher import Dispatcher
+    from aiogram.utils import executor
+
+    PROXY_URL = 'socks5://xxx.xxx.xxx.xxx' # вставить здесь подходящий ip
+
+    secret_token = 'XXX'  # строка вида: 123456789:ABCDEFGHJABCDEFGHJABCDEFGHJABCDEFGHJ
+
+    bot = Bot(token=secret_token, proxy=PROXY_URL)
+    dp = Dispatcher(bot)
 
 
-    urls = [
-        'https://www.yandex.ru', 'https://www.google.com',
-        'https://habrahabr.ru', 'https://www.python.org',
-        'https://isocpp.org',
-    ]
+    @dp.message_handler(commands=['start', 'help'])
+    async def send_welcome(message: types.Message):
+        await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
 
 
-    def read_url(url):
-        with urllib.request.urlopen(url) as u:
-            return u.read()
-
-
-    start = time.time()
-    for url in urls:
-        read_url(url)
-    print(time.time() - start)
-
-Потоки очень уместны, если в коде есть блокирующие операции (ввод-вывод,
-сетевые взаимодействия). Также, удобно разбивать логические
-процессы по потокам (анимация, графический интерфейс, и тд).
-
-multiprocessing
-===============
-Библиотека multiprocessing позволяет организовать параллелизм вычислений за счет создания подпроцессов. Т.к. каждый процесс выполняется независимо от других, этот метод параллелизма позволяет избежать проблем с GIL.
-Предоставляемый библиотекой API схож с тем, что есть в threading, хотя есть уникальные вещи. Создание процесса происходит поутем создания объекта класса Process.
-Аргументы конструктора аналогичны тем, что есть в конструкторе Thread. В том числе аргумент daemon позволяет создавать служебные процессы. Служебные процессы завершаются вместе с родительским процессом и не могут порождать свои подпроцессы.
-
-Простой пример работы с библиотекой:
-
-.. code:: python
-
-    from multiprocessing import Process
-
-
-    def f(name):
-        print('hello', name)
+    @dp.message_handler()
+    async def echo(message: types.Message):
+        await message.reply(message.text)
 
 
     if __name__ == '__main__':
-        p = Process(target=f, args=('bob',))
-        p.start()
-        p.join()
-
-
-Чтобы убедить, что каждый процесс имеет свой ID, запустите пример:
-
-.. code:: python
-
-    from multiprocessing import Process
-    import os
-
-
-    def info(title):
-        print(title)
-        print('module name:', __name__)
-        print('parent process:', os.getppid())
-        print('process id:', os.getpid())
-
-
-    def f(name):
-        info('function f')
-        print('hello', name)
-
-
-    if __name__ == '__main__':
-        info('main line')
-        p = Process(target=f, args=('bob',))
-        p.start()
-        p.join()
-
-Старайтесь не забывать про конструкцию `__name__ == '__main__'`.
-Это надо для того, чтобы ваш модуль можно было безопасно подключать в другие модули и при этом не создавались новые процессы без вашего ведома.
-
-Упражнение №5
--------------
-Запустите код. Попробуйте объяснить, почему LIST - пуст.
-
-.. code:: python
-
-    import multiprocessing
-
-
-    def worker():
-        LIST.append('item')
-
-
-    LIST = []
-
-
-    if __name__ == "__main__":
-        processes = [
-            multiprocessing.Process(target=worker)
-            for _ in range(5)
-        ]
-        for p in processes:
-            p.start()
-        for p in processes:
-            p.join()
-        print(LIST)
-
-
-Общение между процессами
-------------------------
-
-multiprocessing предоставляет два вида межпроцессного обмена данными: очереди и каналы данных (pipe).
-
-Очереди (класс Queue) аналогичны структуре данных "очередь", рассмотренной вами в курсе алгоритмов.
-
-.. code:: python
-
-    from multiprocessing import Process, Queue
-
-
-    def f(q):
-        q.put([42, None, 'hello'])
-
-
-    if __name__ == '__main__':
-        q = Queue()
-        p = Process(target=f, args=(q,))
-        p.start()
-        print(q.get())    # выводит "[42, None, 'hello']"
-        p.join()
-
-Класс Pipe отвечает за канал обмена данными (по умолчанию, двунаправленный), представленный двумя концами, объектами класса Connection.
-С одним концом канала работает родительский процесс, а с другим концом - подпроцесс.
-
-.. code:: python
-
-    from multiprocessing import Process, Pipe
-
-
-    def f(conn):
-        conn.send([42, None, 'hello'])
-        conn.close()
-
-
-    if __name__ == '__main__':
-        parent_conn, child_conn = Pipe()
-        p = Process(target=f, args=(child_conn,))
-        p.start()
-        print(parent_conn.recv())   # выводит "[42, None, 'hello']"
-        p.join()
-
-Еще один вид обмена данными может быть достигнут путем записи/чтения обычных файлов.
-Чтобы исключить одновременную работу двух процессов с одним файлом, в библиотеке есть классы аналогичные threading.
-
-.. code:: python
-
-    from multiprocessing import Process, Lock
-
-
-    def f(l, i):
-        l.acquire()
-        try:
-            print('hello world', i)
-        finally:
-            l.release()
-
-
-    if __name__ == '__main__':
-        lock = Lock()
-        for num in range(10):
-            Process(target=f, args=(lock, num)).start()
-
-Подробнее ознакомиться с функционалом библиотеки можно в официальной документации по multiprocessing_.
-
-.. _multiprocessing: https://docs.python.org/3/library/multiprocessing.html
-
-Класс Pool в multiprocessing
-----------------------------
-
-Класс Pool - удобный механизм распараллеливания выполнения функций,
-распределения входных данных по процессам и т.д.
-
-Наиболее интересные функции: Pool.apply, Pool.map, Pool.apply\_async, Pool.map\_async.
-
-apply, map работают аналогично питоновским built-in apply, map.
-
-Как работает Pool можно понять на примере:
-
-.. code:: python
-
-    from multiprocessing import Pool
-
-
-    def cube(x):
-        return x**3
-
-
-    if __name__ == "__main__":
-        pool = Pool(processes=4)  # создаем пул из 4 процессов
-        # в apply можно передать несколько аргументов
-        results = [pool.apply(cube, args=(x,)) for x in range(1,7)]  # раскидываем числа от 1 до 7 по 4 процессам
-        print(results)
-
-        pool = Pool(processes=4)
-        # то же самое, но с map. разбивает итерируемый объект (range(1,7)) на chunks и раскидывает аргументы по процессам
-        results = pool.map(cube, range(1,7))
-        print(results)
-
-
-map, apply - блокирующие вызовы. Главная программа будет заблокирована,
-пока процесс не выполнит работу.
-
-map\_async, apply\_async - неблокирующие. При их вызове, они сразу
-возвращают управление в главную программу (возвращают ApplyResult как
-результат). Метод get() объекта ApplyResult блокирует основной поток,
-пока функция не будет выполнена.
-
-.. code:: python
-
-    pool = mp.Pool(processes=4)
-    results = [pool.apply_async(cube, args=(x,)) for x in range(1,7)]
-    output = [p.get() for p in results]
-    print(output)
-
-Упражение №6*
-~~~~~~~~~~~~~
-
-Для этого упражнения скачайте архив `viterbi_mp.zip`_ с кодом и необходимыми данными.
-
-.. _`viterbi_mp.zip`: /advanced_python/extra/lab6/viterbi_mp.zip
-
-Рассмотрим следующую задачу. Положение мобильного робота на двумерной карте может быть представлено тремя числами: x, y и направлением θ.
-Точное положение робота нам не известно. В связи с этим мы строим N гипотез о его пложении, сумма их вероятностей равна 1.
-В процессе движения робота некоторые гипотезы исчезали, а некоторые порождали новые. Однако в каждый момент времени количество гипотез - константа.
-Известно, какая гипотеза из какой была порождена.
-
-Представленный (и слегка упрощенный) выше метод оценки положения робота множеством гипотез называется фильтром частиц, а сами гипотезы называются частицами.
-Фильтр частиц используется для оценки положения робота в процессе его движения. Вспомним, что в процессе работы некоторые частицы погибают, а некоторые порождают другие.
-Переходы между частицами образуют граф перехода. Используя этот граф, можно оценить траекторию робота с некоторой точностью.
-
-Задача: необходимо восстановить траекторию движения робота. Есть несколько способов приближенно решить данную задачу.
-Один из способов - восстановить наиболее вероятную траекторию. Для этого воспользуемся алгоритмом Витерби_, одним из алгоритмов динамического программирования.
-
-.. _Витерби: https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D0%92%D0%B8%D1%82%D0%B5%D1%80%D0%B1%D0%B8
-
-Пусть у нас было T моментов времени. На каждом моменте времени t мы для каждой частицы, существующей в момент времени t, выбираем наиболее вероятный переход из
-какой-нибудь частицы с момента времени t-1. Тогда ответом будет - argmax по вероятности среди всех частиц в последний момент времени. Однако, сам алгоритм довольно медленный.
-Его асимптотика `O(T * N^2)`.
-
-В архиве вам предоставлен код в файле `generate_viterbi_trajectory.py`. Однако, он написан без распараллеливания. Ваша задача - распараллелить код, используя multiprocessing.
-Файл `graph.ldj` представляет собой текстовый файл, где каждая строка в формате JSON. Каждая строка представляет собой один момент времени.
-В этом задании вам предлагаются первые 10 моментов времени движения робота. В каждый момент времени количество частиц `N = 2000`.
-Файл `localization_config.json` - файл конфигурации, содержащий параметры с которыми происходила генерация графа.
-Файл `true_trajectory.json` содержит массив троек чисел (x, y, θ), построенный нераспараллеленым алгоритмом.
-Вам надо будет сравнить полученную вами траекторию с данной при помощи скрипта `correspond_trajectories.py`.
-Для тех, кто хочет попробовать свой код на больших данных, используйте файл `full_graph.ldj`, который содержит порядка 1700 строк. `Архив с файлом`_.
-
-.. _`Архив с файлом`: https://drive.google.com/file/d/1Jgy1u_meH7zpMWt4dr2j4Xx5VZjzJ6AD/view?usp=sharing
-
-Не забудьте замерить время работы. Примерное время работы на моем компьютере для 10 строк в 1 процесс - 300 сек.
+        executor.start_polling(dp)
