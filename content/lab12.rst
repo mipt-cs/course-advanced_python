@@ -3,7 +3,7 @@
 
 :date: 2021-11-17
 :summary: Изучение регулярных выражений и их использование
-:status: draft
+:status: published
 
 .. default-role:: code
 .. contents:: Содержание
