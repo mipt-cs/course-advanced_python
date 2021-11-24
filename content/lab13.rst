@@ -3,7 +3,7 @@
 
 :date: 2021-11-24 09:00
 :summary: Сериализация и десериализация объектов.
-:status: draft
+:status: published
 
 .. default-role:: code
 
