@@ -3,7 +3,7 @@
 
 :date: 2021-12-01 09:00
 :summary: Работа с сокетами
-:status: draft
+:status: published
 
 .. default-role:: code
 
