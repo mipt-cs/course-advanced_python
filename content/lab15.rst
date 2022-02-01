@@ -1,9 +1,9 @@
 Краткий справочник Git
 ###############################
 
-:date: 2021-02-02 09:00
+:date: 2022-02-01 09:00
 :summary: Краткий справочник Git
-:status: draft
+:status: published
 
 .. default-role:: code
 
