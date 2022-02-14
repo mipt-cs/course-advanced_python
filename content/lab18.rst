@@ -3,6 +3,7 @@
 
 :date: 2022-02-14 9:00
 :summary: Визуализация
+:status: draft
 
 
 .. default-role:: code
