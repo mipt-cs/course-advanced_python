@@ -3,6 +3,7 @@
 
 :date: 2022-02-20 9:00
 :summary: Визуализация
+:status: published
 
 
 

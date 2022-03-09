@@ -3,6 +3,7 @@
 
 :date: 2022-02-14 9:00
 :summary: Библиотека Pandas
+:status: published
 
 
 .. default-role:: code

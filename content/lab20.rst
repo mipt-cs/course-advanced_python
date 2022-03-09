@@ -1,9 +1,9 @@
 sqlite3 в Python
 ################
 
-:date: 2021-03-09 09:00
+:date: 2022-03-09 09:00
 :summary: Работа с sqlite3 в Python
-:status: draft
+:status: published
 
 .. default-role:: code
 

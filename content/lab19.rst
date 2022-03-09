@@ -3,6 +3,7 @@
 
 :date: 2022-03-01 09:00
 :summary: Работа с sqlite3
+:status: published
 
 
 .. default-role:: code
