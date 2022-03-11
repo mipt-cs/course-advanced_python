@@ -12,7 +12,12 @@
 .. role:: python(code)
    :language: python
 
-**Запись онлайн-занятия:** https://youtu.be/IKaxaE0fKNc
+**Онлайн-лекция:** https://youtu.be/IKaxaE0fKNc
+
+
+ссылка `jupyter notebook`__
+
+__ {filename}/extra/lab25/intro1.ipynb
 
 Машинное обучение (Machine Learning) — обширный подраздел искусственного
 интеллекта, изучающий методы построения алгоритмов, способных обучаться.
