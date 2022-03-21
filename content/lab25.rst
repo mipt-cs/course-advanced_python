@@ -3,6 +3,7 @@
 
 :date: 2022-03-22 09:00
 :summary: Классические методы машинного обучения, ч.1
+:status: published
 
 
 .. default-role:: code
@@ -10,14 +11,14 @@
 .. contents:: Содержание
 
 .. role:: python(code)
-   :language: python
+    :language: python
 
 **Онлайн-лекция:** https://youtu.be/IKaxaE0fKNc
 
 
 ссылка `jupyter notebook`__
 
-__ {filename}/extra/lab25/intro1.ipynb
+__ : {filename}/extra/lab25/intro1.ipynb
 
 Машинное обучение (Machine Learning) — обширный подраздел искусственного
 интеллекта, изучающий методы построения алгоритмов, способных обучаться.
@@ -56,55 +57,65 @@ __ {filename}/extra/lab25/intro1.ipynb
 --------------------------
 
 1. **Обучение с учителем (Supervised Machine Learning)**: наиболее распространённый случай. Каждый прецедент представляет собой пару «объект, ответ». Требуется найти функциональную зависимость ответов от описаний объектов и построить алгоритм, принимающий на входе описание объекта и выдающий на выходе ответ. Функционал качества обычно определяется как средняя ошибка ответов, выданных алгоритмом, по всем объектам выборки. Задачи обучения с учителем делятся на следующие типы :
-    + Классификация: отличается тем, что множество допустимых ответов конечно. Их называют метками классов (class label). Класс — это множество всех объектов с данным значением метки. 
-    Пример - задача о возврате кредита клиентом банка.
-   .. image:: {static}/images/lab25/classification-1.png
-      :align: center
-      :alt:
-   .. image:: {static}/images/lab25/classification-2.png
-      :align: center
-      :alt:
-    + Регресиия: отличается тем, что допустимым ответом является действительное число или числовой вектор.  
-    Пример -  максимальный размер кредита для клиента. 
-   .. image:: {static}/images/lab25/regression-1.png
-      :align: center
-      :alt:
-   .. image:: {static}/images/lab25/regression-2.png
-      :align: center
-      :alt:
-   .. image:: {static}/images/lab25/regression-3.png
-      :align: center
-      :alt:
-    
+    + Классификация: отличается тем, что множество допустимых ответов конечно. Их называют метками классов (class label). Класс — это множество всех объектов с данным значением метки.
+      Пример - задача о возврате кредита клиентом банка.
+
+      .. image:: {static}/images/lab25/classification-1.png
+          :align: center
+          :alt:
+
+      .. image:: {static}/images/lab25/classification-2.png
+          :align: center
+          :alt:
+
+    + Регресиия: отличается тем, что допустимым ответом является действительное число или числовой вектор.
+      Пример -  максимальный размер кредита для клиента.
+
+      .. image:: {static}/images/lab25/regression-1.png
+          :align: center
+          :alt:
+
+      .. image:: {static}/images/lab25/regression-2.png
+          :align: center
+          :alt:
+
+      .. image:: {static}/images/lab25/regression-3.png
+          :align: center
+          :alt:
+
 Ранжирование (ranking) и прогнозирование (forecasting) - другие примеры задач , сводящихся к классификации и регрессии. 
-    + Ранжирование  отличается тем, что ответы надо получить сразу на множестве объектов, после чего отсортировать их по значениям ответов. 
+    + Ранжирование  отличается тем, что ответы надо получить сразу на множестве объектов, после чего отсортировать их по значениям ответов.
     + Прогнозирование отличается тем, что объектами являются отрезки временных рядов, обрывающиеся в тот момент, когда требуется сделать прогноз на будущее.
 
 2. **Обучение без учителя (Unsupervised Machine Learning)**: В этом случае ответы не задаются, и требуется искать зависимости между объектами. Пример: банк хочет разделить клиентов на группы собразно их поведению. 
-    + кластеризация (clustering) заключается в том, чтобы сгруппировать объекты в кластеры, используя данные о попарном сходстве объектов. Функционалы качества могут определяться по-разному, например, как отношение средних межкластерных и внутрикластерных расстояний. 
-   .. image:: {static}/images/lab25/clustering-1.png
-      :align: center
-      :alt:
-   .. image:: {static}/images/lab25/clustering-2.png
-      :align: center
-      :alt:
+    + кластеризация (clustering) заключается в том, чтобы сгруппировать объекты в кластеры, используя данные о попарном сходстве объектов. Функционалы качества могут определяться по-разному, например, как отношение средних межкластерных и внутрикластерных расстояний.
 
-   + поиск ассоциативных правил (association rules learning). Исходные данные представляются в виде признаковых описаний. Требуется найти такие наборы признаков, и такие значения этих признаков, которые особенно часто (неслучайно часто) встречаются в признаковых описаниях объектов. 
-   + снижение размерности (dimensionality reduction) заключается в том, чтобы по исходным признакам с помощью некоторых функций преобразования перейти к наименьшему числу новых признаков, не потеряв при этом никакой существенной информации об объектах выборки. В классе линейных преобразований наиболее известным примером является **метод главных компонент** . 
-   .. image:: {static}/images/lab25/dimensionality-1.png
-      :align: center
-      :alt:
-   .. image:: {static}/images/lab25/dimensionality-2.png
-      :align: center
-      :alt:
-    
+      .. image:: {static}/images/lab25/clustering-1.png
+          :align: center
+          :alt:
+
+      .. image:: {static}/images/lab25/clustering-2.png
+          :align: center
+          :alt:
+
+    + поиск ассоциативных правил (association rules learning). Исходные данные представляются в виде признаковых описаний. Требуется найти такие наборы признаков, и такие значения этих признаков, которые особенно часто (неслучайно часто) встречаются в признаковых описаниях объектов.
+    + снижение размерности (dimensionality reduction) заключается в том, чтобы по исходным признакам с помощью некоторых функций преобразования перейти к наименьшему числу новых признаков, не потеряв при этом никакой существенной информации об объектах выборки. В классе линейных преобразований наиболее известным примером является **метод главных компонент** .
+
+      .. image:: {static}/images/lab25/dimensionality-1.png
+          :align: center
+          :alt:
+
+      .. image:: {static}/images/lab25/dimensionality-2.png
+          :align: center
+          :alt:
+
 
 3. **Обучение с подкреплением (Reinforcement Learning)**: считается основной надеждой "истинного" искусственного интеллекта. Считается, что потенциал этого подхода огромен. Хотя это на данный момент самая сложная часть теории анализа данных. Роль объектов играют пары «ситуация, принятое решение», ответами являются значения функционала качества, характеризующего правильность принятых решений (реакцию среды). Как и в задачах прогнозирования, здесь существенную роль играет фактор времени. Примеры прикладных задач: формирование инвестиционных стратегий, автоматическое управление технологическими процессами, самообучение роботов. 
 
 
 .. image:: {static}/images/lab25/types.png
-   :align: center
-   :alt:
+    :align: center
+    :alt:
 
 * Картинка с сайта https://courses.analyticsvidhya.com/courses/Machine-Learning-Certification-Course-for-Beginners?utm_source=blog_navbar&utm_medium=start_here_button
 
@@ -240,42 +251,42 @@ k-NN
 -  Простая реализация;
 -  Неплохо изучен теоретически;
 -  Как правило, метод хорош для первого решения задачи, причем не только
-   классификации или регрессии, но и, например, рекомендации;
+    классификации или регрессии, но и, например, рекомендации;
 -  Можно адаптировать под нужную задачу выбором метрики или ядра (в двух
-   словах: ядро может задавать операцию сходства для сложных объектов
-   типа графов, а сам подход kNN остается тем же). Кстати, профессор ВМК
-   МГУ и опытный участник соревнований по анализу данных Александр
-   Дьяконов любит самый простой kNN, но с настроенной метрикой сходства
-   объектов.
+    словах: ядро может задавать операцию сходства для сложных объектов
+    типа графов, а сам подход kNN остается тем же). Кстати, профессор ВМК
+    МГУ и опытный участник соревнований по анализу данных Александр
+    Дьяконов любит самый простой kNN, но с настроенной метрикой сходства
+    объектов.
 -  Неплохая интерпретация, можно объяснить, почему тестовый пример был
-   классифицирован именно так. Хотя этот аргумент можно атаковать: если
-   число соседей большое, то интерпретация ухудшается (условно: “мы не
-   дали ему кредит, потому что он похож на 350 клиентов, из которых 70 –
-   плохие, что на 12% больше, чем в среднем по выборке”).
+    классифицирован именно так. Хотя этот аргумент можно атаковать: если
+    число соседей большое, то интерпретация ухудшается (условно: “мы не
+    дали ему кредит, потому что он похож на 350 клиентов, из которых 70 –
+    плохие, что на 12% больше, чем в среднем по выборке”).
 
 Минусы:
 
 -  Метод считается быстрым в сравнении, например, с композициями
-   алгоритмов, но в реальных задачах, как правило, число соседей,
-   используемых для классификации, будет большим (100-150), и в таком
-   случае алгоритм будет работать не так быстро, как дерево решений;
+    алгоритмов, но в реальных задачах, как правило, число соседей,
+    используемых для классификации, будет большим (100-150), и в таком
+    случае алгоритм будет работать не так быстро, как дерево решений;
 -  Если в наборе данных много признаков, то трудно подобрать подходящие
-   веса и определить, какие признаки не важны для
-   классификации/регрессии;
+    веса и определить, какие признаки не важны для
+    классификации/регрессии;
 -  Зависимость от выбранной метрики расстояния между примерами. Выбор по
-   умолчанию евклидового расстояния чаще всего ничем не обоснован. Можно
-   отыскать хорошее решение перебором параметров, но для большого набора
-   данных это отнимает много времени;
+    умолчанию евклидового расстояния чаще всего ничем не обоснован. Можно
+    отыскать хорошее решение перебором параметров, но для большого набора
+    данных это отнимает много времени;
 -  Нет теоретических оснований выбора определенного числа соседей —
-   только перебор (впрочем, чаще всего это верно для всех
-   гиперпараметров всех моделей). В случае малого числа соседей метод
-   чувствителен к выбросам, то есть склонен переобучаться;
+    только перебор (впрочем, чаще всего это верно для всех
+    гиперпараметров всех моделей). В случае малого числа соседей метод
+    чувствителен к выбросам, то есть склонен переобучаться;
 -  Как правило, плохо работает, когда признаков много, из-за “прояклятия
-   размерности”. Про это хорошо рассказывает известный в ML-сообществе
-   профессор Pedro Domingos – тут в популярной статье “A Few Useful
-   Things to Know about Machine Learning”, также “the curse of
-   dimensionality” описывается в книге Deep Learning в главе “Machine
-   Learning basics”.
+    размерности”. Про это хорошо рассказывает известный в ML-сообществе
+    профессор Pedro Domingos – тут в популярной статье “A Few Useful
+    Things to Know about Machine Learning”, также “the curse of
+    dimensionality” описывается в книге Deep Learning в главе “Machine
+    Learning basics”.
 
 Класс KNeighborsClassifier в Scikit-learn
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -285,14 +296,14 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 примера) или другая определенная пользователем функция
 
 -  algorithm (опционально): “brute”, “ball_tree”, “KD_tree”, или “auto”.
-   В первом случае ближайшие соседи для каждого тестового примера
-   считаются перебором обучающей выборки. Во втором и третьем —
-   расстояние между примерами хранятся в дереве, что ускоряет нахождение
-   ближайших соседей. В случае указания параметра “auto” подходящий
-   способ нахождения соседей будет выбран автоматически на основе
-   обучающей выборки.
+    В первом случае ближайшие соседи для каждого тестового примера
+    считаются перебором обучающей выборки. Во втором и третьем —
+    расстояние между примерами хранятся в дереве, что ускоряет нахождение
+    ближайших соседей. В случае указания параметра “auto” подходящий
+    способ нахождения соседей будет выбран автоматически на основе
+    обучающей выборки.
 -  leaf_size (опционально): порог переключения на полный перебор в
-   случае выбора BallTree или KDTree для нахождения соседей
+    случае выбора BallTree или KDTree для нахождения соседей
 -  metric: “minkowski”, “manhattan”, “euclidean”, “chebyshev” и другие
 
 
@@ -303,52 +314,51 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 ----------------------
 
 .. image:: {static}/images/lab25/iris_petal_sepal.png
-   :align: center
-   :alt:
+    :align: center
+    :alt:
 
 Хранятся как стандартный набор внутри библиотеки Scikit-learn
 
 .. code:: ipython3
 
-    from sklearn.datasets import load_iris
-    iris_dataset = load_iris()
+     from sklearn.datasets import load_iris
+     iris_dataset = load_iris()
 
 .. code:: ipython3
 
-    print("Keys of iris_dataset:\n", iris_dataset.keys())
+     print("Keys of iris_dataset:\n", iris_dataset.keys())
 
 
 .. parsed-literal::
 
-    Keys of iris_dataset:
-     dict_keys(['data', 'target', 'frame', 'target_names', 'DESCR', 'feature_names', 'filename'])
+     Keys of iris_dataset:
+      dict_keys(['data', 'target', 'frame', 'target_names', 'DESCR', 'feature_names', 'filename'])
 
 
 .. code:: ipython3
 
-    print(iris_dataset['DESCR'][:193] + "\n...")
+     print(iris_dataset['DESCR'][:193] + "\n...")
 
 
 Набор данных про ирисы (dataset)
 ----------------------------------
-    
+
 **Характеристики набора данных:**
-    
-        :Всего прецедентов: 150 (по 50 в каждом из 3 классов)
-        :всего признаков: 4 числовых
-    ...
+
+          :Всего прецедентов: 150 (по 50 в каждом из 3 классов)
+          :всего признаков: 4 числовых
 
 
 Названия классов
 
 .. code:: ipython3
 
-    print("Target names:", iris_dataset['target_names'])
+     print("Target names:", iris_dataset['target_names'])
 
 
 .. parsed-literal::
 
-    Target names: ['setosa' 'versicolor' 'virginica']
+     Target names: ['setosa' 'versicolor' 'virginica']
 
 
 Названия признаков
@@ -356,87 +366,87 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 .. code:: ipython3
 
-    print("Feature names:\n", iris_dataset['feature_names'])
+     print("Feature names:\n", iris_dataset['feature_names'])
 
 
 .. parsed-literal::
 
-    Feature names:
-     ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+     Feature names:
+      ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
 
 
 .. code:: ipython3
 
-    print("Type of data:", type(iris_dataset['data']))
+     print("Type of data:", type(iris_dataset['data']))
 
 
 .. parsed-literal::
 
-    Type of data: <class 'numpy.ndarray'>
+     Type of data: <class 'numpy.ndarray'>
 
 
 .. code:: ipython3
 
-    print("Shape of data:", iris_dataset['data'].shape)
+     print("Shape of data:", iris_dataset['data'].shape)
 
 
 .. parsed-literal::
 
-    Shape of data: (150, 4)
+     Shape of data: (150, 4)
 
 
 Пример из набора данных
 
 .. code:: ipython3
 
-    print("First five rows of data:\n", iris_dataset['data'][:5])
+     print("First five rows of data:\n", iris_dataset['data'][:5])
 
 
 .. parsed-literal::
 
-    First five rows of data:
-     [[5.1 3.5 1.4 0.2]
-     [4.9 3.  1.4 0.2]
-     [4.7 3.2 1.3 0.2]
-     [4.6 3.1 1.5 0.2]
-     [5.  3.6 1.4 0.2]]
+     First five rows of data:
+      [[5.1 3.5 1.4 0.2]
+      [4.9 3.  1.4 0.2]
+      [4.7 3.2 1.3 0.2]
+      [4.6 3.1 1.5 0.2]
+      [5.  3.6 1.4 0.2]]
 
 
 .. code:: ipython3
 
-    print("Type of target:", type(iris_dataset['target']))
+     print("Type of target:", type(iris_dataset['target']))
 
 
 .. parsed-literal::
 
-    Type of target: <class 'numpy.ndarray'>
+     Type of target: <class 'numpy.ndarray'>
 
 
 .. code:: ipython3
 
-    print("Shape of target:", iris_dataset['target'].shape)
+     print("Shape of target:", iris_dataset['target'].shape)
 
 
 .. parsed-literal::
 
-    Shape of target: (150,)
+     Shape of target: (150,)
 
 
 Известные ответы для прецедентов (классы, к которым они принадлежат).
 
 .. code:: ipython3
 
-    print("Target:\n", iris_dataset['target'])
+     print("Target:\n", iris_dataset['target'])
 
 
 .. parsed-literal::
 
-    Target:
-     [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-     0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2
-     2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-     2 2]
+     Target:
+      [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2
+      2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+      2 2]
 
 
 Измерение качества: обучающая и контрольная выборки
@@ -444,32 +454,32 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 .. code:: ipython3
 
-    from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(
-        iris_dataset['data'], iris_dataset['target'], random_state=0)
+     from sklearn.model_selection import train_test_split
+     X_train, X_test, y_train, y_test = train_test_split(
+          iris_dataset['data'], iris_dataset['target'], random_state=0)
 
 .. code:: ipython3
 
-    print("X_train shape:", X_train.shape)
-    print("y_train shape:", y_train.shape)
+     print("X_train shape:", X_train.shape)
+     print("y_train shape:", y_train.shape)
 
 
 .. parsed-literal::
 
-    X_train shape: (112, 4)
-    y_train shape: (112,)
+     X_train shape: (112, 4)
+     y_train shape: (112,)
 
 
 .. code:: ipython3
 
-    print("X_test shape:", X_test.shape)
-    print("y_test shape:", y_test.shape)
+     print("X_test shape:", X_test.shape)
+     print("y_test shape:", y_test.shape)
 
 
 .. parsed-literal::
 
-    X_test shape: (38, 4)
-    y_test shape: (38,)
+     X_test shape: (38, 4)
+     y_test shape: (38,)
 
 
 Предобработка данных (preconditioning)
@@ -477,36 +487,36 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 .. code:: ipython3
 
-    # create dataframe from data in X_train
-    # label the columns using the strings in iris_dataset.feature_names
-    iris_dataframe = pd.DataFrame(X_train, columns=iris_dataset.feature_names)
-    # create a scatter matrix from the dataframe, color by y_train
-    pd.plotting.scatter_matrix(iris_dataframe, c=y_train, figsize=(15, 15),
-                               marker='o', hist_kwds={'bins': 20}, s=60,
-                               alpha=.8, cmap=mglearn.cm3)
+     # create dataframe from data in X_train
+     # label the columns using the strings in iris_dataset.feature_names
+     iris_dataframe = pd.DataFrame(X_train, columns=iris_dataset.feature_names)
+     # create a scatter matrix from the dataframe, color by y_train
+     pd.plotting.scatter_matrix(iris_dataframe, c=y_train, figsize=(15, 15),
+                                         marker='o', hist_kwds={'bins': 20}, s=60,
+                                         alpha=.8, cmap=mglearn.cm3)
 
 
 
 
 .. parsed-literal::
 
-    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE868F9C88>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE869714C8>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE869A5D48>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE869DFE08>],
-           [<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86A18E48>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86A4FEC8>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86A88F88>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86AC8088>],
-           [<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86ACEC48>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86B06D88>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86B71188>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86BAA208>],
-           [<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86BE22C8>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86C1A388>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86C54408>,
-            <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86C8C3C8>]],
-          dtype=object)
+     array([[<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE868F9C88>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE869714C8>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE869A5D48>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE869DFE08>],
+              [<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86A18E48>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86A4FEC8>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86A88F88>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86AC8088>],
+              [<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86ACEC48>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86B06D88>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86B71188>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86BAA208>],
+              [<matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86BE22C8>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86C1A388>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86C54408>,
+                <matplotlib.axes._subplots.AxesSubplot object at 0x000001BE86C8C3C8>]],
+             dtype=object)
 
 
 
@@ -520,15 +530,15 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 .. code:: ipython3
 
-    from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=1)
+     from sklearn.neighbors import KNeighborsClassifier
+     knn = KNeighborsClassifier(n_neighbors=1)
 
 
 Обучаем его, вызывая функцию fit
 
 .. code:: ipython3
 
-    knn.fit(X_train, y_train)
+     knn.fit(X_train, y_train)
 
 
 
@@ -540,29 +550,29 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 .. code:: ipython3
 
-    X_new = np.array([[5, 2.9, 1, 0.2]])
-    print("X_new.shape:", X_new.shape)
+     X_new = np.array([[5, 2.9, 1, 0.2]])
+     print("X_new.shape:", X_new.shape)
 
 
 .. parsed-literal::
 
-    X_new.shape: (1, 4)
+     X_new.shape: (1, 4)
 
 
 Узнаём прежссказанное значение для него. которое даёт наш обученный классификатор
 
 .. code:: ipython3
 
-    prediction = knn.predict(X_new)
-    print("Prediction:", prediction)
-    print("Predicted target name:",
-           iris_dataset['target_names'][prediction])
+     prediction = knn.predict(X_new)
+     print("Prediction:", prediction)
+     print("Predicted target name:",
+              iris_dataset['target_names'][prediction])
 
 
 .. parsed-literal::
 
-    Prediction: [0]
-    Predicted target name: ['setosa']
+     Prediction: [0]
+     Predicted target name: ['setosa']
 
 
 Оценка качества модели
@@ -572,35 +582,35 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 .. code:: ipython3
 
-    y_pred = knn.predict(X_test)
-    print("Test set predictions:\n", y_pred)
+     y_pred = knn.predict(X_test)
+     print("Test set predictions:\n", y_pred)
 
 
 .. parsed-literal::
 
-    Test set predictions:
-     [2 1 0 2 0 2 0 1 1 1 2 1 1 1 1 0 1 1 0 0 2 1 0 0 2 0 0 1 1 0 2 1 0 2 2 1 0
-     2]
+     Test set predictions:
+      [2 1 0 2 0 2 0 1 1 1 2 1 1 1 1 0 1 1 0 0 2 1 0 0 2 0 0 1 1 0 2 1 0 2 2 1 0
+      2]
 
 
 .. code:: ipython3
 
-    print("Test set score: {:.2f}".format(np.mean(y_pred == y_test)))
+     print("Test set score: {:.2f}".format(np.mean(y_pred == y_test)))
 
 
 .. parsed-literal::
 
-    Test set score: 0.97
+     Test set score: 0.97
 
 
 .. code:: ipython3
 
-    print("Test set score: {:.2f}".format(knn.score(X_test, y_test)))
+     print("Test set score: {:.2f}".format(knn.score(X_test, y_test)))
 
 
 .. parsed-literal::
 
-    Test set score: 0.97
+     Test set score: 0.97
 
 
 Итого
@@ -610,20 +620,20 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 .. code:: ipython3
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        iris_dataset['data'], iris_dataset['target'], random_state=0)
-    
-    knn = KNeighborsClassifier(n_neighbors=1)
-    knn.fit(X_train, y_train)
-    
-    print("Test set score: {:.2f}".format(knn.score(X_test, y_test)))
+     X_train, X_test, y_train, y_test = train_test_split(
+          iris_dataset['data'], iris_dataset['target'], random_state=0)
+
+     knn = KNeighborsClassifier(n_neighbors=1)
+     knn.fit(X_train, y_train)
+
+     print("Test set score: {:.2f}".format(knn.score(X_test, y_test)))
 
 
 Выводим результат в виде качества нашего классификатора (функционал **эмпирического риска**)
 
 .. parsed-literal::
 
-    Test set score: 0.97
+     Test set score: 0.97
 
 
 
@@ -639,8 +649,8 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 проверить качество модели.
 
 .. image:: ../images/lab25/CV_pic.png
-   :width: 900px
-   :height: 550px
+    :width: 900px
+    :height: 550px
 
 Чаще всего это делается одним из 2 способов: \* отложенная выборка
 (held-out/hold-out set). При таком подходе мы оставляем какую-то долю

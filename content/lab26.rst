@@ -13,10 +13,10 @@ Scikit-learn : основные структуры
    :language: python
 
 
-* This notebook contains an excerpt from the*\ `Python Data Science
-Handbook <http://shop.oreilly.com/product/0636920034919.do>`__\ *by Jake
-VanderPlas; the content is available*\ `on
-GitHub <https://github.com/jakevdp/PythonDataScienceHandbook>`__\ *.*
+.. * This notebook contains an excerpt from the*\ `Python Data Science
+.. Handbook <http://shop.oreilly.com/product/0636920034919.do>`__\ *by Jake
+.. VanderPlas; the content is available*\ `on
+.. GitHub <https://github.com/jakevdp/PythonDataScienceHandbook>`__\ *.*
 
 
 Введение в  Scikit-Learn
