@@ -319,12 +319,12 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Хранятся как стандартный набор внутри библиотеки Scikit-learn
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      from sklearn.datasets import load_iris
      iris_dataset = load_iris()
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Keys of iris_dataset:\n", iris_dataset.keys())
 
@@ -335,7 +335,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
       dict_keys(['data', 'target', 'frame', 'target_names', 'DESCR', 'feature_names', 'filename'])
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print(iris_dataset['DESCR'][:193] + "\n...")
 
@@ -351,7 +351,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Названия классов
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Target names:", iris_dataset['target_names'])
 
@@ -364,7 +364,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 Названия признаков
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Feature names:\n", iris_dataset['feature_names'])
 
@@ -375,7 +375,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
       ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Type of data:", type(iris_dataset['data']))
 
@@ -385,7 +385,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
      Type of data: <class 'numpy.ndarray'>
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Shape of data:", iris_dataset['data'].shape)
 
@@ -397,7 +397,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Пример из набора данных
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("First five rows of data:\n", iris_dataset['data'][:5])
 
@@ -412,7 +412,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
       [5.  3.6 1.4 0.2]]
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Type of target:", type(iris_dataset['target']))
 
@@ -422,7 +422,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
      Type of target: <class 'numpy.ndarray'>
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Shape of target:", iris_dataset['target'].shape)
 
@@ -434,7 +434,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Известные ответы для прецедентов (классы, к которым они принадлежат).
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Target:\n", iris_dataset['target'])
 
@@ -452,13 +452,13 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 Измерение качества: обучающая и контрольная выборки
 ------------------------------------------------------
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      from sklearn.model_selection import train_test_split
      X_train, X_test, y_train, y_test = train_test_split(
           iris_dataset['data'], iris_dataset['target'], random_state=0)
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("X_train shape:", X_train.shape)
      print("y_train shape:", y_train.shape)
@@ -470,7 +470,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
      y_train shape: (112,)
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("X_test shape:", X_test.shape)
      print("y_test shape:", y_test.shape)
@@ -485,7 +485,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 Предобработка данных (preconditioning)
 ---------------------------------------
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      # create dataframe from data in X_train
      # label the columns using the strings in iris_dataset.feature_names
@@ -528,7 +528,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Создаём классификатор по 1 ближайшему соседу
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      from sklearn.neighbors import KNeighborsClassifier
      knn = KNeighborsClassifier(n_neighbors=1)
@@ -536,7 +536,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Обучаем его, вызывая функцию fit
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      knn.fit(X_train, y_train)
 
@@ -548,7 +548,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Создаём искусственный прецедент для классификации
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      X_new = np.array([[5, 2.9, 1, 0.2]])
      print("X_new.shape:", X_new.shape)
@@ -561,7 +561,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Узнаём прежссказанное значение для него. которое даёт наш обученный классификатор
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      prediction = knn.predict(X_new)
      print("Prediction:", prediction)
@@ -580,7 +580,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Узнаем ответ обученного классификатора на контрольной выборке
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      y_pred = knn.predict(X_test)
      print("Test set predictions:\n", y_pred)
@@ -593,7 +593,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
       2]
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Test set score: {:.2f}".format(np.mean(y_pred == y_test)))
 
@@ -603,7 +603,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
      Test set score: 0.97
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      print("Test set score: {:.2f}".format(knn.score(X_test, y_test)))
 
@@ -618,7 +618,7 @@ sklearn.neighbors.KNeighborsClassifier: \* weights: “uniform” (все вес
 
 Делим выборку на обучающую и контрольную, обучаем классификатор по 1 ближайшему соседу на обучающей, сравниваем предсказанные значения на контрольной выборке с известными. 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
      X_train, X_test, y_train, y_test = train_test_split(
           iris_dataset['data'], iris_dataset['target'], random_state=0)
