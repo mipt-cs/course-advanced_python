@@ -18,7 +18,7 @@
 
 ссылка `jupyter notebook`__
 
-__ {filename}/extra/lab25/intro1.ipynb
+__ {static}/extra/lab25/intro1.ipynb
 
 Машинное обучение (Machine Learning) — обширный подраздел искусственного
 интеллекта, изучающий методы построения алгоритмов, способных обучаться.
