@@ -3,7 +3,7 @@ Scikit-learn : основные структуры
 
 :date: 2021-04-13 09:00
 :summary: Классические методы машинного обучения, ч.2, модуль scikit-learn
-:status: draft
+
 
 .. default-role:: code
 
