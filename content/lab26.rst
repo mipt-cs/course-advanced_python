@@ -116,7 +116,7 @@ Notebook_
 
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     %matplotlib inline
     import seaborn as sns; sns.set()
@@ -129,7 +129,7 @@ Notebook_
 
 Для использования в Scikit-Learn, нужно из ``DataFrame`` сформировать отдельно признаковую матрицу и вектор ответов:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     X_iris = iris.drop('species', axis=1)
     X_iris.shape
@@ -143,7 +143,7 @@ Notebook_
 
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     y_iris = iris['species']
     y_iris.shape
@@ -204,7 +204,7 @@ paper <http://arxiv.org/abs/1309.0238>`_ :
 
 Один из самых простых примеров  - приближение данных вида :math:`(x, y)` линейной функцией :
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     import matplotlib.pyplot as plt
     import numpy as np
@@ -226,7 +226,7 @@ paper <http://arxiv.org/abs/1309.0238>`_ :
 
 В Scikit-Learn, класс моделей всегда соответствует классу в смысле ООП. То есть, в случае с линейной регрессией надо использовать соответствующи одноимённый класс:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.linear_model import LinearRegression
 
@@ -252,7 +252,7 @@ paper <http://arxiv.org/abs/1309.0238>`_ :
 Итак, инстанцируется класс 
 ``LinearRegression`` , подстраиваемся под сдвиг от начала координат с помощью параметра ``fit_intercept`` :
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     model = LinearRegression(fit_intercept=True)
     model
@@ -273,7 +273,7 @@ paper <http://arxiv.org/abs/1309.0238>`_ :
 
 Пусть ранее мы представили входные данные в стандартном виде *признаковая матрица + вектор ответов*:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     X = x[:, np.newaxis]
     X.shape
@@ -293,7 +293,7 @@ paper <http://arxiv.org/abs/1309.0238>`_ :
 Теперь можно собственно **обучить** модель на данных. По сути это в большинстве случев означает оптимизацию модели по внутренним параметрам. Это делается с помощью метода 
 ``fit()`` :
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     model.fit(X, y)
 
@@ -308,7 +308,7 @@ paper <http://arxiv.org/abs/1309.0238>`_ :
 
 Теперь внутрение параметры модели приведены к некоторому оптимальному значению, и пользователь может их увидеть. По традиции, все внутренние параметры, настраиваемые с помощью ``fit()`` имеют подчёркивание в конце:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     model.coef_
 
@@ -321,7 +321,7 @@ paper <http://arxiv.org/abs/1309.0238>`_ :
 
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     model.intercept_
 
@@ -357,21 +357,21 @@ package <http://statsmodels.sourceforge.net/>`_ .
 частью обучающей последовательности. Сделать это в библиотеке Scikit-Learn
 можно посредством метода ``predict()`` . 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     xfit = np.linspace(-1, 11)
 
 Как обычно, надо скомпоновать прецеденты в признаковую матрицу размера
 ``[n_samples, n_features]`` :
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     Xfit = xfit[:, np.newaxis]
     yfit = model.predict(Xfit)
 
 Теперь, отрисуем то, что получилось: данные и полученную модель:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     plt.scatter(x, y)
     plt.plot(xfit, yfit);
@@ -407,7 +407,7 @@ package <http://statsmodels.sourceforge.net/>`_ .
 удобнее воспользоваться вспомогательной функцией 
 ``train_test_split`` :
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.cross_validation import train_test_split
     Xtrain, Xtest, ytrain, ytest = train_test_split(X_iris, y_iris,
@@ -415,7 +415,7 @@ package <http://statsmodels.sourceforge.net/>`_ .
 
 После реорганизации данных:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.naive_bayes import GaussianNB # 1. choose model class
     model = GaussianNB()                       # 2. instantiate model
@@ -424,7 +424,7 @@ package <http://statsmodels.sourceforge.net/>`_ .
 
 Теперь с помощью ``accuracy_score`` можно узнать долю совпавших ответов:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.metrics import accuracy_score
     accuracy_score(ytest, y_model)
@@ -451,7 +451,7 @@ package <http://statsmodels.sourceforge.net/>`_ .
 
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.decomposition import PCA  # 1. Choose the model class
     model = PCA(n_components=2)            # 2. Instantiate the model with hyperparameters
@@ -462,7 +462,7 @@ package <http://statsmodels.sourceforge.net/>`_ .
 вив результаты в исходный объект ``DataFrame`` Iris и воспользовавшись функцией
 ``lmplot`` для отображения результатов :
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     iris['PCA1'] = X_2D[:, 0]
     iris['PCA2'] = X_2D[:, 1]
@@ -488,7 +488,7 @@ package <http://statsmodels.sourceforge.net/>`_ .
 Гауссовых пятен.
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.mixture import GMM      # 1. Choose the model class
     model = GMM(n_components=3,
@@ -499,7 +499,7 @@ package <http://statsmodels.sourceforge.net/>`_ .
 Как и ранее, добавим столбец cluster в ``DataFrame`` Iris и воспользуемся библиотекой
 Seaborn для построения графика результатов:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     iris['cluster'] = y_gmm
     sns.lmplot("PCA1", "PCA2", data=iris, hue='species',
@@ -524,7 +524,7 @@ Seaborn для построения графика результатов:
 We’ll use Scikit-Learn’s data access interface and take a look at this
 data:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.datasets import load_digits
     digits = load_digits()
@@ -542,7 +542,7 @@ data:
 Трехмерный массив: 1797 выборок,
 каждая состоит из сетки пикселов размером 8 × 8. Визуализируем первую их сотню:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     import matplotlib.pyplot as plt
     
@@ -568,7 +568,7 @@ data:
 в виде атрибутов ``data`` и ``target`` , соответственно:
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     X = digits.data
     X.shape
@@ -582,7 +582,7 @@ data:
 
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     y = digits.target
     y.shape
@@ -610,7 +610,7 @@ __ {static}/extra/lab26/lec10ISOmap.pdf
 
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.manifold import Isomap
     iso = Isomap(n_components=2)
@@ -629,7 +629,7 @@ __ {static}/extra/lab26/lec10ISOmap.pdf
 Теперь наши данные стали двумерными. Построим график этих данных, чтобы
 увидеть, можно ли что-то понять из их структуры:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     plt.scatter(data_projected[:, 0], data_projected[:, 1], c=digits.target,
                 edgecolor='none', alpha=0.5,
@@ -663,11 +663,11 @@ __ {static}/extra/lab26/lec10ISOmap.pdf
 сти, после чего обучим на первой из них Гауссову наивную байесовскую модель
 таким образом:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     Xtrain, Xtest, ytrain, ytest = train_test_split(X, y, random_state=0)
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.naive_bayes import GaussianNB
     model = GaussianNB()
@@ -676,7 +676,7 @@ __ {static}/extra/lab26/lec10ISOmap.pdf
 
 Теперь оценим точность:
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.metrics import accuracy_score
     accuracy_score(ytest, y_model)
@@ -696,7 +696,7 @@ __ {static}/extra/lab26/lec10ISOmap.pdf
 matrix*), вычислить которую можно спомощью библиотеки Scikit-Learn, а нарисовать
 посредством Seaborn :
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.metrics import confusion_matrix
     
@@ -717,7 +717,7 @@ matrix*), вычислить которую можно спомощью библ
 с предсказанными метками. Мы будем использовать зеленый цвет для правильных
 меток, и красный — для ошибочных.
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     fig, axes = plt.subplots(10, 10, figsize=(8, 8),
                              subplot_kw={'xticks':[], 'yticks':[]},
