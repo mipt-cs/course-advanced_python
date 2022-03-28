@@ -80,3 +80,162 @@
 	>>> np.percentile(values, 40)
 	4.6
 
+Квантильная нормализация включает в себя три шага:
+
+1) отсортировать значения по каждому столбцу;
+2) найти среднее каждой результирующей строки;
+3) заменить квантиль каждого столбца на квантиль среднего столбца.
+
+Далее приведём пример использования эквализации гистограмм при работе с данныи экспрессии генов. В качестве примера взяты данные из работы `paper <http://dx.doi.org/10.1016/j.cell.2015.05.044>`__
+
+.. code:: python
+
+   import numpy as np
+   from scipy import stats
+
+   def quantile_norm(X):
+       """Normalize the columns of X to each have the same distribution.
+
+       Given an expression matrix (microarray data, read counts, etc) of M genes
+       by N samples, quantile normalization ensures all samples have the same
+       spread of data (by construction).
+
+       The data across each row are averaged to obtain an average column. Each
+       column quantile is replaced with the corresponding quantile of the average
+       column.
+
+       Parameters
+       ----------
+       X : 2D array of float, shape (M, N)
+           The input data, with M rows (genes/features) and N columns (samples).
+
+       Returns
+       -------
+       Xn : 2D array of float, shape (M, N)
+           The normalized data.
+       """
+       # compute the quantiles
+       quantiles = np.mean(np.sort(X, axis=0), axis=1)
+
+       # compute the column-wise ranks. Each observation is replaced with its
+       # rank in that column: the smallest observation is replaced by 1, the
+       # second-smallest by 2, ..., and the largest by M, the number of rows.
+       ranks = np.apply_along_axis(stats.rankdata, 0, X)
+
+       # convert ranks to integer indices from 0 to M-1
+       rank_indices = ranks.astype(int) - 1
+
+       # index the quantiles for each rank with the ranks matrix
+       Xn = quantiles[rank_indices]
+
+       return(Xn)
+
+По причине характера вариабельности, присутствующей в количественных
+данных экспрессии генов, общепринято перед квантильной нормализацией логарифмически преобразовывать данные. Поэтому мы напишем дополнительную вспомогательную функцию, которая будет выполнять это преобразование:
+
+.. code:: python
+
+   def quantile_norm_log(X):
+       logX = np.log(X + 1)
+       logXn = quantile_norm(logX)
+       return logXn
+
+Данные по экспрессии генов до эквализации:
+
+.. image:: {static}/images/lab27/before.png
+          :align: center
+          :alt:
+
+Главный сдвиг в распределении, который мы наблюдаем, говорит о том, что
+эти различия технические. Иными словами, наличие изменений, скорее всего,
+вызвано различиями в обработке каждого образца, а не биологической ва-
+риацией. Поэтому мы попытаемся нормализовать эти глобальные различия
+между индивидуумами.
+
+
+.. image:: {static}/images/lab27/after.png
+          :align: center
+          :alt:
+
+Распределения теперь выглядят почти одинаково - различаются только левые хвосты. 
+
+Преобразования Фурье
+=======================
+
+Введение
+---------
+ДПФ (дискретное преобразование Фурье ) преобразовывает последовательность из N равномерно расположенных ве­
+щественных или комплексных чисел :math:`x_{0},x_{1},\ldots, x_{N-1}` функции x(t) в последовательность из N комплексных
+чисел :math:`X_{k}` :
+
+   .. math::
+
+      X_{k}=\sum_{n=0}^{N-1}x_{n}e^{-j2\pi kn/N},\;k=0,1,\ldots,
+      N-1.
+
+Если числа Xk известны, то обратное Фурье-преобразование  восстанавливает выборочные значения xn единственным способом. т.е. ДФТ полностью обратимо:
+
+   .. math:: x_{n}=\frac{1}{N}\sum_{k=0}^{N-1}X_{k}e^{j2\pi kn/N}
+
+
+
+Если исходная функция x(t) будет ограничиваться по частоте менее половиной час­
+тоты дискретизации (так называемой частотой Найквиста- Котельникова), то интерполяция между
+выборочными значениями, производимая обратным ДПФ-преобразованием, обычно
+будет давать верную реконструкцию x(t) (теорема Шеннона-Котельникова). 
+Если x(t) как таковая не ограничивается, то
+обратное ДПФ-преобразование не может в целом путем интерполяции использоваться
+для реконструкции x(t). Обратите внимание, данное ограничение не подразумевает от-
+сутствия методов, позволяющих выполнять такую реконструкцию. Возьмем, например,
+методы восстановления сигнала с использованием знаний о его предыдущих разрежен-
+ных или сжатых значениях (**compressed sensing**) или методы выборки сигналов с конеч-
+ной интенсивностью обновления (FRI-сигналов).
+
+Функция :math:`e^{j2\pi k/N}=\left(e^{j2\pi/N}\right)^{k}=w^{k}` принимает дискретные значения между 0 и на еди-
+ничном круге в комплексной плоскости. Функция 
+:math:`e^{j2\pi kn/N}=w^{kn}` обходит начало координат :math:`n\frac{N-1}{N}` раз, в результате генерируя гармонику , для
+которой :math:`n=1` .
+
+
+   .. figure:: {static}/images/lab27/unit_circle_samples.png
+      :alt: Unit circle samples
+
+      Unit circle samples
+
+
+**Быстрое преобразование Фурье** (fft), в свою очередь, просто является специальным и очень эффективным алгоритмом вычисления ДПФ. В отличие от прямого вычисления ДПФ, занимающего порядка :math:`N^2`
+вычислений, алгоритм БПФ занимает порядка NlogN вычислений. БПФ стал ключевым
+в широком распространении ДПФ в приложениях, работающих в режиме реального
+времени, и в 2000 г. журналом IEEE Computing Science & Engineering он был включен
+в список лучших 10 алгоритмов XX века.
+
+Реализации
+-----------
+
+Функционал ДПФ библиотеки SciPy расположен в модуле scipy.fftpack. 
+
+-  ``fft``, ``fft2``, ``fftn``: быстрое преобразование Фурье соответственно  1, 2, или ``n`` мерных массивов.
+-  ``ifft``, ``ifft2``, ``ifftn``: обратное быстрое преобразование Фурье
+-  ``dct``, ``idct``, ``dst``, ``idst``: синусное и косинусное преобразования.
+-  ``fftshift``, ``ifftshift``: преобразования с задаваемым значением нулевой частоты.
+-  ``fftfreq``: возвращает также вектор частот.
+-  ``rfft``: действительный аналог fft  - используется по умолчанию для действительных векторов.
+
+Для оконных свёртк используются функции NumPy:
+
+-  ``np.hanning``, ``np.hamming``, ``np.bartlett``, ``np.blackman``,
+   ``np.kaiser``
+или же
+``scipy.signal.fftconvolve``.
+
+Пример. Подавление шума
+------------------------
+
+Рассмотрим изображение
+
+.. image:: {static}/images/lab27/moonlanding.png
+          :align: center
+          :alt:
+
+
+
