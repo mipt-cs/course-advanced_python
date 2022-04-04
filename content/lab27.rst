@@ -3,7 +3,7 @@
 
 :date: 2021-04-13 09:00
 :summary: Классические методы машинного обучения, ч.2, модуль scikit-learn
-:status: draft
+
 
 .. default-role:: code
 
@@ -15,6 +15,10 @@
 
 Эквализация гистограмм.
 =====================================
+
+Код к эквализации notebook_
+
+.. _notebook: {static}/extra/lab27/eq.ipynb
 
 Теория
 ------
@@ -162,6 +166,10 @@
 Преобразования Фурье
 =======================
 
+Код к Фурье notebook_
+
+.. _notebook: {static}/extra/lab27/furier.ipynb
+
 Введение
 ---------
 ДПФ (дискретное преобразование Фурье ) преобразовывает последовательность из N равномерно расположенных ве­
@@ -225,8 +233,9 @@
 
 -  ``np.hanning``, ``np.hamming``, ``np.bartlett``, ``np.blackman``,
    ``np.kaiser``
+   
 или же
-``scipy.signal.fftconvolve``.
+- ``scipy.signal.fftconvolve`` .
 
 Пример. Подавление шума
 ------------------------
@@ -238,4 +247,176 @@
           :alt:
 
 
+Для исследования спектра, поскольку изображение имеет более одной раз-
+мерности, чтобы вычислить ДПФ, применим вместо функции fft функцию
+fftn. Двумерное БПФ-преобразование эквивалентно взятию одномерного БПФ
+в строках и затем в столбцах, или наоборот.
 
+.. code:: python
+
+   F = fftpack.fftn(image)
+
+   F_magnitude = np.abs(F)
+   F_magnitude = fftpack.fftshift(F_magnitude)
+
+Далее, посчитаем логарифм спектра
+
+.. code:: python
+
+   f, ax = plt.subplots(figsize=(4.8, 4.8))
+
+   ax.imshow(np.log(1 + F_magnitude), cmap='viridis',
+             extent=(-N // 2, N // 2, -M // 2, M // 2))
+   ax.set_title('Spectrum magnitude');
+
+Обратите внимание на высокие значения вокруг источника (середины)
+спектра. Эти коэффициенты описывают низкие частоты или сглаживают части
+изображения, размывшие полотно фотографии. Более высокочастотные ком-
+поненты, распространенные по всему спектру, заполняют края и детализацию.
+Пики вокруг более высоких частот соответствуют периодическому шуму.
+Из фотографии мы видим, что шум (артефакты измерения) имеет высоко-
+периодический характер. Поэтому попробуем удалить его, обнулив соответ-
+ствующие части спектра.
+
+.. image:: {static}/images/lab27/spec.png
+          :align: center
+          :alt:
+
+.. code:: python
+
+   # Set block around center of spectrum to zero
+   K = 40
+   F_magnitude[M // 2 - K: M // 2 + K, N // 2 - K: N // 2 + K] = 0
+
+   # Find all peaks higher than the 98th percentile
+   peaks = F_magnitude < np.percentile(F_magnitude, 98)
+
+   # Shift the peaks back to align with the original spectrum
+   peaks = fftpack.ifftshift(peaks)
+
+   # Make a copy of the original (complex) spectrum
+   F_dim = F.copy()
+
+   # Set those peak coefficients to zero
+   F_dim = F_dim * peaks.astype(int)
+
+   # Do the inverse Fourier transform to get back to an image
+   # Since we started with a real image, we only look at the real part of
+   # the output.
+   image_filtered = np.real(fftpack.ifft2(F_dim))
+
+   f, (ax0, ax1) = plt.subplots(2, 1, figsize=(4.8, 7))
+   ax0.imshow(fftpack.fftshift(np.log10(1 + np.abs(F_dim))), cmap='viridis')
+   ax0.set_title('Spectrum after suppression')
+
+   ax1.imshow(image_filtered)
+   ax1.set_title('Reconstructed image');
+
+
+.. image:: {static}/images/lab27/newspec.png
+          :align: center
+          :alt:
+
+.. image:: {static}/images/lab27/newmoon.png
+          :align: center
+          :alt:
+
+
+Оконные преобразования
+------------------------
+
+Если исследовать преобразование Фурье прямоугольного импульса, то мы уви-
+дим значительные боковые лепестки в спектре:
+
+.. code:: python
+
+   x = np.zeros(500)
+   x[100:150] = 1
+
+   X = fftpack.fft(x)
+
+   f, (ax0, ax1) = plt.subplots(2, 1, sharex=True)
+
+   ax0.plot(x)
+   ax0.set_ylim(-0.1, 1.1)
+
+   ax1.plot(fftpack.fftshift(np.abs(X)))
+   ax1.set_ylim(-5, 55);
+
+.. image:: {static}/images/lab27/window.png
+          :align: center
+          :alt:
+
+Аналогично, для любого конечного сигнала увидим всегда сглаженный спектр. Например, для 1 синусоиды.
+
+.. code:: python
+
+   t = np.linspace(0, 1, 500)
+   x = np.sin(49 * np.pi * t)
+
+   X = fftpack.fft(x)
+
+   f, (ax0, ax1) = plt.subplots(2, 1)
+
+   ax0.plot(x)
+   ax0.set_ylim(-1.1, 1.1)
+
+   ax1.plot(fftpack.fftfreq(len(t)), np.abs(X))
+   ax1.set_ylim(0, 190);
+
+.. image:: {static}/images/lab27/sin.png
+          :align: center
+          :alt:
+
+Этот эффект можно купировать *оконным преобразованием*. 
+Ниже приведено кайзеровское окно для разных хначений параметра
+:math:`K(N,\beta)`, :math:`\beta` от
+0 до 100:
+
+
+.. code:: python
+
+   f, ax = plt.subplots()
+
+   N = 10
+   beta_max = 5
+   colormap = plt.cm.plasma
+
+   norm = plt.Normalize(vmin=0, vmax=beta_max)
+
+   lines = [
+       ax.plot(np.kaiser(100, beta), color=colormap(norm(beta)))
+       for beta in np.linspace(0, beta_max, N)
+       ]
+
+   sm = plt.cm.ScalarMappable(cmap=colormap, norm=norm)
+
+   sm._A = []
+
+   plt.colorbar(sm).set_label(r'Kaiser $\beta$');
+
+.. image:: {static}/images/lab27/kaiser.png
+          :align: center
+          :alt:
+
+
+С применением окна пример с синусоидой будет выглядеть так
+
+.. code:: python
+
+   win = np.kaiser(len(t), 5)
+   x_win = x * win
+
+   X_win = fftpack.fft(x_win)
+
+   f, (ax0, ax1) = plt.subplots(2, 1)
+
+   ax0.plot(x_win)
+   ax0.set_ylim(-1.1, 1.1)
+
+   ax1.plot(fftpack.fftfreq(len(t)), np.abs(X_win))
+   ax1.set_ylim(0, 190);
+
+.. image:: {static}/images/lab27/sin2.png
+          :align: center
+          :alt:
