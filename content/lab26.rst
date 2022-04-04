@@ -27,6 +27,14 @@ Notebook_
 .. _Notebook: {static}/extra/lab26/LABML1.ipynb
 
 
+Код к семинару
+---------------
+
+jupyter-notebook_
+
+.. _jupyter-notebook: {static}/extra/lab26/classwork.ipynb
+
+
 Крайне полезная ссылка про то, с чего начинать при работе с набором данных `data exploration <https://www.kaggle.com/code/prakharrathi25/exploratory-data-analysis-step-by-step/notebook>`__
 
 
