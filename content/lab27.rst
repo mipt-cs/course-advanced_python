@@ -168,7 +168,7 @@
 
 Код к Фурье Fourier_
 
-.. _Fourier: {static}/extra/lab27/furier.ipynb
+.. _Fourier: {static}/extra/lab27/fourier.ipynb
 
 Введение
 ---------
