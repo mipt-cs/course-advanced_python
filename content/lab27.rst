@@ -20,6 +20,15 @@
 
 .. _notebook: {static}/extra/lab27/eq.ipynb
 
+
+Данные по раку_
+
+.. _раку: {static}/extra/lab27/counts.txt.bz2
+
+и по генам_
+
+.. _генам: {static}/extra/lab27/genes.csv
+
 Теория
 ------
 
