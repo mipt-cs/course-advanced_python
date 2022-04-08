@@ -27,7 +27,7 @@
 
 и по генам_
 
-.. _генам: {static}/extra/lab27/genes.csv
+.. _генам: {static}/extra/lab27/patients.csv
 
 Теория
 ------
