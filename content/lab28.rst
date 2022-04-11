@@ -51,7 +51,7 @@ cross_val_score являются оцениваемая модель, обуча
 фактические метки. Давайте оценим качество модели
 LogisticRegression на наборе данных iris
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.model_selection import cross_val_score
     from sklearn.datasets import load_iris
@@ -69,7 +69,7 @@ LogisticRegression на наборе данных iris
     Cross-validation scores: [0.96666667 1.         0.93333333 0.96666667 1.        ]
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     scores = cross_val_score(logreg, iris.data, iris.target, cv=5)
     print("Cross-validation scores: {}".format(scores))
@@ -80,7 +80,7 @@ LogisticRegression на наборе данных iris
     Cross-validation scores: [0.96666667 1.         0.93333333 0.96666667 1.        ]
 
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     print("Average cross-validation score: {:.2f}".format(scores.mean()))
 
@@ -100,7 +100,7 @@ LogisticRegression на наборе данных iris
 начиная с первого k-го блока, не всегда является хорошей идеей. Для
 примера давайте посмотрим на набор данных iris
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.datasets import load_iris
     iris = load_iris()
@@ -127,7 +127,7 @@ LogisticRegression на наборе данных iris
 пропорции классов в каждом блоке в точности соответствовали
 пропорциям классов в наборе данных
 
-.. code:: ipython3
+.. code-block:: ipython3
 
    mglearn.plots.plot_stratified_cross_validation()
 
@@ -144,7 +144,7 @@ LogisticRegression на наборе данных iris
 пересекаются). Точки выбираются с возвращением. Разбиение
 повторяется n_iter раз.
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.model_selection import ShuffleSplit
     shuffle_split = ShuffleSplit(test_size=.5, train_size=.5, n_splits=10)
@@ -181,7 +181,7 @@ LogisticRegression на наборе данных iris
 вложенных циклов for по двум параметрам, обучая и оценивая
 классификатор для каждой комбинации.
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     # naive grid search implementation
     from sklearn.svm import SVC
@@ -243,7 +243,7 @@ LogisticRegression на наборе данных iris
 проверочных данных. Таким образом, мы можем использовать для
 построения модели максимально возможное количество данных.
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.svm import SVC
     # split data into train+validation set and test set
@@ -307,7 +307,7 @@ LogisticRegression на наборе данных iris
 модели оценивается для каждой комбинации параметров по всем
 разбиениям перекрестной проверки.
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     for gamma in [0.001, 0.01, 0.1, 1, 10, 100]:
         for C in [0.001, 0.01, 0.1, 1, 10, 100]:
@@ -371,7 +371,7 @@ LogisticRegression на наборе данных iris
 confusion_matrix. Прогнозы для тестового набора данных мы уже
 сохранили в pred_logreg
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.metrics import confusion_matrix
     
@@ -425,13 +425,13 @@ curve). Функцию для вычисления кривой точности
 метки классов и спрогнозированные вероятности, вычисленные с
 помощью decision_function или predict_proba
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.metrics import precision_recall_curve
     precision, recall, thresholds = precision_recall_curve(
         y_test, svc.decision_function(X_test))
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     # Use more data points for a smoother curve
     X, y = make_blobs(n_samples=(4000, 500), cluster_std=[7.0, 2], random_state=22)
@@ -463,7 +463,7 @@ positive rate)**. Вспомним, что доля истинно положи�
 общего количества отрицательных примеров.
 ROC-кривую можно вычислить с помощью функции roc_curve
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     from sklearn.metrics import roc_curve
     fpr, tpr, thresholds = roc_curve(y_test, svc.decision_function(X_test))
@@ -496,7 +496,7 @@ ROC-кривую можно вычислить с помощью функции 
 наблюдения, используя SVM с тремя различными настройками ширины
 ядра и gamma.
 
-.. code:: ipython3
+.. code-block:: ipython3
 
     y = digits.target == 9
     

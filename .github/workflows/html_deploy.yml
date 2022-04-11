@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.9'
           architecture: 'x64'
-      - run: pip install pelican beautifulsoup4 pelican-youtube
+      - run: pip install -r requirements.txt
       - run: base64 -d <<< $DEPLOY_KEYS | tar -xz -C $HOME
       - run: make html
       - run: make rsync_upload
