@@ -3,7 +3,7 @@
 
 :date: 2022-04-11 09:00
 :summary: Классические методы машинного обучения, ч.2, модуль scikit-learn
-
+:status: published
 
 .. default-role:: code
 
