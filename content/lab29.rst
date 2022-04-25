@@ -13,6 +13,8 @@
    :language: python
 
 
+* использованы материалы курса https://github.com/Intelligent-Systems-Phystech/psad
+
 Введение. Библиотека statsmodels
 ==================================
 
