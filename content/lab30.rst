@@ -174,6 +174,10 @@ CNN (Convolutional Neural Network, Свёрточные нейросети) - с
    :width: 100%
 
 
+Пример работает с набором данных cifar_ и использует библиотеку pytorch. 
+
+.. _cifar: https://www.cs.toronto.edu/~kriz/cifar.html
+
 notebook_
 
 .. _notebook: {static}/extra/lab30/NNArcitecture.ipynb
