@@ -105,7 +105,7 @@
 
 Очень сжатый и качественный обзор_
 
-.. _обзор: https://developer.ibm.com/articles/cc-machine-learning-deep-learning-architectures/
+.. _обзор: {static}/extra/lab30/DeepLearnArch.pdf
 
 .. image:: {static}/extra/lab30/DL-arch.png
    :width: 100%
